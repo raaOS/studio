@@ -32,6 +32,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/AdminHeader';
+import { SheetTitle } from '@/components/ui/sheet';
 
 export default function AdminLayout({
   children,
@@ -42,6 +43,7 @@ export default function AdminLayout({
     <SidebarProvider>
       <div className="flex min-h-screen bg-muted/40">
         <Sidebar>
+            <SheetTitle className="sr-only">Admin Sidebar</SheetTitle>
             <SidebarContent>
               <SidebarGroup>
                   <SidebarMenu>
@@ -162,7 +164,7 @@ export default function AdminLayout({
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="#">
+                        <Link href="/admin/settings/user-mgmt">
                           <UserCog />
                           User Mgmt
                         </Link>

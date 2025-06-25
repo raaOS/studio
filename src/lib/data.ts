@@ -1,4 +1,4 @@
-import type { BudgetItem, Service, Order, Promo, Coupon, Banner } from '@/lib/types';
+import type { BudgetItem, Service, Order, Promo, Coupon, Banner, AdminUser } from '@/lib/types';
 import { Briefcase, ShoppingCart, Store } from 'lucide-react';
 
 export const budgetItems: BudgetItem[] = [
@@ -312,4 +312,39 @@ export const mockBanners: Banner[] = [
     type: 'Text',
     content: '💖 Spesial Valentine, diskon 14% untuk semua paket branding! 💖',
   },
+];
+
+export const mockAdminUsers: AdminUser[] = [
+  {
+    id: 'user-1',
+    name: 'Admin Utama',
+    email: 'admin@designflow.com',
+    role: 'Admin',
+    status: 'Active',
+    avatar: 'https://placehold.co/40x40.png'
+  },
+  {
+    id: 'user-2',
+    name: 'Desainer Hebat',
+    email: 'desainer@designflow.com',
+    role: 'Designer',
+    status: 'Active',
+    avatar: 'https://placehold.co/40x40.png'
+  },
+  {
+    id: 'user-3',
+    name: 'Marketer Pro',
+    email: 'marketing@designflow.com',
+    role: 'Marketing',
+    status: 'Active',
+    avatar: 'https://placehold.co/40x40.png'
+  },
+  {
+    id: 'user-4',
+    name: 'User Nonaktif',
+    email: 'nonaktif@designflow.com',
+    role: 'Designer',
+    status: 'Inactive',
+    avatar: 'https://placehold.co/40x40.png'
+  }
 ];

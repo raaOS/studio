@@ -78,3 +78,12 @@ export type Banner = {
   content: string;
   type: 'Image' | 'Text';
 };
+
+export type AdminUser = {
+  id: string;
+  name: string;
+  email: string;
+  role: 'Admin' | 'Designer' | 'Marketing';
+  status: 'Active' | 'Inactive';
+  avatar: string;
+};
