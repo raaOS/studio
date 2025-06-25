@@ -13,6 +13,7 @@ import {
   LayoutDashboard, 
   Package,
   CreditCard,
+  Archive,
   Gift,
   Ticket,
   Image as ImageIcon,
@@ -65,6 +66,14 @@ export default function AdminLayout({
                         <Link href="/admin/payments">
                           <CreditCard />
                           Pembayaran
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                     <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="/admin/products">
+                          <Archive />
+                          Produk
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
