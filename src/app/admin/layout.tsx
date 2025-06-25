@@ -63,7 +63,7 @@ export default function AdminLayout({
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="#">
+                        <Link href="/admin/queue">
                           <Package />
                           Pesanan
                         </Link>
@@ -71,7 +71,7 @@ export default function AdminLayout({
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="#">
+                        <Link href="/admin/payments">
                           <CreditCard />
                           Pembayaran
                         </Link>

@@ -121,6 +121,7 @@ export const mockOrders: Order[] = [
     ],
     total: 375000,
     paymentMethod: 'lunas',
+    paymentStatus: 'Lunas',
     status: 'Antri',
     date: '2024-05-20',
     budget: 'UMKM',
@@ -144,6 +145,7 @@ export const mockOrders: Order[] = [
     ],
     total: 400000,
     paymentMethod: 'dp',
+    paymentStatus: 'DP',
     status: 'Kerja',
     date: '2024-05-22',
     budget: 'Kaki Lima',
@@ -167,6 +169,7 @@ export const mockOrders: Order[] = [
     ],
     total: 600000,
     paymentMethod: 'lunas',
+    paymentStatus: 'Lunas',
     status: 'Revisi',
     date: '2024-05-23',
     budget: 'E-Comm',
@@ -190,9 +193,33 @@ export const mockOrders: Order[] = [
     ],
     total: 200000,
     paymentMethod: 'dp',
+    paymentStatus: 'Lunas',
     status: 'Selesai',
     date: '2024-05-24',
     budget: 'UMKM',
     pekan: 'W1',
+  },
+  {
+    id: '#005',
+    customerName: 'Siti Aminah',
+    customerTelegram: '@sitiaminah',
+    items: [
+      { 
+        name: 'Flyer/Brosur', 
+        quantity: 1, 
+        price: 100000,
+        brief: {
+          'Judul': 'Promo Jasa Desain Grafis',
+          'Isi': 'Diskon 30% untuk semua layanan',
+        }
+      },
+    ],
+    total: 100000,
+    paymentMethod: 'lunas',
+    paymentStatus: 'Belum Lunas',
+    status: 'Antri',
+    date: '2024-05-25',
+    budget: 'Kaki Lima',
+    pekan: 'W2',
   }
 ];

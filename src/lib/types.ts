@@ -44,6 +44,7 @@ export type Order = {
   }[];
   total: number;
   paymentMethod: 'dp' | 'lunas';
+  paymentStatus: string;
   status: OrderStatus;
   date: string;
   budget: 'Kaki Lima' | 'UMKM' | 'E-Comm';
