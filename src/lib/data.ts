@@ -1,4 +1,4 @@
-import type { BudgetItem, Service, Order, Promo } from '@/lib/types';
+import type { BudgetItem, Service, Order, Promo, Coupon } from '@/lib/types';
 import { Briefcase, ShoppingCart, Store } from 'lucide-react';
 
 export const budgetItems: BudgetItem[] = [
@@ -245,5 +245,40 @@ export const mockPromos: Promo[] = [
     promoText: '15% OFF',
     period: '1-15 Jan',
     status: 'Draft',
+  },
+];
+
+export const mockCoupons: Coupon[] = [
+  {
+    id: 'c1',
+    code: 'NEWBIE20',
+    discount: '20%',
+    usage: '15/50',
+    period: '1-31 Des',
+    status: 'Aktif',
+  },
+  {
+    id: 'c2',
+    code: 'LOYAL50',
+    discount: 'Rp 50.000',
+    usage: '3/10',
+    period: '1-15 Jan',
+    status: 'Aktif',
+  },
+  {
+    id: 'c3',
+    code: 'XMAS2024',
+    discount: '25%',
+    usage: '0/100',
+    period: '20-26 Des',
+    status: 'Draft',
+  },
+  {
+    id: 'c4',
+    code: 'FLASH1212',
+    discount: 'Rp 12.000',
+    usage: '100/100',
+    period: '12 Des',
+    status: 'Expired',
   },
 ];

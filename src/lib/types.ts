@@ -58,3 +58,12 @@ export type Promo = {
   period: string;
   status: 'Aktif' | 'Draft' | 'Selesai';
 };
+
+export type Coupon = {
+  id: string;
+  code: string;
+  discount: string;
+  usage: string;
+  period: string;
+  status: 'Aktif' | 'Draft' | 'Expired';
+};
