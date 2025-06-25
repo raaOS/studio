@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from '@/components/ui/button';
@@ -38,6 +38,14 @@ const StatusIndicator = ({ status, message }: { status: BotStatus; message: stri
     );
 };
 
+const notificationSettings = [
+  { id: 'order-confirmation', label: 'Konfirmasi Pesanan Baru', description: 'Kirim pesan saat pesanan baru berhasil dibuat.', defaultChecked: true },
+  { id: 'payment-reminder', label: 'Pengingat Pembayaran', description: 'Kirim pengingat untuk pembayaran yang belum lunas.', defaultChecked: true },
+  { id: 'work-started', label: 'Update Pengerjaan Dimulai', description: 'Beritahu klien saat pesanan mulai dikerjakan.', defaultChecked: false },
+  { id: 'preview-ready', label: 'Notifikasi Pratinjau Siap', description: 'Kirim link pratinjau saat hasil awal siap direview.', defaultChecked: true },
+  { id: 'order-completed', label: 'Notifikasi Pesanan Selesai', description: 'Beritahu klien saat pesanan selesai dan file final dikirim.', defaultChecked: true },
+];
+
 export default function TelegramAutomationPage() {
     const { toast } = useToast();
     const [adminChatId, setAdminChatId] = useState('');
@@ -48,7 +56,7 @@ export default function TelegramAutomationPage() {
     const [botStatus, setBotStatus] = useState<BotStatus>('idle');
     const [botStatusMessage, setBotStatusMessage] = useState('');
 
-    const handleVerifyBot = useCallback(async () => {
+    const handleVerifyBot = async () => {
         setBotStatus('checking');
         setBotStatusMessage('Memeriksa token bot...');
         try {
@@ -64,9 +72,9 @@ export default function TelegramAutomationPage() {
              setBotStatus('rejected');
              setBotStatusMessage(`Gagal verifikasi: ${e.message}`);
         }
-    }, []);
+    };
     
-    const handleSaveSettings = useCallback(() => {
+    const handleSaveSettings = () => {
         setIsSaving(true);
         localStorage.setItem('telegramAdminChatId', adminChatId);
         toast({
@@ -74,9 +82,9 @@ export default function TelegramAutomationPage() {
             description: 'ID Chat Admin telah disimpan di browser Anda.',
         });
         setTimeout(() => setIsSaving(false), 1000);
-    }, [adminChatId, toast]);
+    };
 
-    const handleTestMessage = useCallback(async () => {
+    const handleTestMessage = async () => {
         if (!testTelegramId) {
             toast({
                 title: 'ID Telegram dibutuhkan',
@@ -115,7 +123,7 @@ export default function TelegramAutomationPage() {
         } finally {
             setIsTesting(false);
         }
-    }, [testTelegramId, toast]);
+    };
     
     useEffect(() => {
         const origin = typeof window !== 'undefined' ? window.location.origin : '';
@@ -126,7 +134,8 @@ export default function TelegramAutomationPage() {
         if (savedAdminId) {
             setAdminChatId(savedAdminId);
         }
-    }, [handleVerifyBot]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         setTestTelegramId(adminChatId);
@@ -254,13 +263,3 @@ export default function TelegramAutomationPage() {
         </div>
     );
 }
-
-const notificationSettings = [
-  { id: 'order-confirmation', label: 'Konfirmasi Pesanan Baru', description: 'Kirim pesan saat pesanan baru berhasil dibuat.', defaultChecked: true },
-  { id: 'payment-reminder', label: 'Pengingat Pembayaran', description: 'Kirim pengingat untuk pembayaran yang belum lunas.', defaultChecked: true },
-  { id: 'work-started', label: 'Update Pengerjaan Dimulai', description: 'Beritahu klien saat pesanan mulai dikerjakan.', defaultChecked: false },
-  { id: 'preview-ready', label: 'Notifikasi Pratinjau Siap', description: 'Kirim link pratinjau saat hasil awal siap direview.', defaultChecked: true },
-  { id: 'order-completed', label: 'Notifikasi Pesanan Selesai', description: 'Beritahu klien saat pesanan selesai dan file final dikirim.', defaultChecked: true },
-];
-
-    
