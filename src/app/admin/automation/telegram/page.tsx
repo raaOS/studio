@@ -53,7 +53,7 @@ export default function TelegramAutomationPage() {
     }, []);
 
     useEffect(() => {
-        const savedAdminId = localStorage.getItem('telegramAdminChatId') ?? '6116803120';
+        const savedAdminId = localStorage.getItem('telegramAdminChatId') ?? '';
         setAdminChatId(savedAdminId);
     }, []);
 
@@ -178,7 +178,9 @@ export default function TelegramAutomationPage() {
                                     onChange={(e) => setAdminChatId(e.target.value)}
                                 />
                                 <p className="text-xs text-muted-foreground">
-                                    Ini adalah Chat ID pribadi Anda dengan bot. Bot akan menggunakan ID ini untuk mengirim notifikasi penting khusus untuk admin. Untuk mendapatkannya, kirim pesan <strong>/start</strong> ke bot Anda di Telegram, lalu salin Chat ID yang ditampilkan di pesan balasan.
+                                    Ini adalah "alamat" Telegram pribadi Anda, <strong>BUKAN ID bot</strong>. Bot menggunakan ID ini untuk mengirim notifikasi khusus admin ke Anda.
+                                    <br />
+                                    <strong>Cara mendapatkan ID Anda:</strong> Kirim pesan <code>/start</code> ke bot Anda, dan bot akan membalas dengan Chat ID Anda.
                                 </p>
                             </div>
                         </CardContent>
