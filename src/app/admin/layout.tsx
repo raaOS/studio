@@ -119,7 +119,7 @@ export default function AdminLayout({
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="#">
+                        <Link href="/admin/marketing/email">
                           <Mail />
                           Email
                         </Link>
