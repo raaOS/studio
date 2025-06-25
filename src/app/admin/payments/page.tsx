@@ -111,7 +111,7 @@ export default function AdminPaymentsPage() {
                     </TableCell>
                     <TableCell>{order.date}</TableCell>
                     <TableCell className="text-right space-x-2">
-                       {order.paymentStatus !== 'Lunas' && order.paymentStatus !== 'Batal' && <Button size="sm" variant="default">Validasi</Button>}
+                       {order.paymentStatus !== 'Lunas' && order.paymentStatus !== 'Batal' && <Button size="sm" variant="default">Validasi Pembayaran</Button>}
                        {order.paymentStatus === 'Belum Lunas' && <Button size="sm" variant="outline">Kirim Pengingat</Button>}
                        <Button asChild size="sm" variant="ghost">
                           <Link href={`/admin/orders/${order.id.substring(1)}`}>Detail</Link>

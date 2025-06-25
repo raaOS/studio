@@ -226,6 +226,7 @@ export const mockOrders: Order[] = [
     date: '2024-05-20',
     budget: 'UMKM',
     pekan: 'W1',
+    driveFolderUrl: 'https://drive.google.com/drive/folders/simulated_1'
   },
   {
     id: '#002',
@@ -250,6 +251,7 @@ export const mockOrders: Order[] = [
     date: '2024-05-22',
     budget: 'Kaki Lima',
     pekan: 'W1',
+    driveFolderUrl: 'https://drive.google.com/drive/folders/simulated_2'
   },
   {
     id: '#003',
@@ -274,6 +276,7 @@ export const mockOrders: Order[] = [
     date: '2024-05-23',
     budget: 'E-Comm',
     pekan: 'W2',
+    driveFolderUrl: 'https://drive.google.com/drive/folders/simulated_3'
   },
   {
     id: '#004',
@@ -298,6 +301,7 @@ export const mockOrders: Order[] = [
     date: '2024-05-24',
     budget: 'UMKM',
     pekan: 'W1',
+    driveFolderUrl: 'https://drive.google.com/drive/folders/simulated_4'
   },
   {
     id: '#005',
@@ -341,6 +345,7 @@ export const mockOrders: Order[] = [
     date: '2024-05-26',
     budget: 'Kaki Lima',
     pekan: 'W2',
+    driveFolderUrl: 'https://drive.google.com/drive/folders/simulated_6'
   }
 ];
 

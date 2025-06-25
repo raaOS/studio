@@ -76,6 +76,7 @@ export type Order = {
   date: string;
   budget: 'Kaki Lima' | 'UMKM' | 'E-Comm';
   pekan: 'W1' | 'W2' | 'W3' | 'W4';
+  driveFolderUrl?: string;
 };
 
 export type Promo = {

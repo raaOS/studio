@@ -18,6 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { mockOrders, mockCustomers } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import type { OrderStatus } from '@/lib/types';
+import { Folder } from 'lucide-react';
 
 const allOrderStatuses: OrderStatus[] = [
     'Menunggu Pembayaran', 'Masuk Antrian', 'Sedang Dikerjakan',
@@ -139,7 +140,7 @@ export default function AdminOrdersPage() {
                 <TableHead>Nama</TableHead>
                 <TableHead>Budget</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Pekan</TableHead>
+                <TableHead>Drive</TableHead>
                 <TableHead className="text-right">Aksi</TableHead>
               </TableRow>
             </TableHeader>
@@ -159,7 +160,15 @@ export default function AdminOrdersPage() {
                         {order.status}
                       </Badge>
                     </TableCell>
-                    <TableCell>{order.pekan}</TableCell>
+                    <TableCell>
+                      {order.driveFolderUrl && (
+                        <Button asChild variant="ghost" size="icon">
+                          <a href={order.driveFolderUrl} target="_blank" rel="noopener noreferrer" title="Buka Folder Drive">
+                            <Folder className="h-4 w-4" />
+                          </a>
+                        </Button>
+                      )}
+                    </TableCell>
                     <TableCell className="text-right space-x-2">
                        {order.status === 'Masuk Antrian' && <Button size="sm" variant="default">Mulai</Button>}
                        {order.status === 'Sedang Dikerjakan' && <Button size="sm" variant="default">Pratinjau</Button>}

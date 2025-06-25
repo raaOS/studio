@@ -99,11 +99,6 @@ export default function OrderDetailPage() {
                     <Badge className={cn("capitalize w-fit mt-2 md:mt-0", getStatusClass(currentStatus))}>{currentStatus}</Badge>
                 </div>
             </CardHeader>
-            <CardFooter className="flex flex-wrap gap-2 pt-4">
-                 <Button variant="outline" size="sm"><Folder className="mr-2 h-4 w-4" /> Drive Folder</Button>
-                 <Button variant="outline" size="sm"><MessageSquare className="mr-2 h-4 w-4" /> Telegram Chat</Button>
-                 <Button variant="outline" size="sm"><Calendar className="mr-2 h-4 w-4" /> Schedule Meeting</Button>
-            </CardFooter>
         </Card>
       
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -173,8 +168,14 @@ export default function OrderDetailPage() {
                 <CardContent className="space-y-4">
                     <div>
                       <h4 className="font-semibold flex items-center gap-2"><Folder className="h-4 w-4" /> Drive Folder</h4>
-                      <p className="text-sm text-muted-foreground">Last updated: 2 hours ago</p>
-                      <Button variant="outline" size="sm" className="mt-2 w-full">Open Folder</Button>
+                      <p className="text-sm text-muted-foreground">
+                        {order.driveFolderUrl ? `Last updated: 2 hours ago` : 'Belum dibuat'}
+                      </p>
+                      <Button asChild variant="outline" size="sm" className="mt-2 w-full" disabled={!order.driveFolderUrl}>
+                        <a href={order.driveFolderUrl} target="_blank" rel="noopener noreferrer">
+                          Buka Folder
+                        </a>
+                      </Button>
                     </div>
                     <Separator />
                     <div>
