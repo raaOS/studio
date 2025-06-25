@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from '@/components/ui/button';
@@ -16,24 +16,32 @@ import { verifyTelegramBot } from '@/ai/flows/verify-telegram-bot';
 type BotStatus = 'idle' | 'checking' | 'approved' | 'rejected';
 
 const StatusIndicator = ({ status, message }: { status: BotStatus; message: string }) => {
-    if (status === 'idle') {
-        return null;
+    if (status === 'idle') return null;
+
+    let Icon;
+    let iconClassName = '';
+    let textColor = '';
+
+    switch (status) {
+        case 'checking':
+            Icon = Loader2;
+            iconClassName = 'animate-spin';
+            textColor = 'text-muted-foreground';
+            break;
+        case 'approved':
+            Icon = CheckCircle;
+            textColor = 'text-green-600';
+            break;
+        case 'rejected':
+            Icon = XCircle;
+            textColor = 'text-destructive';
+            break;
     }
 
-    const Icon = status === 'checking' ? <Loader2 className="h-4 w-4 animate-spin" /> :
-                   status === 'approved' ? <CheckCircle className="h-4 w-4" /> :
-                   <XCircle className="h-4 w-4" />;
-
-    const textColor = status === 'checking' ? 'text-muted-foreground' :
-                      status === 'approved' ? 'text-green-600' :
-                      'text-destructive';
-
     return (
-        <div className="flex flex-col gap-2 flex-grow">
-            <div className={`flex items-center gap-2 text-sm ${textColor}`}>
-                {Icon}
-                <span>{message}</span>
-            </div>
+        <div className={`flex items-center gap-2 text-sm ${textColor}`}>
+            <Icon className={`h-4 w-4 ${iconClassName}`} />
+            <span>{message}</span>
         </div>
     );
 };
@@ -56,7 +64,7 @@ export default function TelegramAutomationPage() {
     const [botStatus, setBotStatus] = useState<BotStatus>('idle');
     const [botStatusMessage, setBotStatusMessage] = useState('');
 
-    const handleVerifyBot = async () => {
+    const handleVerifyBot = useCallback(async () => {
         setBotStatus('checking');
         setBotStatusMessage('Memeriksa token bot...');
         try {
@@ -72,9 +80,9 @@ export default function TelegramAutomationPage() {
              setBotStatus('rejected');
              setBotStatusMessage(`Gagal verifikasi: ${e.message}`);
         }
-    };
+    }, []);
     
-    const handleSaveSettings = () => {
+    const handleSaveSettings = useCallback(() => {
         setIsSaving(true);
         localStorage.setItem('telegramAdminChatId', adminChatId);
         toast({
@@ -82,9 +90,9 @@ export default function TelegramAutomationPage() {
             description: 'ID Chat Admin telah disimpan di browser Anda.',
         });
         setTimeout(() => setIsSaving(false), 1000);
-    };
+    }, [adminChatId, toast]);
 
-    const handleTestMessage = async () => {
+    const handleTestMessage = useCallback(async () => {
         if (!testTelegramId) {
             toast({
                 title: 'ID Telegram dibutuhkan',
@@ -123,7 +131,7 @@ export default function TelegramAutomationPage() {
         } finally {
             setIsTesting(false);
         }
-    };
+    }, [testTelegramId, toast]);
     
     useEffect(() => {
         const origin = typeof window !== 'undefined' ? window.location.origin : '';
@@ -134,8 +142,7 @@ export default function TelegramAutomationPage() {
         if (savedAdminId) {
             setAdminChatId(savedAdminId);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [handleVerifyBot]);
 
     useEffect(() => {
         setTestTelegramId(adminChatId);
