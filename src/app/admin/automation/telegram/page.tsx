@@ -1,7 +1,6 @@
-
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from '@/components/ui/button';
@@ -28,17 +27,14 @@ const StatusIndicator = ({ status, message }: { status: BotStatus; message: stri
         return null;
     }
 
-    const Icon = {
-        checking: <Loader2 className="h-4 w-4 animate-spin" />,
-        approved: <CheckCircle className="h-4 w-4" />,
-        rejected: <XCircle className="h-4 w-4" />,
-    }[status] || null;
+    const Icon = status === 'checking' ? <Loader2 className="h-4 w-4 animate-spin" /> :
+                   status === 'approved' ? <CheckCircle className="h-4 w-4" /> :
+                   status === 'rejected' ? <XCircle className="h-4 w-4" /> :
+                   null;
 
-    const textColor = {
-        checking: 'text-muted-foreground',
-        approved: 'text-green-600',
-        rejected: 'text-destructive',
-    }[status] || '';
+    const textColor = status === 'checking' ? 'text-muted-foreground' :
+                      status === 'approved' ? 'text-green-600' :
+                      'text-destructive';
 
     return (
         <div className="flex flex-col gap-2 flex-grow">
@@ -60,12 +56,7 @@ export default function TelegramAutomationPage() {
     const [botStatus, setBotStatus] = useState<BotStatus>('idle');
     const [botStatusMessage, setBotStatusMessage] = useState('');
 
-    useEffect(() => {
-        const origin = typeof window !== 'undefined' ? window.location.origin : '';
-        setWebhookUrl(`${origin}/api/telegram/webhook`);
-    }, []);
-
-    const handleVerifyBot = useCallback(async () => {
+    const handleVerifyBot = async () => {
         setBotStatus('checking');
         setBotStatusMessage('Memeriksa token bot...');
         try {
@@ -81,24 +72,9 @@ export default function TelegramAutomationPage() {
              setBotStatus('rejected');
              setBotStatusMessage(`Gagal verifikasi: ${e.message}`);
         }
-    }, []);
+    };
     
-    useEffect(() => {
-        handleVerifyBot();
-    }, [handleVerifyBot]);
-
-    useEffect(() => {
-        const savedAdminId = localStorage.getItem('telegramAdminChatId');
-        if (savedAdminId) {
-            setAdminChatId(savedAdminId);
-        }
-    }, []);
-
-    useEffect(() => {
-        setTestTelegramId(adminChatId);
-    }, [adminChatId]);
-    
-    const handleSaveSettings = useCallback(() => {
+    const handleSaveSettings = () => {
         setIsSaving(true);
         localStorage.setItem('telegramAdminChatId', adminChatId);
         toast({
@@ -106,9 +82,9 @@ export default function TelegramAutomationPage() {
             description: 'ID Chat Admin telah disimpan di browser Anda.',
         });
         setTimeout(() => setIsSaving(false), 1000);
-    }, [adminChatId, toast]);
+    };
 
-    const handleTestMessage = useCallback(async () => {
+    const handleTestMessage = async () => {
         if (!testTelegramId) {
             toast({
                 title: 'ID Telegram dibutuhkan',
@@ -147,7 +123,23 @@ export default function TelegramAutomationPage() {
         } finally {
             setIsTesting(false);
         }
-    }, [testTelegramId, toast]);
+    };
+    
+    useEffect(() => {
+        const origin = typeof window !== 'undefined' ? window.location.origin : '';
+        setWebhookUrl(`${origin}/api/telegram/webhook`);
+        handleVerifyBot();
+        
+        const savedAdminId = localStorage.getItem('telegramAdminChatId');
+        if (savedAdminId) {
+            setAdminChatId(savedAdminId);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        setTestTelegramId(adminChatId);
+    }, [adminChatId]);
     
     return (
         <div className="space-y-8">
