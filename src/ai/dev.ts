@@ -7,3 +7,4 @@ import '@/ai/flows/telegram-bot-responder.ts';
 // import '@/ai/flows/generate-meeting-agenda.ts';
 // import '@/ai/flows/generate-dynamic-brief.ts';
 import '@/ai/flows/create-drive-folder.ts';
+import '@/ai/flows/verify-telegram-bot.ts';

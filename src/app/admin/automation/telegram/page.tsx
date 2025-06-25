@@ -8,8 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from "@/hooks/use-toast";
-import { Send, TestTube2, Save, Terminal } from 'lucide-react';
+import { Send, TestTube2, Save, Terminal, CheckCircle, XCircle, Loader2, RefreshCw } from 'lucide-react';
 import { sendTelegramUpdate } from '@/ai/flows/telegram-bot-integration';
+import { verifyTelegramBot } from '@/ai/flows/verify-telegram-bot';
 
 const notificationSettings = [
   { id: 'order-confirmation', label: 'Konfirmasi Pesanan Baru', description: 'Kirim pesan saat pesanan baru berhasil dibuat.', defaultChecked: true },
@@ -25,6 +26,31 @@ export default function TelegramAutomationPage() {
     const [testTelegramId, setTestTelegramId] = useState('');
     const [isTesting, setIsTesting] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+
+    const [botStatus, setBotStatus] = useState<'idle' | 'checking' | 'approved' | 'rejected'>('idle');
+    const [botStatusMessage, setBotStatusMessage] = useState('');
+
+    const handleVerifyBot = async () => {
+        setBotStatus('checking');
+        setBotStatusMessage('Memeriksa token bot...');
+        try {
+            const result = await verifyTelegramBot();
+            if (result.success) {
+                setBotStatus('approved');
+                setBotStatusMessage(`Bot direstui: @${result.botName}`);
+            } else {
+                setBotStatus('rejected');
+                setBotStatusMessage(`Bot tidak direstui: ${result.error}`);
+            }
+        } catch (e: any) {
+             setBotStatus('rejected');
+             setBotStatusMessage(`Gagal verifikasi: ${e.message}`);
+        }
+    };
+    
+    useEffect(() => {
+        handleVerifyBot();
+    }, []);
 
     useEffect(() => {
         const savedAdminId = localStorage.getItem('telegramAdminChatId') ?? '6116803120';
@@ -85,6 +111,39 @@ export default function TelegramAutomationPage() {
             setIsTesting(false);
         }
     };
+    
+    const StatusIndicator = () => {
+        let indicator = null;
+
+        if (botStatus === 'checking') {
+            indicator = (
+                <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>{botStatusMessage}</span>
+                </div>
+            );
+        } else if (botStatus === 'approved') {
+            indicator = (
+                <div className="flex items-center gap-2 text-green-600 text-sm">
+                <CheckCircle className="h-4 w-4" />
+                <span>{botStatusMessage}</span>
+                </div>
+            );
+        } else if (botStatus === 'rejected') {
+            indicator = (
+                <div className="flex items-center gap-2 text-destructive text-sm">
+                <XCircle className="h-4 w-4" />
+                <span>{botStatusMessage}</span>
+                </div>
+            );
+        }
+
+        return (
+            <div className="flex flex-col gap-2 flex-grow">
+                {indicator}
+            </div>
+        );
+    };
 
     return (
         <div className="space-y-8">
@@ -121,10 +180,17 @@ export default function TelegramAutomationPage() {
                                 <p className="text-xs text-muted-foreground">ID ini akan menerima notifikasi untuk admin. Anda bisa mendapatkan ID ini dengan mengirim `/start` ke bot Anda.</p>
                             </div>
                         </CardContent>
-                        <CardFooter>
-                            <Button onClick={handleSaveSettings} disabled={isSaving}>
+                        <CardFooter className="flex flex-wrap items-center justify-between gap-4">
+                           <div className="flex gap-2">
+                             <Button onClick={handleSaveSettings} disabled={isSaving}>
                                 {isSaving ? 'Menyimpan...' : <><Save className="mr-2 h-4 w-4" /> Simpan ID Admin</>}
                             </Button>
+                            <Button variant="outline" onClick={handleVerifyBot} disabled={botStatus === 'checking'}>
+                               <RefreshCw className={`mr-2 h-4 w-4 ${botStatus === 'checking' ? 'animate-spin' : ''}`} />
+                               Verifikasi
+                            </Button>
+                           </div>
+                           <StatusIndicator />
                         </CardFooter>
                     </Card>
 
