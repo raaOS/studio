@@ -18,11 +18,16 @@ export function OrderSummary() {
     const { toast } = useToast();
     const [customer, setCustomer] = useState<Customer | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [botToken, setBotToken] = useState('');
 
     useEffect(() => {
         const savedCustomerData = localStorage.getItem('customerData');
         if (savedCustomerData) {
             setCustomer(JSON.parse(savedCustomerData));
+        }
+        const savedToken = localStorage.getItem('telegramBotToken');
+        if (savedToken) {
+            setBotToken(savedToken);
         }
     }, []);
 
@@ -44,6 +49,15 @@ export function OrderSummary() {
             });
             return;
         }
+        
+        if (!botToken) {
+            toast({
+                title: 'Token Bot Telegram Tidak Ditemukan',
+                description: 'Admin belum mengatur token bot di panel admin.',
+                variant: 'destructive',
+            });
+            return;
+        }
 
         setIsSubmitting(true);
         const orderId = `#${Math.floor(1000 + Math.random() * 9000)}`;
@@ -55,11 +69,16 @@ Metode Bayar: ${paymentMethod === 'dp' ? 'DP 50%' : 'Lunas'}.
 Terima kasih!`;
 
         try {
-            await sendTelegramUpdate({
+            const result = await sendTelegramUpdate({
+                botToken: botToken,
                 telegramId: customer.telegram,
                 orderId: orderId,
                 updateMessage: message,
             });
+
+            if (!result.success) {
+                throw new Error('Telegram API call failed from order summary.');
+            }
 
             toast({
                 title: 'Pesanan Terkirim!',
@@ -70,7 +89,7 @@ Terima kasih!`;
             console.error("Failed to send order:", error);
             toast({
                 title: 'Gagal Mengirim Pesanan',
-                description: 'Terjadi kesalahan. Silakan coba lagi.',
+                description: 'Terjadi kesalahan. Silakan coba lagi atau hubungi admin.',
                 variant: 'destructive',
             });
         } finally {
