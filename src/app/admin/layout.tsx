@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/sidebar';
 import { 
   LayoutDashboard, 
-  ListTodo, 
   Package,
   CreditCard,
   Gift,
@@ -55,15 +54,7 @@ export default function AdminLayout({
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="/admin/queue">
-                          <ListTodo />
-                          Antrian
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/admin/queue">
+                        <Link href="/admin/orders">
                           <Package />
                           Pesanan
                         </Link>

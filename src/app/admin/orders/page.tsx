@@ -19,7 +19,7 @@ import { mockOrders } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import type { OrderStatus } from '@/lib/types';
 
-export default function AdminQueuePage() {
+export default function AdminOrdersPage() {
   const [filters, setFilters] = useState({
     status: 'All',
     pekan: 'All',
@@ -59,7 +59,7 @@ export default function AdminQueuePage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl md:text-3xl font-bold font-headline">Antrian Pesanan</h1>
+      <h1 className="text-2xl md:text-3xl font-bold font-headline">Daftar Pesanan</h1>
       
       <Card>
         <CardContent className="p-4 flex flex-col md:flex-row items-center gap-4">
