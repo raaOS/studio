@@ -50,3 +50,11 @@ export type Order = {
   budget: 'Kaki Lima' | 'UMKM' | 'E-Comm';
   pekan: 'W1' | 'W2' | 'W3' | 'W4';
 };
+
+export type Promo = {
+  id: string;
+  productName: string;
+  promoText: string;
+  period: string;
+  status: 'Aktif' | 'Draft' | 'Selesai';
+};

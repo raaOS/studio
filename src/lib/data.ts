@@ -1,4 +1,4 @@
-import type { BudgetItem, Service, Order } from '@/lib/types';
+import type { BudgetItem, Service, Order, Promo } from '@/lib/types';
 import { Briefcase, ShoppingCart, Store } from 'lucide-react';
 
 export const budgetItems: BudgetItem[] = [
@@ -222,4 +222,28 @@ export const mockOrders: Order[] = [
     budget: 'Kaki Lima',
     pekan: 'W2',
   }
+];
+
+export const mockPromos: Promo[] = [
+  {
+    id: 'p1',
+    productName: 'Logo Design',
+    promoText: '20% OFF',
+    period: '1-31 Des',
+    status: 'Aktif',
+  },
+  {
+    id: 'p2',
+    productName: 'Business Card',
+    promoText: 'Buy 2 Get 1',
+    period: '15-25 Des',
+    status: 'Aktif',
+  },
+  {
+    id: 'p3',
+    productName: 'Banner',
+    promoText: '15% OFF',
+    period: '1-15 Jan',
+    status: 'Draft',
+  },
 ];

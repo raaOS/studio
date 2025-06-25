@@ -87,7 +87,7 @@ export default function AdminLayout({
                   <SidebarMenu>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="#">
+                        <Link href="/admin/marketing/promos">
                           <Gift />
                           Promo
                         </Link>
