@@ -3,7 +3,6 @@
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,10 +22,10 @@ type CustomerFormValues = z.infer<typeof customerFormSchema>;
 
 interface CustomerFormProps {
     selectedBudget: BudgetItem;
+    onSuccess: () => void;
 }
 
-export function CustomerForm({ selectedBudget }: CustomerFormProps) {
-  const router = useRouter();
+export function CustomerForm({ selectedBudget, onSuccess }: CustomerFormProps) {
   const { toast } = useToast();
 
   const form = useForm<CustomerFormValues>({
@@ -38,16 +37,16 @@ export function CustomerForm({ selectedBudget }: CustomerFormProps) {
     localStorage.setItem('customerData', JSON.stringify(data));
     toast({
       title: "Data tersimpan!",
-      description: `Selamat datang, ${data.name}! Lanjutkan untuk memilih layanan.`,
+      description: `Selamat datang, ${data.name}! Silakan pilih layanan yang Anda butuhkan.`,
     });
-    router.push(`/catalog/${selectedBudget.id}`);
+    onSuccess();
   }
 
   return (
     <div className="container mx-auto max-w-2xl">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline text-2xl">Langkah Terakhir Sebelum Memilih Layanan</CardTitle>
+          <CardTitle className="font-headline text-2xl">Langkah 2: Isi Data Diri Anda</CardTitle>
           <CardDescription>
             Kami butuh data Anda untuk melanjutkan pesanan pada paket <span className="font-bold text-primary">{selectedBudget.title}</span>.
           </CardDescription>
@@ -104,7 +103,7 @@ export function CustomerForm({ selectedBudget }: CustomerFormProps) {
                 )}
               />
               <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? 'Memproses...' : 'Lanjut ke Katalog'}
+                {form.formState.isSubmitting ? 'Memproses...' : 'Lanjut Pilih Layanan'}
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </form>
