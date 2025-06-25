@@ -138,7 +138,7 @@ export default function AdminLayout({
                   <SidebarMenu>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="#">
+                        <Link href="/admin/settings/capacity">
                           <BarChart3 />
                           Kapasitas
                         </Link>
