@@ -85,6 +85,14 @@ export default function AdminLayout({
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="/admin/analytics">
+                          <LineChart />
+                          Analytics
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
                   </SidebarMenu>
               </SidebarGroup>
 
@@ -157,14 +165,6 @@ export default function AdminLayout({
                         <Link href="/admin/settings/integrations">
                           <Wrench />
                           Integrasi
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/admin/analytics">
-                          <LineChart />
-                          Analytics
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
