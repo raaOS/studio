@@ -24,11 +24,18 @@ import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import type { Service } from "@/lib/types"
 import { useEffect } from "react"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 const productFormSchema = z.object({
   id: z.string(),
   name: z.string().min(3, { message: "Nama produk minimal 3 karakter." }),
-  category: z.string().min(3, { message: "Kategori minimal 3 karakter." }),
+  category: z.string({ required_error: "Silakan pilih kategori." }),
   prices: z.object({
     'kaki-lima': z.coerce.number().min(0, { message: "Harga harus angka positif." }),
     'umkm': z.coerce.number().min(0, { message: "Harga harus angka positif." }),
@@ -46,6 +53,13 @@ interface ProductFormDialogProps {
   onOpenChange: (isOpen: boolean) => void
 }
 
+const productCategories = [
+  "Konten Media Sosial",
+  "Branding & Kantor",
+  "Materi Promosi",
+  "Desain Digital & Event",
+]
+
 export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductFormDialogProps) {
   const { toast } = useToast()
 
@@ -54,7 +68,7 @@ export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductForm
     defaultValues: {
       id: product?.id || `new-product-${Date.now()}`,
       name: product?.name || "",
-      category: product?.category || "",
+      category: product?.category || undefined,
       prices: {
         'kaki-lima': product?.prices['kaki-lima'] || 0,
         'umkm': product?.prices['umkm'] || 0,
@@ -70,7 +84,7 @@ export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductForm
       form.reset({
         id: product?.id || `new-product-${Date.now()}`,
         name: product?.name || "",
-        category: product?.category || "",
+        category: product?.category || undefined,
         prices: {
           'kaki-lima': product?.prices['kaki-lima'] || 0,
           'umkm': product?.prices['umkm'] || 0,
@@ -125,9 +139,20 @@ export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductForm
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Kategori</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Contoh: Branding & Kantor" {...field} />
-                  </FormControl>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pilih kategori untuk produk" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {productCategories.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
