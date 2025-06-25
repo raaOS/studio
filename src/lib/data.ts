@@ -1,4 +1,4 @@
-import type { BudgetItem, Service, Order, Promo, Coupon, Banner, AdminUser, DriveActivityLog, CalendarActivityLog, MeetActivityLog } from '@/lib/types';
+import type { BudgetItem, Service, Order, Promo, Coupon, Banner, AdminUser, DriveActivityLog, CalendarActivityLog, MeetActivityLog, Category } from '@/lib/types';
 import { Briefcase, ShoppingCart, Store } from 'lucide-react';
 
 export const budgetItems: BudgetItem[] = [
@@ -25,6 +25,13 @@ export const budgetItems: BudgetItem[] = [
   },
 ];
 
+export const mockCategories: Category[] = [
+  { id: 'konten-medsos', name: 'Konten Media Sosial' },
+  { id: 'branding-kantor', name: 'Branding & Kantor' },
+  { id: 'materi-promosi', name: 'Materi Promosi' },
+  { id: 'desain-digital-event', name: 'Desain Digital & Event' },
+];
+
 export const services: Service[] = [
   // Kategori: Konten Media Sosial
   {
@@ -32,7 +39,7 @@ export const services: Service[] = [
     name: 'Desain Konten Feed (Single Post)',
     prices: { 'kaki-lima': 15000, 'umkm': 25000, 'e-comm': 70000 },
     image: 'https://placehold.co/400x300/FF5733/FFFFFF.png',
-    category: 'Konten Media Sosial',
+    category: 'konten-medsos',
     dataAiHint: 'social media',
   },
   {
@@ -40,7 +47,7 @@ export const services: Service[] = [
     name: 'Desain Konten Carousel (3 Slide)',
     prices: { 'kaki-lima': 30000, 'umkm': 60000, 'e-comm': 180000 },
     image: 'https://placehold.co/400x300/33FF57/FFFFFF.png',
-    category: 'Konten Media Sosial',
+    category: 'konten-medsos',
     dataAiHint: 'social media',
   },
   {
@@ -48,7 +55,7 @@ export const services: Service[] = [
     name: 'Desain Konten Story (Vertikal)',
     prices: { 'kaki-lima': 15000, 'umkm': 25000, 'e-comm': 70000 },
     image: 'https://placehold.co/400x300/3357FF/FFFFFF.png',
-    category: 'Konten Media Sosial',
+    category: 'konten-medsos',
     dataAiHint: 'instagram story',
   },
   {
@@ -56,7 +63,7 @@ export const services: Service[] = [
     name: 'Desain Frame Foto Profil (Twibbon)',
     prices: { 'kaki-lima': 18000, 'umkm': 35000, 'e-comm': 80000 },
     image: 'https://placehold.co/400x300/FF33A1/FFFFFF.png',
-    category: 'Konten Media Sosial',
+    category: 'konten-medsos',
     dataAiHint: 'profile frame',
   },
   // Kategori: Branding & Kantor
@@ -65,7 +72,7 @@ export const services: Service[] = [
     name: 'Desain Kop Surat (Letterhead)',
     prices: { 'kaki-lima': 15000, 'umkm': 28000, 'e-comm': 65000 },
     image: 'https://placehold.co/400x300/A133FF/FFFFFF.png',
-    category: 'Branding & Kantor',
+    category: 'branding-kantor',
     dataAiHint: 'stationery branding',
   },
   {
@@ -73,7 +80,7 @@ export const services: Service[] = [
     name: 'Desain Kartu Nama',
     prices: { 'kaki-lima': 18000, 'umkm': 30000, 'e-comm': 70000 },
     image: 'https://placehold.co/400x300/33FFA1/FFFFFF.png',
-    category: 'Branding & Kantor',
+    category: 'branding-kantor',
     dataAiHint: 'business card',
   },
   {
@@ -81,7 +88,7 @@ export const services: Service[] = [
     name: 'Desain Sertifikat / Piagam',
     prices: { 'kaki-lima': 20000, 'umkm': 45000, 'e-comm': 105000 },
     image: 'https://placehold.co/400x300/FFC300/FFFFFF.png',
-    category: 'Branding & Kantor',
+    category: 'branding-kantor',
     dataAiHint: 'certificate design',
   },
   {
@@ -89,7 +96,7 @@ export const services: Service[] = [
     name: 'Desain Lanyard / Tali ID Card',
     prices: { 'kaki-lima': 20000, 'umkm': 35000, 'e-comm': 85000 },
     image: 'https://placehold.co/400x300/C70039/FFFFFF.png',
-    category: 'Branding & Kantor',
+    category: 'branding-kantor',
     dataAiHint: 'lanyard design',
   },
   // Kategori: Materi Promosi
@@ -98,7 +105,7 @@ export const services: Service[] = [
     name: 'Desain Poster (Ukuran A4)',
     prices: { 'kaki-lima': 22000, 'umkm': 50000, 'e-comm': 125000 },
     image: 'https://placehold.co/400x300/900C3F/FFFFFF.png',
-    category: 'Materi Promosi',
+    category: 'materi-promosi',
     dataAiHint: 'poster design',
   },
   {
@@ -106,7 +113,7 @@ export const services: Service[] = [
     name: 'Desain Buku Menu',
     prices: { 'kaki-lima': 25000, 'umkm': 60000, 'e-comm': 160000 },
     image: 'https://placehold.co/400x300/581845/FFFFFF.png',
-    category: 'Materi Promosi',
+    category: 'materi-promosi',
     dataAiHint: 'menu design',
   },
   {
@@ -114,7 +121,7 @@ export const services: Service[] = [
     name: 'Desain Undangan Digital / Cetak',
     prices: { 'kaki-lima': 25000, 'umkm': 60000, 'e-comm': 145000 },
     image: 'https://placehold.co/400x300/1ABC9C/FFFFFF.png',
-    category: 'Materi Promosi',
+    category: 'materi-promosi',
     dataAiHint: 'invitation design',
   },
   {
@@ -122,7 +129,7 @@ export const services: Service[] = [
     name: 'Desain Brosur / Pamflet Promosi',
     prices: { 'kaki-lima': 35000, 'umkm': 75000, 'e-comm': 195000 },
     image: 'https://placehold.co/400x300/2ECC71/FFFFFF.png',
-    category: 'Materi Promosi',
+    category: 'materi-promosi',
     dataAiHint: 'brochure design',
   },
   {
@@ -130,7 +137,7 @@ export const services: Service[] = [
     name: 'Desain X-Banner',
     prices: { 'kaki-lima': 35000, 'umkm': 75000, 'e-comm': 185000 },
     image: 'https://placehold.co/400x300/3498DB/FFFFFF.png',
-    category: 'Materi Promosi',
+    category: 'materi-promosi',
     dataAiHint: 'banner stand',
   },
   {
@@ -138,7 +145,7 @@ export const services: Service[] = [
     name: 'Desain Spanduk / Banner Outdoor',
     prices: { 'kaki-lima': 40000, 'umkm': 85000, 'e-comm': 210000 },
     image: 'https://placehold.co/400x300/9B59B6/FFFFFF.png',
-    category: 'Materi Promosi',
+    category: 'materi-promosi',
     dataAiHint: 'outdoor banner',
   },
   {
@@ -146,7 +153,7 @@ export const services: Service[] = [
     name: 'Desain Roll-Up Banner',
     prices: { 'kaki-lima': 45000, 'umkm': 90000, 'e-comm': 240000 },
     image: 'https://placehold.co/400x300/34495E/FFFFFF.png',
-    category: 'Materi Promosi',
+    category: 'materi-promosi',
     dataAiHint: 'rollup banner',
   },
   // Kategori: Desain Digital & Event
@@ -155,7 +162,7 @@ export const services: Service[] = [
     name: 'Desain Sampul E-book',
     prices: { 'kaki-lima': 35000, 'umkm': 70000, 'e-comm': 175000 },
     image: 'https://placehold.co/400x300/F1C40F/FFFFFF.png',
-    category: 'Desain Digital & Event',
+    category: 'desain-digital-event',
     dataAiHint: 'ebook cover',
   },
   {
@@ -163,7 +170,7 @@ export const services: Service[] = [
     name: 'Desain Gerbang Acara (Gate)',
     prices: { 'kaki-lima': 70000, 'umkm': 150000, 'e-comm': 375000 },
     image: 'https://placehold.co/400x300/E67E22/FFFFFF.png',
-    category: 'Desain Digital & Event',
+    category: 'desain-digital-event',
     dataAiHint: 'event gate',
   },
   {
@@ -171,7 +178,7 @@ export const services: Service[] = [
     name: 'Desain Slide Presentasi (PPT)',
     prices: { 'kaki-lima': 70000, 'umkm': 150000, 'e-comm': 425000 },
     image: 'https://placehold.co/400x300/E74C3C/FFFFFF.png',
-    category: 'Desain Digital & Event',
+    category: 'desain-digital-event',
     dataAiHint: 'presentation slide',
   },
   {
@@ -179,7 +186,7 @@ export const services: Service[] = [
     name: 'Desain Visual Landing Page',
     prices: { 'kaki-lima': 125000, 'umkm': 350000, 'e-comm': 950000 },
     image: 'https://placehold.co/400x300/95A5A6/FFFFFF.png',
-    category: 'Desain Digital & Event',
+    category: 'desain-digital-event',
     dataAiHint: 'web page',
   },
 ];

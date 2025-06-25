@@ -31,6 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { mockCategories } from "@/lib/data";
 
 const productFormSchema = z.object({
   id: z.string(),
@@ -52,13 +53,6 @@ interface ProductFormDialogProps {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
 }
-
-const productCategories = [
-  "Konten Media Sosial",
-  "Branding & Kantor",
-  "Materi Promosi",
-  "Desain Digital & Event",
-]
 
 export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductFormDialogProps) {
   const { toast } = useToast()
@@ -146,9 +140,9 @@ export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductForm
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {productCategories.map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {category}
+                      {mockCategories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
                         </SelectItem>
                       ))}
                     </SelectContent>

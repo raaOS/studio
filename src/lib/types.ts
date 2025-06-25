@@ -113,3 +113,8 @@ export type MeetActivityLog = {
   timestamp: string;
   trigger: string;
 };
+
+export type Category = {
+  id: string;
+  name: string;
+};

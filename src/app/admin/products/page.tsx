@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { services } from '@/lib/data';
+import { services, mockCategories } from '@/lib/data';
 import { formatRupiah } from '@/lib/utils';
 import { PlusCircle, MoreHorizontal } from 'lucide-react';
 import type { Service } from '@/lib/types';
@@ -43,6 +43,10 @@ export default function AdminProductsPage() {
       description: `Produk "${service.name}" telah dihapus (simulasi).`,
       variant: 'destructive',
     });
+  }
+  
+  const getCategoryName = (categoryId: string) => {
+    return mockCategories.find(c => c.id === categoryId)?.name || categoryId;
   }
 
   return (
@@ -77,7 +81,7 @@ export default function AdminProductsPage() {
                   services.map((service: Service) => (
                     <TableRow key={service.id}>
                       <TableCell className="font-medium">{service.name}</TableCell>
-                      <TableCell>{service.category}</TableCell>
+                      <TableCell>{getCategoryName(service.category)}</TableCell>
                       <TableCell>{formatRupiah(service.prices['kaki-lima'])}</TableCell>
                       <TableCell>{formatRupiah(service.prices['umkm'])}</TableCell>
                       <TableCell>{formatRupiah(service.prices['e-comm'])}</TableCell>
