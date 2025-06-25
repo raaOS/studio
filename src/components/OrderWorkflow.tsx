@@ -1,135 +1,255 @@
 "use client";
 
-import { useMemo, useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import type { BudgetItem, Service } from '@/lib/types';
-import { budgetItems, services } from '@/lib/data';
+// Components
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { CustomerForm } from '@/components/CustomerForm';
 import { ServiceCard } from '@/components/ServiceCard';
 import { OrderSummary } from '@/components/OrderSummary';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { FloatingCart } from '@/components/FloatingCart';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from '@/components/ui/input';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import { User, Phone, Send, ChevronRight, ArrowRight } from 'lucide-react';
+
+// Hooks & Context
 import { useCart } from '@/contexts/CartContext';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useToast } from "@/hooks/use-toast";
+
+// Data & Types
+import { budgetItems, services } from '@/lib/data';
+import type { BudgetItem, Service, Customer } from '@/lib/types';
+
+// Form Schema
+const initialInfoFormSchema = z.object({
+  name: z.string().min(2, { message: "Nama harus diisi, minimal 2 karakter." }),
+  phone: z.string().min(10, { message: "Nomor telepon tidak valid." }),
+  telegram: z.string().min(3, { message: "Username Telegram tidak valid." }).startsWith('@', { message: 'Username harus diawali dengan @' }),
+  paymentMethod: z.enum(['dp', 'lunas'], { required_error: 'Pilih metode pembayaran.' }),
+});
+type InitialInfoFormValues = z.infer<typeof initialInfoFormSchema>;
+
 
 export function OrderWorkflow() {
-  const { selectedBudget, setSelectedBudget, clearCart } = useCart();
-  const [customerDataSubmitted, setCustomerDataSubmitted] = useState(false);
+  const { selectedBudget, setSelectedBudget, clearCart, setPaymentMethod } = useCart();
+  const [infoSubmitted, setInfoSubmitted] = useState(false);
   const isMobile = useIsMobile();
+  const { toast } = useToast();
+
+  const form = useForm<InitialInfoFormValues>({
+    resolver: zodResolver(initialInfoFormSchema),
+    defaultValues: { name: "", phone: "", telegram: "", paymentMethod: "dp" },
+  });
   
+  function onInfoSubmit(data: InitialInfoFormValues) {
+    const customerData: Customer = { name: data.name, phone: data.phone, telegram: data.telegram };
+    localStorage.setItem('customerData', JSON.stringify(customerData));
+    setPaymentMethod(data.paymentMethod);
+    setInfoSubmitted(true);
+    toast({
+      title: "Data tersimpan!",
+      description: `Selamat datang, ${data.name}! Silakan pilih budget Anda.`,
+    });
+    setTimeout(() => {
+        document.getElementById('budget-selection-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }
+
   const handleBudgetSelect = (budget: BudgetItem) => {
     if (selectedBudget?.id !== budget.id) {
         clearCart();
     }
     setSelectedBudget(budget);
-    setCustomerDataSubmitted(false); // Reset if budget changes
     setTimeout(() => {
-        document.getElementById('customer-form-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.getElementById('catalog-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 100);
   };
   
-  const handleCustomerSuccess = () => {
-    setCustomerDataSubmitted(true);
-    setTimeout(() => {
-        document.getElementById('catalog-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-  };
-
   const serviceCategories = useMemo(() => {
     if (!selectedBudget) return {};
-    // Since all services are available, we just group them by category
     return services.reduce((acc, service) => {
         (acc[service.category] = acc[service.category] || []).push(service);
         return acc;
     }, {} as Record<string, Service[]>);
   }, [selectedBudget]);
 
-
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow">
-        {/* Step 1: Budget Selection */}
-        <section className="text-center py-16 md:py-24 px-4">
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-4xl md:text-6xl font-headline font-bold text-foreground mb-4"
-          >
-            Wujudkan Desain Impian Anda
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto"
-          >
-            Pilih paket yang sesuai dengan budget Anda dan biarkan kami yang urus sisanya.
-          </motion.p>
+      <main className="flex-grow container mx-auto px-4 py-16">
+        
+        {/* Step 1: Customer Info & Payment */}
+        <section id="info-section" className="max-w-2xl mx-auto">
+           <Card>
+            <CardHeader>
+              <CardTitle className="font-headline text-2xl">Langkah 1: Data Diri & Pembayaran</CardTitle>
+              <CardDescription>
+                Isi data Anda untuk memulai proses pemesanan.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onInfoSubmit)} className="space-y-6">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Nama Lengkap</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                            <Input placeholder="John Doe" {...field} className="pl-10" />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Nomor Telepon (Aktif)</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                            <Input placeholder="081234567890" {...field} className="pl-10" />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="telegram"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Username Telegram</FormLabel>
+                        <FormControl>
+                        <div className="relative">
+                            <Send className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                            <Input placeholder="@johndoe" {...field} className="pl-10" />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="paymentMethod"
+                    render={({ field }) => (
+                        <FormItem className="space-y-3">
+                            <FormLabel>Cara Pembayaran</FormLabel>
+                             <FormControl>
+                                <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="flex pt-2 gap-6"
+                                >
+                                    <FormItem className="flex items-center space-x-3 space-y-0">
+                                        <FormControl>
+                                            <RadioGroupItem value="dp" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">
+                                            DP 50%
+                                        </FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-3 space-y-0">
+                                        <FormControl>
+                                            <RadioGroupItem value="lunas" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">
+                                            Lunas
+                                        </FormLabel>
+                                    </FormItem>
+                                </RadioGroup>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                   />
+                  <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+                    {form.formState.isSubmitting ? 'Memproses...' : 'Lanjut Pilih Budget'}
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
         </section>
 
-        <section className="px-4">
-          <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            {budgetItems.map((item, index) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-              >
-                <Card className={`text-center h-full flex flex-col hover:shadow-lg transition-all duration-300 ${selectedBudget?.id === item.id ? 'border-primary ring-2 ring-primary' : 'hover:border-primary'}`}>
-                  <CardHeader>
-                    <item.icon className="mx-auto h-12 w-12 text-primary mb-4" />
-                    <CardTitle className="font-headline">{item.title}</CardTitle>
-                    <CardDescription>{item.priceRange}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex-grow flex flex-col justify-between">
-                    <p className="text-muted-foreground mb-6">{item.description}</p>
-                    <Button onClick={() => handleBudgetSelect(item)} className="w-full">
-                      Pilih Paket Ini <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        {/* Step 2: Customer Form */}
+        {/* Step 2: Budget Selection */}
         <AnimatePresence>
-          {selectedBudget && (
+          {infoSubmitted && (
             <motion.section
-              id="customer-form-section"
-              className="mt-16 md:mt-24 px-4"
+              id="budget-selection-section"
+              className="py-16 md:py-24"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
             >
-              <CustomerForm selectedBudget={selectedBudget} onSuccess={handleCustomerSuccess} />
+              <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">Langkah 2: Pilih Budget Anda</h2>
+                <p className="text-lg text-muted-foreground mt-2">Pilih paket yang sesuai dengan kebutuhan Anda.</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {budgetItems.map((item, index) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
+                  >
+                    <Card className={`text-center h-full flex flex-col hover:shadow-lg transition-all duration-300 ${selectedBudget?.id === item.id ? 'border-primary ring-2 ring-primary' : 'hover:border-primary'}`}>
+                      <CardHeader>
+                        <item.icon className="mx-auto h-12 w-12 text-primary mb-4" />
+                        <CardTitle className="font-headline">{item.title}</CardTitle>
+                        <CardDescription>{item.priceRange}</CardDescription>
+                      </CardHeader>
+                      <CardContent className="flex-grow flex flex-col justify-between">
+                        <p className="text-muted-foreground mb-6">{item.description}</p>
+                        <Button onClick={() => handleBudgetSelect(item)} className="w-full">
+                          Pilih Paket Ini <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
             </motion.section>
           )}
         </AnimatePresence>
         
         {/* Step 3: Catalog and Order Summary */}
         <AnimatePresence>
-        {customerDataSubmitted && selectedBudget && (
+        {infoSubmitted && selectedBudget && (
             <motion.section
                 id="catalog-section"
-                className="container mx-auto px-4 py-8 flex-grow mt-16 md:mt-24"
+                className="pt-8 flex-grow"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
             >
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">Langkah 3: Pilih Layanan</h2>
+                    <p className="text-lg text-muted-foreground mt-2">Tambahkan layanan ke keranjang Anda.</p>
+                </div>
                 <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-8">
                     <div className="lg:col-span-8 xl:col-span-9">
-                        <h2 className="text-3xl font-headline font-bold mb-8">Langkah 3: Pilih Layanan untuk {selectedBudget.title}</h2>
                         {Object.entries(serviceCategories).map(([category, servicesInCategory], categoryIndex) => (
                             <div key={category} className="mb-12">
                                 <motion.h3

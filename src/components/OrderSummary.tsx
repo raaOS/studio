@@ -3,8 +3,6 @@
 import { useCart } from "@/contexts/CartContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { ShoppingCart, Trash2 } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
@@ -14,7 +12,8 @@ import { useState, useEffect } from "react";
 import type { Customer } from "@/lib/types";
 
 export function OrderSummary() {
-    const { cartItems, totalPrice, totalItems, paymentMethod, setPaymentMethod, updateItemQuantity, clearCart } = useCart();
+    // Removed setPaymentMethod as it's now handled upstream
+    const { cartItems, totalPrice, totalItems, paymentMethod, updateItemQuantity, clearCart } = useCart();
     const { toast } = useToast();
     const [customer, setCustomer] = useState<Customer | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -119,7 +118,7 @@ Terima kasih!`;
                                     <p className="font-medium">{item.name} <span className="text-muted-foreground">x{item.quantity}</span></p>
                                     <p className="text-muted-foreground">{formatRupiah(item.price * item.quantity)}</p>
                                 </div>
-                                <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={() => updateItemQuantity(item.id, 0)}>
+                                <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={() => updateItemQuantity(item, 0)}>
                                     <Trash2 className="h-4 w-4 text-destructive" />
                                 </Button>
                             </div>
@@ -129,22 +128,6 @@ Terima kasih!`;
                     <p className="text-muted-foreground text-center py-8">Keranjang Anda kosong.</p>
                 )}
                 
-                <Separator />
-                
-                <div className="space-y-2">
-                    <Label>Metode Pembayaran</Label>
-                    <RadioGroup value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'dp' | 'lunas')} className="flex gap-4">
-                        <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="dp" id="dp" />
-                            <Label htmlFor="dp">DP 50%</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="lunas" id="lunas" />
-                            <Label htmlFor="lunas">Lunas</Label>
-                        </div>
-                    </RadioGroup>
-                </div>
-
                 <Separator />
 
                 <div className="space-y-1 text-lg">
