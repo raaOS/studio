@@ -189,7 +189,7 @@ export default function AdminLayout({
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="#">
+                        <Link href="/admin/automation/drive">
                           <Folder />
                           Drive
                         </Link>

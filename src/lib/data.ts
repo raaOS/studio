@@ -1,4 +1,4 @@
-import type { BudgetItem, Service, Order, Promo, Coupon, Banner, AdminUser } from '@/lib/types';
+import type { BudgetItem, Service, Order, Promo, Coupon, Banner, AdminUser, DriveActivityLog } from '@/lib/types';
 import { Briefcase, ShoppingCart, Store } from 'lucide-react';
 
 export const budgetItems: BudgetItem[] = [
@@ -347,4 +347,12 @@ export const mockAdminUsers: AdminUser[] = [
     status: 'Inactive',
     avatar: 'https://placehold.co/40x40.png'
   }
+];
+
+export const mockDriveActivityLogs: DriveActivityLog[] = [
+  { id: 'd1', orderId: '#002', activity: 'Folder Created', timestamp: '2024-05-22 10:05 AM', user: 'System' },
+  { id: 'd2', orderId: '#002', activity: 'File Uploaded: initial_brief.pdf', timestamp: '2024-05-22 10:06 AM', user: 'System' },
+  { id: 'd3', orderId: '#003', activity: 'Folder Created', timestamp: '2024-05-23 09:00 AM', user: 'System' },
+  { id: 'd4', orderId: '#004', activity: 'Folder Created', timestamp: '2024-05-24 11:30 AM', user: 'System' },
+  { id: 'd5', orderId: '#004', activity: 'File Uploaded: final_assets.zip', timestamp: '2024-05-25 04:15 PM', user: 'Admin' },
 ];

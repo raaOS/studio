@@ -87,3 +87,11 @@ export type AdminUser = {
   status: 'Active' | 'Inactive';
   avatar: string;
 };
+
+export type DriveActivityLog = {
+  id: string;
+  orderId: string;
+  activity: string;
+  timestamp: string;
+  user: string;
+};
