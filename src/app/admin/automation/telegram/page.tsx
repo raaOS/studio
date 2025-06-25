@@ -20,7 +20,7 @@ const notificationSettings = [
 
 export default function TelegramAutomationPage() {
     const { toast } = useToast();
-    const [testTelegramId, setTestTelegramId] = useState('');
+    const [testTelegramId, setTestTelegramId] = useState('6116803120');
     const [isTesting, setIsTesting] = useState(false);
 
     const handleTestMessage = async () => {
@@ -47,12 +47,12 @@ export default function TelegramAutomationPage() {
                     description: `Pesan berhasil dikirim ke ID ${testTelegramId}.`,
                 });
             } else {
-                throw new Error('Simulated API call failed.');
+                throw new Error('Telegram API call failed. Check console for details.');
             }
         } catch (error) {
             toast({
                 title: 'Gagal Mengirim Pesan',
-                description: 'Terjadi kesalahan saat pengujian. Periksa kembali pengaturan Anda.',
+                description: 'Terjadi kesalahan. Pastikan Token Bot dan Chat ID sudah benar.',
                 variant: 'destructive',
             });
         } finally {
@@ -77,11 +77,11 @@ export default function TelegramAutomationPage() {
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="bot-token">Bot Token</Label>
-                                <Input id="bot-token" type="password" placeholder="••••••••••••••••••••••••••" defaultValue="SECRET_BOT_TOKEN" />
+                                <Input id="bot-token" type="password" placeholder="••••••••••••••••••••••••••" defaultValue="7441750744:AAE9ZpwiJ65DQHzmoyfhBdTzuXC2G3P7nFA" />
                             </div>
                              <div className="space-y-2">
                                 <Label htmlFor="admin-chat-id">Admin Chat ID</Label>
-                                <Input id="admin-chat-id" placeholder="Contoh: 123456789" defaultValue="ADMIN_CHAT_ID" />
+                                <Input id="admin-chat-id" placeholder="Contoh: 123456789" defaultValue="6116803120" />
                                 <p className="text-xs text-muted-foreground">ID ini akan menerima notifikasi untuk admin.</p>
                             </div>
                         </CardContent>
