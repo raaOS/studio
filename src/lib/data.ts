@@ -1,4 +1,4 @@
-import type { BudgetItem, Service, Order, Promo, Coupon, Banner, AdminUser, DriveActivityLog, CalendarActivityLog, MeetActivityLog, Category } from '@/lib/types';
+import type { BudgetItem, Service, Order, Promo, Coupon, Banner, AdminUser, DriveActivityLog, CalendarActivityLog, MeetActivityLog, Category, CustomerProfile } from '@/lib/types';
 import { Briefcase, ShoppingCart, Store } from 'lucide-react';
 
 export const budgetItems: BudgetItem[] = [
@@ -323,6 +323,34 @@ export const mockOrders: Order[] = [
     pekan: 'W2',
   }
 ];
+
+// Generate mock customer data from orders
+const customerData = new Map<string, { id: string; name: string; email: string; telegram: string; totalOrders: number; ltv: number; lastOrderDate: string }>();
+
+mockOrders.forEach((order, index) => {
+  const customerName = order.customerName;
+  if (!customerData.has(customerName)) {
+    customerData.set(customerName, {
+      id: `cust-${index + 1}`,
+      name: customerName,
+      email: `${customerName.toLowerCase().replace(/\s/g, '.')}@example.com`,
+      telegram: order.customerTelegram,
+      totalOrders: 0,
+      ltv: 0,
+      lastOrderDate: '1970-01-01',
+      avatar: `https://i.pravatar.cc/40?u=${customerName}`
+    });
+  }
+
+  const currentCustomer = customerData.get(customerName)!;
+  currentCustomer.totalOrders += 1;
+  currentCustomer.ltv += order.total;
+  if (order.date > currentCustomer.lastOrderDate) {
+    currentCustomer.lastOrderDate = order.date;
+  }
+});
+
+export const mockCustomers: CustomerProfile[] = Array.from(customerData.values());
 
 export const mockPromos: Promo[] = [
   {

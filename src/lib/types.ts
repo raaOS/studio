@@ -90,6 +90,17 @@ export type AdminUser = {
   avatar: string;
 };
 
+export type CustomerProfile = {
+  id: string;
+  name: string;
+  email: string;
+  telegram: string;
+  avatar: string;
+  totalOrders: number;
+  ltv: number; // Lifetime Value
+  lastOrderDate: string;
+};
+
 export type DriveActivityLog = {
   id: string;
   orderId: string;

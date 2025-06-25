@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { mockOrders } from '@/lib/data';
+import { mockOrders, mockCustomers } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import type { OrderStatus } from '@/lib/types';
 
@@ -55,6 +55,10 @@ export default function AdminOrdersPage() {
       case 'Batal': return 'bg-red-500/20 text-red-700 border-red-500/30';
       default: return 'bg-gray-500/20 text-gray-700 border-gray-500/30';
     }
+  };
+
+  const getCustomerId = (customerName: string) => {
+    return mockCustomers.find(c => c.name === customerName)?.id || '';
   };
 
   return (
@@ -115,7 +119,11 @@ export default function AdminOrdersPage() {
                 filteredOrders.map(order => (
                   <TableRow key={order.id}>
                     <TableCell className="font-medium">{order.id}</TableCell>
-                    <TableCell>{order.customerName}</TableCell>
+                    <TableCell>
+                       <Link href={`/admin/customers/${getCustomerId(order.customerName)}`} className="hover:underline text-primary">
+                        {order.customerName}
+                      </Link>
+                    </TableCell>
                     <TableCell>{order.budget}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className={cn("capitalize", getStatusClass(order.status))}>

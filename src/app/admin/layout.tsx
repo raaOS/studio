@@ -63,6 +63,14 @@ export default function AdminLayout({
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
+                        <Link href="/admin/customers">
+                          <Users />
+                          Pelanggan
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
                         <Link href="/admin/payments">
                           <CreditCard />
                           Pembayaran
