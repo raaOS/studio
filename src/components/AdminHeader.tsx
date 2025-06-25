@@ -18,7 +18,7 @@ export function AdminHeader() {
         <div className="flex-1">
             <Link href="/admin">
                 <h1 className="text-xl font-headline font-bold text-foreground">
-                    Make it Better Studio - Admin Panel
+                    Urgent Studio - Admin Panel
                 </h1>
             </Link>
         </div>
