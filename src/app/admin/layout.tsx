@@ -205,7 +205,7 @@ export default function AdminLayout({
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="#">
+                        <Link href="/admin/automation/meet">
                           <Video />
                           Meet
                         </Link>

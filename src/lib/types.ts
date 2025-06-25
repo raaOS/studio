@@ -103,3 +103,11 @@ export type CalendarActivityLog = {
   timestamp: string;
   trigger: string;
 };
+
+export type MeetActivityLog = {
+  id: string;
+  orderId: string;
+  activity: string;
+  timestamp: string;
+  trigger: string;
+};
