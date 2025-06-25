@@ -20,6 +20,43 @@ const notificationSettings = [
   { id: 'order-completed', label: 'Notifikasi Pesanan Selesai', description: 'Beritahu klien saat pesanan selesai dan file final dikirim.', defaultChecked: true },
 ];
 
+type BotStatus = 'idle' | 'checking' | 'approved' | 'rejected';
+
+const StatusIndicator = ({ status, message }: { status: BotStatus, message: string }) => {
+    let indicator = null;
+
+    if (status === 'checking') {
+        indicator = (
+            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span>{message}</span>
+            </div>
+        );
+    } else if (status === 'approved') {
+        indicator = (
+            <div className="flex items-center gap-2 text-green-600 text-sm">
+            <CheckCircle className="h-4 w-4" />
+            <span>{message}</span>
+            </div>
+        );
+    } else if (status === 'rejected') {
+        indicator = (
+            <div className="flex items-center gap-2 text-destructive text-sm">
+            <XCircle className="h-4 w-4" />
+            <span>{message}</span>
+            </div>
+        );
+    }
+
+    if(status === 'idle' || !indicator) return null;
+
+    return (
+        <div className="flex flex-col gap-2 flex-grow">
+            {indicator}
+        </div>
+    );
+};
+
 export default function TelegramAutomationPage() {
     const { toast } = useToast();
     const [adminChatId, setAdminChatId] = useState('');
@@ -28,7 +65,7 @@ export default function TelegramAutomationPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [webhookUrl, setWebhookUrl] = useState('');
 
-    const [botStatus, setBotStatus] = useState<'idle' | 'checking' | 'approved' | 'rejected'>('idle');
+    const [botStatus, setBotStatus] = useState<BotStatus>('idle');
     const [botStatusMessage, setBotStatusMessage] = useState('');
 
     useEffect(() => {
@@ -119,39 +156,6 @@ export default function TelegramAutomationPage() {
         }
     };
     
-    const StatusIndicator = () => {
-        let indicator = null;
-
-        if (botStatus === 'checking') {
-            indicator = (
-                <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>{botStatusMessage}</span>
-                </div>
-            );
-        } else if (botStatus === 'approved') {
-            indicator = (
-                <div className="flex items-center gap-2 text-green-600 text-sm">
-                <CheckCircle className="h-4 w-4" />
-                <span>{botStatusMessage}</span>
-                </div>
-            );
-        } else if (botStatus === 'rejected') {
-            indicator = (
-                <div className="flex items-center gap-2 text-destructive text-sm">
-                <XCircle className="h-4 w-4" />
-                <span>{botStatusMessage}</span>
-                </div>
-            );
-        }
-
-        return (
-            <div className="flex flex-col gap-2 flex-grow">
-                {indicator}
-            </div>
-        );
-    };
-
     return (
         <div className="space-y-8">
             <div>
@@ -219,7 +223,7 @@ export default function TelegramAutomationPage() {
                                Verifikasi Token
                             </Button>
                            </div>
-                           <StatusIndicator />
+                           <StatusIndicator status={botStatus} message={botStatusMessage} />
                         </CardFooter>
                     </Card>
 
