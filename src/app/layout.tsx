@@ -1,11 +1,26 @@
 import type {Metadata} from 'next';
+import { Inter, Poppins } from 'next/font/google';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
+import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'Urgent Studio',
   description: 'yang urgent-urgent aja',
 };
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['600', '700'],
+  variable: '--font-poppins',
+});
 
 export default function RootLayout({
   children,
@@ -14,12 +29,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="light">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
-      </head>
-      <body className="font-body antialiased">
+      <body className={cn(
+        "font-body antialiased",
+        inter.variable,
+        poppins.variable
+      )}>
         {children}
         <Toaster />
       </body>
