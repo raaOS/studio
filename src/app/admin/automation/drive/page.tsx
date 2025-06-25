@@ -18,7 +18,7 @@ import { mockDriveActivityLogs } from '@/lib/data';
 import { FolderSync, Folder, Save, TestTube2, Info } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
-import { createDriveFolder } from '@/ai/flows/create-drive-folder';
+import { createOrderFolder } from '@/ai/flows/create-drive-folder';
 
 export default function DriveAutomationPage() {
   const { toast } = useToast();
@@ -39,7 +39,7 @@ export default function DriveAutomationPage() {
 
     setIsTesting(true);
     try {
-      const result = await createDriveFolder({
+      const result = await createOrderFolder({
         orderId: testOrderId,
         customerName: testCustomerName,
         folderTemplate: folderTemplate,
@@ -67,15 +67,15 @@ export default function DriveAutomationPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl md:text-3xl font-bold font-headline">Otomasi Google Drive</h1>
-        <p className="text-muted-foreground">Kelola folder proyek otomatis dan sinkronisasi file.</p>
+        <h1 className="text-2xl md:text-3xl font-bold font-headline">Otomasi Folder Proyek</h1>
+        <p className="text-muted-foreground">Kelola folder proyek otomatis untuk setiap pesanan.</p>
       </div>
 
        <Alert variant="default" className="bg-blue-50 border-blue-200 dark:bg-blue-950 dark:border-blue-800">
           <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           <AlertTitle className="text-blue-800 dark:text-blue-300">Mode Simulasi Aktif</AlertTitle>
           <AlertDescription className="text-blue-700 dark:text-blue-400">
-            Fitur otomasi Google Drive sedang berjalan dalam mode simulasi. Tidak ada koneksi nyata ke akun Google mana pun dan tidak ada folder yang akan dibuat. Ini 100% aman untuk pengujian.
+            Fitur otomasi folder sedang berjalan dalam mode simulasi. Tidak ada file atau koneksi nyata yang dibuat. Ini 100% aman untuk pengujian.
           </AlertDescription>
         </Alert>
 
@@ -161,7 +161,7 @@ export default function DriveAutomationPage() {
       <Card>
         <CardHeader>
           <CardTitle>Log Aktivitas (Simulasi)</CardTitle>
-          <CardDescription>Riwayat aktivitas sinkronisasi Google Drive yang disimulasikan.</CardDescription>
+          <CardDescription>Riwayat aktivitas sinkronisasi folder yang disimulasikan.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
