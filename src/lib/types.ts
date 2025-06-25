@@ -14,6 +14,7 @@ export type Service = {
   prices: { [key in BudgetTier]: number };
   image: string;
   category: string;
+  dataAiHint: string;
 };
 
 export type CartItem = {

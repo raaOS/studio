@@ -64,7 +64,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
           width={400}
           height={300}
           className="object-cover w-full h-48"
-          data-ai-hint="design service"
+          data-ai-hint={service.dataAiHint}
         />
       </CardHeader>
       <CardContent className="p-4 flex-grow">
