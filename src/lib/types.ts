@@ -1,5 +1,7 @@
+export type BudgetTier = 'kaki-lima' | 'umkm' | 'e-comm';
+
 export type BudgetItem = {
-  id: 'kaki-lima' | 'umkm' | 'e-comm';
+  id: BudgetTier;
   title: string;
   description: string;
   priceRange: string;
@@ -9,9 +11,8 @@ export type BudgetItem = {
 export type Service = {
   id: string;
   name: string;
-  price: number;
+  prices: { [key in BudgetTier]: number };
   image: string;
-  budgets: Array<BudgetItem['id']>;
   category: string;
 };
 

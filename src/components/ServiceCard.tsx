@@ -18,7 +18,7 @@ interface ServiceCardProps {
 }
 
 export function ServiceCard({ service }: ServiceCardProps) {
-  const { getItemQuantity, updateItemQuantity, updateBrief, cartItems } = useCart();
+  const { getItemQuantity, updateItemQuantity, updateBrief, cartItems, selectedBudget } = useCart();
   const quantity = getItemQuantity(service.id);
   const brief = cartItems.find(item => item.id === service.id)?.brief ?? {};
   
@@ -46,12 +46,14 @@ export function ServiceCard({ service }: ServiceCardProps) {
   }, [quantity, briefFields, service.name]);
 
   const handleQuantityChange = (newQuantity: number) => {
-    updateItemQuantity(service.id, newQuantity);
+    updateItemQuantity(service, newQuantity);
   };
   
   const handleBriefChange = (field: string, value: string) => {
     updateBrief(service.id, field, value);
   }
+
+  const price = selectedBudget ? service.prices[selectedBudget.id] : 0;
 
   return (
     <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg">
@@ -67,7 +69,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
       </CardHeader>
       <CardContent className="p-4 flex-grow">
         <CardTitle className="font-headline text-lg mb-2">{service.name}</CardTitle>
-        <p className="text-primary font-semibold text-xl">{formatRupiah(service.price)}</p>
+        <p className="text-primary font-semibold text-xl">{formatRupiah(price)}</p>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex flex-col items-start gap-4">
         <div className="flex justify-between items-center w-full">

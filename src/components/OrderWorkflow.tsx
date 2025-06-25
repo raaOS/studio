@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
@@ -15,13 +15,17 @@ import { ServiceCard } from '@/components/ServiceCard';
 import { OrderSummary } from '@/components/OrderSummary';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { FloatingCart } from '@/components/FloatingCart';
+import { useCart } from '@/contexts/CartContext';
 
 export function OrderWorkflow() {
-  const [selectedBudget, setSelectedBudget] = useState<BudgetItem | null>(null);
+  const { selectedBudget, setSelectedBudget, clearCart } = useCart();
   const [customerDataSubmitted, setCustomerDataSubmitted] = useState(false);
   const isMobile = useIsMobile();
   
   const handleBudgetSelect = (budget: BudgetItem) => {
+    if (selectedBudget?.id !== budget.id) {
+        clearCart();
+    }
     setSelectedBudget(budget);
     setCustomerDataSubmitted(false); // Reset if budget changes
     setTimeout(() => {
@@ -36,18 +40,14 @@ export function OrderWorkflow() {
     }, 100);
   };
 
-  const filteredServices = useMemo(() => {
-    if (!selectedBudget) return [];
-    return services.filter(service => service.budgets.includes(selectedBudget.id as any));
-  }, [selectedBudget]);
-
   const serviceCategories = useMemo(() => {
-    if (!filteredServices) return {};
-    return filteredServices.reduce((acc, service) => {
+    if (!selectedBudget) return {};
+    // Since all services are available, we just group them by category
+    return services.reduce((acc, service) => {
         (acc[service.category] = acc[service.category] || []).push(service);
         return acc;
     }, {} as Record<string, Service[]>);
-  }, [filteredServices]);
+  }, [selectedBudget]);
 
 
   return (
@@ -129,7 +129,7 @@ export function OrderWorkflow() {
             >
                 <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-8">
                     <div className="lg:col-span-8 xl:col-span-9">
-                        <h2 className="text-3xl font-headline font-bold mb-8">Langkah 3: Pilih Layanan untuk Budget {selectedBudget.title}</h2>
+                        <h2 className="text-3xl font-headline font-bold mb-8">Langkah 3: Pilih Layanan untuk {selectedBudget.title}</h2>
                         {Object.entries(serviceCategories).map(([category, servicesInCategory], categoryIndex) => (
                             <div key={category} className="mb-12">
                                 <motion.h3
