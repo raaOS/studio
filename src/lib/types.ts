@@ -67,3 +67,14 @@ export type Coupon = {
   period: string;
   status: 'Aktif' | 'Draft' | 'Expired';
 };
+
+export type Banner = {
+  id: string;
+  name: string;
+  position: 'Top Banner' | 'Hero Section' | 'Popup' | 'Footer';
+  period: string;
+  status: 'Aktif' | 'Draft' | 'Selesai';
+  image?: string;
+  content: string;
+  type: 'Image' | 'Text';
+};

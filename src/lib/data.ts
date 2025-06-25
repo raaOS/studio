@@ -1,4 +1,4 @@
-import type { BudgetItem, Service, Order, Promo, Coupon } from '@/lib/types';
+import type { BudgetItem, Service, Order, Promo, Coupon, Banner } from '@/lib/types';
 import { Briefcase, ShoppingCart, Store } from 'lucide-react';
 
 export const budgetItems: BudgetItem[] = [
@@ -280,5 +280,36 @@ export const mockCoupons: Coupon[] = [
     usage: '100/100',
     period: '12 Des',
     status: 'Expired',
+  },
+];
+
+export const mockBanners: Banner[] = [
+  {
+    id: 'b1',
+    name: 'Promo Akhir Tahun',
+    position: 'Top Banner',
+    period: '1-31 Des',
+    status: 'Aktif',
+    type: 'Text',
+    content: '🎉 PROMO AKHIR TAHUN - DISKON 25% SEMUA LAYANAN! 🎉 Gunakan kode: YEAR2024 | Berlaku s/d 31 Desember',
+  },
+  {
+    id: 'b2',
+    name: 'Promo Tahun Baru',
+    position: 'Top Banner',
+    period: '1-15 Jan',
+    status: 'Draft',
+    type: 'Image',
+    image: 'https://placehold.co/800x100.png',
+    content: 'Selamat Tahun Baru 2025!',
+  },
+  {
+    id: 'b3',
+    name: 'Promo Valentine',
+    position: 'Popup',
+    period: '1-14 Feb',
+    status: 'Draft',
+    type: 'Text',
+    content: '💖 Spesial Valentine, diskon 14% untuk semua paket branding! 💖',
   },
 ];
