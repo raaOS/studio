@@ -15,7 +15,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { mockDriveActivityLogs } from '@/lib/data';
-import { CheckCircle, FolderSync, Folder, Save, TestTube2 } from 'lucide-react';
+import { FolderSync, Folder, Save, TestTube2, Info } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { createDriveFolder } from '@/ai/flows/create-drive-folder';
 
@@ -70,29 +71,16 @@ export default function DriveAutomationPage() {
         <p className="text-muted-foreground">Kelola folder proyek otomatis dan sinkronisasi file.</p>
       </div>
 
+       <Alert variant="default" className="bg-blue-50 border-blue-200 dark:bg-blue-950 dark:border-blue-800">
+          <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+          <AlertTitle className="text-blue-800 dark:text-blue-300">Mode Simulasi Aktif</AlertTitle>
+          <AlertDescription className="text-blue-700 dark:text-blue-400">
+            Fitur otomasi Google Drive sedang berjalan dalam mode simulasi. Tidak ada koneksi nyata ke akun Google mana pun dan tidak ada folder yang akan dibuat. Ini 100% aman untuk pengujian.
+          </AlertDescription>
+        </Alert>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-2 space-y-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Pengaturan Utama</CardTitle>
-              <CardDescription>Hubungkan akun Google Anda untuk mengaktifkan integrasi.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-md">
-                    <div className="flex items-center gap-3">
-                        <Folder className="h-8 w-8 text-blue-500" />
-                        <div>
-                            <p className="font-semibold">urgentstudio.official@gmail.com</p>
-                            <Badge variant="outline" className="border-green-500/30 bg-green-500/20 text-green-700 mt-1">
-                                <CheckCircle className="mr-1 h-3 w-3" /> Terhubung
-                            </Badge>
-                        </div>
-                    </div>
-                    <Button variant="destructive">Putuskan Hubungan</Button>
-                </div>
-            </CardContent>
-          </Card>
-
           <Card>
             <CardHeader>
               <CardTitle>Struktur Folder</CardTitle>
@@ -120,7 +108,7 @@ export default function DriveAutomationPage() {
         <div className="lg:col-span-1 space-y-8">
           <Card className="sticky top-24">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><FolderSync /> Sinkronisasi</CardTitle>
+              <CardTitle className="flex items-center gap-2"><FolderSync /> Alur Sinkronisasi</CardTitle>
               <CardDescription>Atur file apa saja yang akan disinkronkan secara otomatis.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
@@ -138,8 +126,8 @@ export default function DriveAutomationPage() {
           </Card>
           <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2"><TestTube2 /> Uji Integrasi</CardTitle>
-                <CardDescription>Buat folder proyek tes untuk memastikan integrasi berjalan.</CardDescription>
+                <CardTitle className="flex items-center gap-2"><TestTube2 /> Uji Simulasi</CardTitle>
+                <CardDescription>Buat folder proyek tes untuk memastikan alur simulasi berjalan.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="space-y-2">
@@ -163,7 +151,7 @@ export default function DriveAutomationPage() {
             </CardContent>
             <CardFooter>
                 <Button className="w-full" onClick={handleTestDrive} disabled={isTesting}>
-                    {isTesting ? 'Membuat...' : <><FolderSync className="mr-2 h-4 w-4" /> Buat Folder Tes</>}
+                    {isTesting ? 'Menjalankan...' : <><FolderSync className="mr-2 h-4 w-4" /> Jalankan Simulasi</>}
                 </Button>
             </CardFooter>
           </Card>
@@ -172,8 +160,8 @@ export default function DriveAutomationPage() {
       
       <Card>
         <CardHeader>
-          <CardTitle>Log Aktivitas</CardTitle>
-          <CardDescription>Riwayat aktivitas sinkronisasi Google Drive.</CardDescription>
+          <CardTitle>Log Aktivitas (Simulasi)</CardTitle>
+          <CardDescription>Riwayat aktivitas sinkronisasi Google Drive yang disimulasikan.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
