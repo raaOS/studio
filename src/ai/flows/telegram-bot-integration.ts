@@ -15,6 +15,7 @@ const SendTelegramUpdateInputSchema = z.object({
   telegramId: z.string().describe('The Telegram user ID or @username to send the message to.'),
   orderId: z.string().describe('The ID of the order.'),
   updateMessage: z.string().describe('The message to send to the user.'),
+  botToken: z.string().describe('The Telegram Bot API Token.'),
 });
 export type SendTelegramUpdateInput = z.infer<typeof SendTelegramUpdateInputSchema>;
 
@@ -34,10 +35,10 @@ const sendTelegramUpdateFlow = ai.defineFlow(
     outputSchema: SendTelegramUpdateOutputSchema,
   },
   async (input) => {
-    const botToken = process.env.TELEGRAM_BOT_TOKEN?.trim();
+    const botToken = input.botToken?.trim();
 
-    if (!botToken || botToken === 'YOUR_BOT_TOKEN_HERE') {
-      console.error('TELEGRAM_BOT_TOKEN is not set in the .env file.');
+    if (!botToken) {
+      console.error('Telegram Bot Token is not provided.');
       return { success: false };
     }
 

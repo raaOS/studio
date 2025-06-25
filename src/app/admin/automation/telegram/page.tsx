@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from "@/hooks/use-toast";
-import { Send, TestTube2 } from 'lucide-react';
+import { Send, TestTube2, Save } from 'lucide-react';
 import { sendTelegramUpdate } from '@/ai/flows/telegram-bot-integration';
 
 const notificationSettings = [
@@ -20,14 +20,33 @@ const notificationSettings = [
 
 export default function TelegramAutomationPage() {
     const { toast } = useToast();
-    const [adminChatId, setAdminChatId] = useState('6116803120');
-    const [testTelegramId, setTestTelegramId] = useState(adminChatId);
+    const [botToken, setBotToken] = useState('');
+    const [adminChatId, setAdminChatId] = useState('');
+    const [testTelegramId, setTestTelegramId] = useState('');
     const [isTesting, setIsTesting] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+
+    useEffect(() => {
+        const savedToken = localStorage.getItem('telegramBotToken') ?? '7441750744:AAE9ZpwiJ65DQHzmoyfhBdTzuXC2G3P7nFA';
+        const savedAdminId = localStorage.getItem('telegramAdminChatId') ?? '6116803120';
+        setBotToken(savedToken);
+        setAdminChatId(savedAdminId);
+    }, []);
 
     useEffect(() => {
         setTestTelegramId(adminChatId);
     }, [adminChatId]);
-
+    
+    const handleSaveSettings = () => {
+        setIsSaving(true);
+        localStorage.setItem('telegramBotToken', botToken);
+        localStorage.setItem('telegramAdminChatId', adminChatId);
+        toast({
+            title: 'Pengaturan Disimpan!',
+            description: 'Token Bot dan ID Chat Admin telah disimpan di browser Anda.',
+        });
+        setTimeout(() => setIsSaving(false), 1000);
+    };
 
     const handleTestMessage = async () => {
         if (!testTelegramId) {
@@ -39,9 +58,19 @@ export default function TelegramAutomationPage() {
             return;
         }
 
+        if (!botToken) {
+            toast({
+                title: 'Token Bot dibutuhkan',
+                description: 'Mohon masukkan Token Bot Anda dan simpan pengaturan.',
+                variant: 'destructive',
+            });
+            return;
+        }
+
         setIsTesting(true);
         try {
             const result = await sendTelegramUpdate({
+                botToken: botToken,
                 telegramId: testTelegramId,
                 orderId: '#TEST-001',
                 updateMessage: 'Ini adalah pesan tes dari integrasi bot Telegram DesignFlow Studio.',
@@ -83,7 +112,13 @@ export default function TelegramAutomationPage() {
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="bot-token">Bot Token</Label>
-                                <Input id="bot-token" type="password" placeholder="••••••••••••••••••••••••••" defaultValue="7441750744:AAE9ZpwiJ65DQHzmoyfhBdTzuXC2G3P7nFA" />
+                                <Input 
+                                    id="bot-token" 
+                                    type="password" 
+                                    placeholder="Masukkan token bot Anda..." 
+                                    value={botToken}
+                                    onChange={(e) => setBotToken(e.target.value)}
+                                />
                             </div>
                              <div className="space-y-2">
                                 <Label htmlFor="admin-chat-id">Admin Chat ID</Label>
@@ -97,7 +132,9 @@ export default function TelegramAutomationPage() {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button>Simpan Pengaturan</Button>
+                            <Button onClick={handleSaveSettings} disabled={isSaving}>
+                                {isSaving ? 'Menyimpan...' : <><Save className="mr-2 h-4 w-4" /> Simpan Pengaturan</>}
+                            </Button>
                         </CardFooter>
                     </Card>
 
