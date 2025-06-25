@@ -9,9 +9,6 @@ import { useCart } from '@/contexts/CartContext';
 import { QuantityStepper } from '@/components/QuantityStepper';
 import type { Service } from '@/lib/types';
 import { formatRupiah } from '@/lib/utils';
-import { generateDynamicBrief } from '@/ai/flows/generate-dynamic-brief';
-import { useState, useEffect } from 'react';
-import { Skeleton } from './ui/skeleton';
 
 interface ServiceCardProps {
   service: Service;
@@ -21,29 +18,6 @@ export function ServiceCard({ service }: ServiceCardProps) {
   const { getItemQuantity, updateItemQuantity, updateBrief, cartItems, selectedBudget } = useCart();
   const quantity = getItemQuantity(service.id);
   const brief = cartItems.find(item => item.id === service.id)?.brief ?? {};
-  
-  const [briefFields, setBriefFields] = useState<string[] | null>(null);
-  const [isLoadingFields, setIsLoadingFields] = useState(false);
-
-  useEffect(() => {
-    const fetchFields = async () => {
-      if (quantity > 0 && !briefFields) {
-        setIsLoadingFields(true);
-        try {
-          const response = await generateDynamicBrief({ serviceName: service.name });
-          setBriefFields(response.briefFields);
-        } catch (error) {
-          console.error("Failed to generate brief fields:", error);
-          // Fallback to a generic field
-          setBriefFields(["Jelaskan detail yang Anda inginkan..."]);
-        } finally {
-          setIsLoadingFields(false);
-        }
-      }
-    };
-
-    fetchFields();
-  }, [quantity, briefFields, service.name]);
 
   const handleQuantityChange = (newQuantity: number) => {
     updateItemQuantity(service, newQuantity);
@@ -86,24 +60,13 @@ export function ServiceCard({ service }: ServiceCardProps) {
               transition={{ duration: 0.3 }}
             >
               <div className="w-full space-y-2">
-                {isLoadingFields ? (
-                  <>
-                    <Skeleton className="h-4 w-1/3" />
-                    <Skeleton className="h-20 w-full" />
-                  </>
-                ) : (
-                  briefFields?.map(field => (
-                    <div key={field} className="space-y-2">
-                      <Label htmlFor={`brief-${service.id}-${field}`}>{field}</Label>
-                      <Textarea
-                        id={`brief-${service.id}-${field}`}
-                        placeholder="..."
-                        value={brief[field] ?? ''}
-                        onChange={(e) => handleBriefChange(field, e.target.value)}
-                      />
-                    </div>
-                  ))
-                )}
+                <Label htmlFor={`brief-${service.id}`}>Brief</Label>
+                <Textarea
+                  id={`brief-${service.id}`}
+                  placeholder="Jelaskan detail yang Anda inginkan..."
+                  value={brief['detail'] ?? ''}
+                  onChange={(e) => handleBriefChange('detail', e.target.value)}
+                />
               </div>
             </motion.div>
           )}
