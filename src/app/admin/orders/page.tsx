@@ -19,6 +19,15 @@ import { mockOrders, mockCustomers } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import type { OrderStatus } from '@/lib/types';
 
+const allOrderStatuses: OrderStatus[] = [
+    'Menunggu Pembayaran', 'Masuk Antrian', 'Sedang Dikerjakan',
+    'Siap Kirim Pratinjau', 'Menunggu Respon Klien', 'Sedang Direvisi',
+    'Selesai', 'Perlu Tinjauan Owner', 'Eskalasi: Revisi di Luar Lingkup',
+    'Dibatalkan (Tidak Dibayar)', 'Dibatalkan (Refund 90%)',
+    'Tidak Puas (Refund 50%)', 'Ditutup (Tanpa Refund)'
+];
+
+
 export default function AdminOrdersPage() {
   const [filters, setFilters] = useState({
     status: 'All',
@@ -48,11 +57,33 @@ export default function AdminOrdersPage() {
   
   const getStatusClass = (status: OrderStatus) => {
     switch (status) {
+      // Positive flow
+      case 'Masuk Antrian': return 'bg-gray-500/20 text-gray-700 border-gray-500/30';
+      case 'Sedang Dikerjakan': return 'bg-blue-500/20 text-blue-700 border-blue-500/30';
+      case 'Siap Kirim Pratinjau': return 'bg-cyan-500/20 text-cyan-700 border-cyan-500/30';
+      case 'Sedang Direvisi': return 'bg-indigo-500/20 text-indigo-700 border-indigo-500/30';
+      case 'Selesai': return 'bg-green-500/20 text-green-700 border-green-500/30';
+
+      // Waiting statuses
+      case 'Menunggu Pembayaran': return 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30';
+      case 'Menunggu Respon Klien': return 'bg-amber-500/20 text-amber-700 border-amber-500/30';
+      
+      // Action needed statuses
+      case 'Perlu Tinjauan Owner': return 'bg-purple-500/20 text-purple-700 border-purple-500/30 font-bold';
+      case 'Eskalasi: Revisi di Luar Lingkup': return 'bg-orange-500/20 text-orange-700 border-orange-500/30 font-bold';
+
+      // Negative/Cancellation statuses
+      case 'Dibatalkan (Tidak Dibayar)': return 'bg-red-500/20 text-red-700 border-red-500/30';
+      case 'Dibatalkan (Refund 90%)': return 'bg-red-500/20 text-red-700 border-red-500/30';
+      case 'Tidak Puas (Refund 50%)': return 'bg-pink-500/20 text-pink-700 border-pink-500/30';
+      case 'Ditutup (Tanpa Refund)': return 'bg-neutral-500/20 text-neutral-700 border-neutral-500/30';
+      
+      // Legacy for transition
       case 'Antri': return 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30';
       case 'Kerja': return 'bg-blue-500/20 text-blue-700 border-blue-500/30';
       case 'Revisi': return 'bg-orange-500/20 text-orange-700 border-orange-500/30';
-      case 'Selesai': return 'bg-green-500/20 text-green-700 border-green-500/30';
       case 'Batal': return 'bg-red-500/20 text-red-700 border-red-500/30';
+
       default: return 'bg-gray-500/20 text-gray-700 border-gray-500/30';
     }
   };
@@ -68,16 +99,14 @@ export default function AdminOrdersPage() {
       <Card>
         <CardContent className="p-4 flex flex-col md:flex-row items-center gap-4">
           <Select value={filters.status} onValueChange={value => handleFilterChange('status', value)}>
-            <SelectTrigger className="w-full md:w-[180px]">
+            <SelectTrigger className="w-full md:w-[220px]">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">Semua Status</SelectItem>
-              <SelectItem value="Antri">Antri</SelectItem>
-              <SelectItem value="Kerja">Kerja</SelectItem>
-              <SelectItem value="Revisi">Revisi</SelectItem>
-              <SelectItem value="Selesai">Selesai</SelectItem>
-              <SelectItem value="Batal">Batal</SelectItem>
+              {allOrderStatuses.map(status => (
+                  <SelectItem key={status} value={status}>{status}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <Select value={filters.pekan} onValueChange={value => handleFilterChange('pekan', value)}>
@@ -132,10 +161,11 @@ export default function AdminOrdersPage() {
                     </TableCell>
                     <TableCell>{order.pekan}</TableCell>
                     <TableCell className="text-right space-x-2">
-                       {order.status === 'Antri' && <Button size="sm" variant="default">Mulai</Button>}
-                       {order.status === 'Kerja' && <Button size="sm" variant="default">Pratinjau</Button>}
-                       {order.status === 'Revisi' && <Button size="sm" variant="default">Update</Button>}
-                       {order.status === 'Revisi' && <Button size="sm" variant="outline">Chat</Button>}
+                       {order.status === 'Masuk Antrian' && <Button size="sm" variant="default">Mulai</Button>}
+                       {order.status === 'Sedang Dikerjakan' && <Button size="sm" variant="default">Pratinjau</Button>}
+                       {order.status === 'Sedang Direvisi' && <Button size="sm" variant="default">Update</Button>}
+                       {order.status === 'Menunggu Respon Klien' && <Button size="sm" variant="outline">Kirim Pengingat</Button>}
+                       {order.status === 'Perlu Tinjauan Owner' && <Button size="sm" variant="destructive">Tinjau</Button>}
                        <Button asChild size="sm" variant="ghost">
                           <Link href={`/admin/orders/${order.id.substring(1)}`}>Detail</Link>
                        </Button>

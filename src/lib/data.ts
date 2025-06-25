@@ -222,7 +222,7 @@ export const mockOrders: Order[] = [
     total: 88000,
     paymentMethod: 'lunas',
     paymentStatus: 'Lunas',
-    status: 'Antri',
+    status: 'Masuk Antrian',
     date: '2024-05-20',
     budget: 'UMKM',
     pekan: 'W1',
@@ -246,7 +246,7 @@ export const mockOrders: Order[] = [
     total: 75000,
     paymentMethod: 'dp',
     paymentStatus: 'DP',
-    status: 'Kerja',
+    status: 'Sedang Dikerjakan',
     date: '2024-05-22',
     budget: 'Kaki Lima',
     pekan: 'W1',
@@ -270,7 +270,7 @@ export const mockOrders: Order[] = [
     total: 950000,
     paymentMethod: 'lunas',
     paymentStatus: 'Lunas',
-    status: 'Revisi',
+    status: 'Menunggu Respon Klien',
     date: '2024-05-23',
     budget: 'E-Comm',
     pekan: 'W2',
@@ -317,15 +317,35 @@ export const mockOrders: Order[] = [
     total: 35000,
     paymentMethod: 'lunas',
     paymentStatus: 'Belum Lunas',
-    status: 'Antri',
+    status: 'Menunggu Pembayaran',
     date: '2024-05-25',
+    budget: 'Kaki Lima',
+    pekan: 'W2',
+  },
+  {
+    id: '#006',
+    customerName: 'Budi Santoso',
+    customerTelegram: '@budisan',
+    items: [
+      { 
+        name: 'Desain Lanyard / Tali ID Card', 
+        quantity: 10, 
+        price: 20000,
+        brief: { 'Detail': 'Desain lanyard untuk acara kantor.' }
+      },
+    ],
+    total: 200000,
+    paymentMethod: 'dp',
+    paymentStatus: 'DP',
+    status: 'Eskalasi: Revisi di Luar Lingkup',
+    date: '2024-05-26',
     budget: 'Kaki Lima',
     pekan: 'W2',
   }
 ];
 
 // Generate mock customer data from orders
-const customerData = new Map<string, { id: string; name: string; email: string; telegram: string; totalOrders: number; ltv: number; lastOrderDate: string }>();
+const customerData = new Map<string, { id: string; name: string; email: string; telegram: string; totalOrders: number; ltv: number; lastOrderDate: string; avatar: string; }>();
 
 mockOrders.forEach((order, index) => {
   const customerName = order.customerName;

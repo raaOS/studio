@@ -28,7 +28,8 @@ import {
   Send,
   Folder,
   Calendar,
-  Video
+  Video,
+  CircleDollarSign
 } from 'lucide-react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/AdminHeader';
@@ -76,6 +77,14 @@ export default function AdminLayout({
                           Pembayaran
                         </Link>
                       </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <Link href="/admin/refunds">
+                                <CircleDollarSign />
+                                Refund
+                            </Link>
+                        </SidebarMenuButton>
                     </SidebarMenuItem>
                      <SidebarMenuItem>
                       <SidebarMenuButton asChild>

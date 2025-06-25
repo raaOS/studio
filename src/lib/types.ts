@@ -19,7 +19,7 @@ export type Service = {
 
 export type CartItem = {
   id: string;
-  name: string;
+  name:string;
   price: number;
   quantity: number;
   brief: Record<string, string>;
@@ -32,7 +32,32 @@ export type Customer = {
   telegram: string;
 };
 
-export type OrderStatus = 'Antri' | 'Kerja' | 'Revisi' | 'Selesai' | 'Batal';
+// New, more detailed order status system
+export type OrderStatus = 
+  // Bot-driven statuses
+  | 'Menunggu Pembayaran'
+  | 'Masuk Antrian'
+  | 'Masuk Antrian (Minggu Depan)'
+  | 'Sedang Direvisi'
+  | 'Menunggu Respon Klien'
+  | 'Selesai'
+  // Owner-driven statuses
+  | 'Perlu Tinjauan Owner'
+  | 'Setujui Pembayaran Terlambat'
+  // Designer-driven statuses
+  | 'Sedang Dikerjakan'
+  | 'Siap Kirim Pratinjau'
+  | 'Eskalasi: Revisi di Luar Lingkup'
+  // Cancellation/Refund statuses
+  | 'Dibatalkan (Tidak Dibayar)'
+  | 'Dibatalkan (Refund 90%)'
+  | 'Tidak Puas (Refund 50%)'
+  | 'Ditutup (Tanpa Refund)'
+  // Legacy statuses for smooth transition (can be removed later)
+  | 'Antri' 
+  | 'Kerja' 
+  | 'Revisi' 
+  | 'Batal';
 
 export type Order = {
   id: string;
