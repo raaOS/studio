@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -23,29 +23,27 @@ const notificationSettings = [
 
 type BotStatus = 'idle' | 'checking' | 'approved' | 'rejected';
 
-const StatusIndicator = ({ status, message }: { status: BotStatus, message: string }) => {
+const StatusIndicator = ({ status, message }: { status: BotStatus; message: string }) => {
     if (status === 'idle') {
         return null;
     }
 
-    let icon = null;
-    let textColor = '';
+    const Icon = {
+        checking: <Loader2 className="h-4 w-4 animate-spin" />,
+        approved: <CheckCircle className="h-4 w-4" />,
+        rejected: <XCircle className="h-4 w-4" />,
+    }[status] || null;
 
-    if (status === 'checking') {
-        icon = <Loader2 className="h-4 w-4 animate-spin" />;
-        textColor = 'text-muted-foreground';
-    } else if (status === 'approved') {
-        icon = <CheckCircle className="h-4 w-4" />;
-        textColor = 'text-green-600';
-    } else if (status === 'rejected') {
-        icon = <XCircle className="h-4 w-4" />;
-        textColor = 'text-destructive';
-    }
+    const textColor = {
+        checking: 'text-muted-foreground',
+        approved: 'text-green-600',
+        rejected: 'text-destructive',
+    }[status] || '';
 
     return (
         <div className="flex flex-col gap-2 flex-grow">
             <div className={`flex items-center gap-2 text-sm ${textColor}`}>
-                {icon}
+                {Icon}
                 <span>{message}</span>
             </div>
         </div>
@@ -59,14 +57,12 @@ export default function TelegramAutomationPage() {
     const [isTesting, setIsTesting] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [webhookUrl, setWebhookUrl] = useState('');
-
     const [botStatus, setBotStatus] = useState<BotStatus>('idle');
     const [botStatusMessage, setBotStatusMessage] = useState('');
 
     useEffect(() => {
         const origin = typeof window !== 'undefined' ? window.location.origin : '';
-        const url = `${origin}/api/telegram/webhook`;
-        setWebhookUrl(url);
+        setWebhookUrl(`${origin}/api/telegram/webhook`);
     }, []);
 
     const handleVerifyBot = useCallback(async () => {
@@ -92,8 +88,10 @@ export default function TelegramAutomationPage() {
     }, [handleVerifyBot]);
 
     useEffect(() => {
-        const savedAdminId = localStorage.getItem('telegramAdminChatId') ?? '';
-        setAdminChatId(savedAdminId);
+        const savedAdminId = localStorage.getItem('telegramAdminChatId');
+        if (savedAdminId) {
+            setAdminChatId(savedAdminId);
+        }
     }, []);
 
     useEffect(() => {
