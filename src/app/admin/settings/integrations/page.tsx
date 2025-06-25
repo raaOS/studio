@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,6 +14,7 @@ const integrations = [
     description: 'Kirim notifikasi order, pengingat pembayaran, dan handle revisi otomatis.',
     icon: Send,
     connected: true,
+    href: '/admin/automation/telegram',
   },
   {
     id: 'google-drive',
@@ -20,13 +22,15 @@ const integrations = [
     description: 'Buat folder project otomatis untuk setiap pesanan dan kelola file dengan mudah.',
     icon: Folder,
     connected: true,
+    href: '/admin/automation/drive',
   },
   {
     id: 'google-meet',
     title: 'Google Meet',
     description: 'Jadwalkan meeting konsultasi otomatis untuk customer dengan revisi berlebih.',
     icon: Video,
-    connected: false,
+    connected: true,
+    href: '/admin/automation/meet',
   },
   {
     id: 'google-calendar',
@@ -34,6 +38,7 @@ const integrations = [
     description: 'Sinkronkan jadwal meeting dan deadline project langsung ke kalender Anda.',
     icon: Calendar,
     connected: true,
+    href: '/admin/automation/calendar',
   },
 ];
 
@@ -69,8 +74,10 @@ export default function AdminIntegrationsPage() {
               </div>
             </CardHeader>
             <CardFooter className="mt-auto bg-muted/50 p-4 border-t">
-              <Button variant="outline" className="w-full">
-                {integration.connected ? 'Kelola Pengaturan' : 'Hubungkan Sekarang'}
+              <Button asChild variant="outline" className="w-full">
+                <Link href={integration.href}>
+                  {integration.connected ? 'Kelola Pengaturan' : 'Hubungkan Sekarang'}
+                </Link>
               </Button>
             </CardFooter>
           </Card>
