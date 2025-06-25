@@ -1,1 +1,6 @@
-// Flows will be imported for their side effects in this file.
+import { config } from 'dotenv';
+config();
+
+import '@/ai/flows/telegram-bot-integration.ts';
+import '@/ai/flows/summarize-design-brief.ts';
+import '@/ai/flows/generate-meeting-agenda.ts';
