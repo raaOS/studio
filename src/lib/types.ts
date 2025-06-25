@@ -38,6 +38,7 @@ export type Order = {
     name: string;
     quantity: number;
     price: number;
+    brief: Record<string, string>;
   }[];
   total: number;
   paymentMethod: 'dp' | 'lunas';

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -83,7 +84,11 @@ export default function AdminPage() {
             <TableBody>
               {mockOrders.map((order) => (
                 <TableRow key={order.id}>
-                  <TableCell className="font-medium">{order.id}</TableCell>
+                  <TableCell className="font-medium">
+                    <Link href={`/admin/orders/${order.id.substring(1)}`} className="hover:underline text-primary">
+                        {order.id}
+                    </Link>
+                  </TableCell>
                   <TableCell>
                       <div className="font-medium">{order.customerName}</div>
                       <div className="text-sm text-muted-foreground">{order.customerTelegram}</div>

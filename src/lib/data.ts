@@ -98,8 +98,26 @@ export const mockOrders: Order[] = [
     customerName: 'Budi Santoso',
     customerTelegram: '@budisan',
     items: [
-      { name: 'Logo Design', quantity: 1, price: 150000 },
-      { name: 'Business Card', quantity: 2, price: 75000 },
+      { 
+        name: 'Logo Design', 
+        quantity: 1, 
+        price: 150000, 
+        brief: {
+          'Nama Brand': 'Kopi Senja',
+          'Slogan': 'Secangkir cerita di kala senja',
+          'Warna yang diinginkan': 'Coklat, oranye, dan krem'
+        }
+      },
+      { 
+        name: 'Business Card', 
+        quantity: 2, 
+        price: 75000,
+        brief: {
+          'Nama & Jabatan': 'Budi Santoso, Owner',
+          'Informasi Kontak': '0812345678, kopi.senja@email.com',
+          'Alamat': 'Jl. Kenangan No. 10, Jakarta'
+        }
+      },
     ],
     total: 300000,
     paymentMethod: 'lunas',
@@ -111,7 +129,16 @@ export const mockOrders: Order[] = [
     customerName: 'Siti Aminah',
     customerTelegram: '@sitia',
     items: [
-      { name: 'Paket Branding UMKM', quantity: 1, price: 450000 },
+      { 
+        name: 'Paket Branding UMKM', 
+        quantity: 1, 
+        price: 450000,
+        brief: {
+          'Deskripsi Usaha': 'Menjual aneka kue kering tradisional.',
+          'Target Pasar': 'Ibu rumah tangga dan acara keluarga.',
+          'Pesan yang ingin disampaikan': 'Rasa klasik, resep warisan.'
+        }
+      },
     ],
     total: 450000,
     paymentMethod: 'dp',
@@ -123,7 +150,16 @@ export const mockOrders: Order[] = [
     customerName: 'Rina Wijaya',
     customerTelegram: '@rinaw',
     items: [
-      { name: 'Social Media Post', quantity: 5, price: 80000 },
+      { 
+        name: 'Social Media Post', 
+        quantity: 5, 
+        price: 80000,
+        brief: {
+          'Tema Konten': 'Promosi diskon 50% untuk produk fashion.',
+          'Platform': 'Instagram & Facebook',
+          'Call to Action': 'Belanja sekarang, klik link di bio!'
+        }
+      },
     ],
     total: 400000,
     paymentMethod: 'lunas',
@@ -135,7 +171,16 @@ export const mockOrders: Order[] = [
     customerName: 'Agus Setiawan',
     customerTelegram: '@agusset',
     items: [
-        { name: 'Banner/Spanduk', quantity: 1, price: 200000 },
+        { 
+          name: 'Banner/Spanduk', 
+          quantity: 1, 
+          price: 200000,
+          brief: {
+            'Ukuran Banner': '3x1 meter',
+            'Teks Utama': 'Grand Opening Toko "Maju Jaya"',
+            'Informasi Tambahan': 'Diskon 20% selama minggu pertama.'
+          }
+        },
     ],
     total: 200000,
     paymentMethod: 'dp',

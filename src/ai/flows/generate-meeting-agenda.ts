@@ -22,7 +22,7 @@ const GenerateMeetingAgendaInputSchema = z.object({
 export type GenerateMeetingAgendaInput = z.infer<typeof GenerateMeetingAgendaInputSchema>;
 
 const GenerateMeetingAgendaOutputSchema = z.object({
-  agenda: z.string().describe('The generated meeting agenda.'),
+  agenda: z.string().describe('The generated meeting agenda in Markdown format.'),
 });
 export type GenerateMeetingAgendaOutput = z.infer<typeof GenerateMeetingAgendaOutputSchema>;
 
@@ -38,7 +38,7 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateMeetingAgendaOutputSchema},
   prompt: `You are an AI assistant designed to generate meeting agendas for client meetings.
 
-  Based on the provided order details, revision history, and customer communication logs, create a detailed agenda for the meeting.
+  Based on the provided order details, revision history, and customer communication logs, create a detailed agenda for the meeting in Markdown format.
   The agenda should include key discussion points, potential concerns to address, and a structured plan for the meeting.
 
   Order ID: {{{orderId}}}
@@ -46,7 +46,7 @@ const prompt = ai.definePrompt({
   Revision History: {{{revisionHistory}}}
   Customer Communication Logs: {{{customerCommunicationLogs}}}
 
-  Agenda:
+  Generate the agenda now.
 `,
 });
 
