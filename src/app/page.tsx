@@ -40,7 +40,6 @@ type InitialInfoFormValues = z.infer<typeof initialInfoFormSchema>;
 
 function OrderWorkflow() {
   const { selectedBudget, setSelectedBudget, clearCart, setPaymentMethod } = useCart();
-  const [infoSubmitted, setInfoSubmitted] = useState(false);
   const isMobile = useIsMobile();
   const { toast } = useToast();
 
@@ -53,14 +52,11 @@ function OrderWorkflow() {
     const customerData: Customer = { name: data.name, phone: data.phone, telegram: data.telegram };
     localStorage.setItem('customerData', JSON.stringify(customerData));
     setPaymentMethod(data.paymentMethod);
-    setInfoSubmitted(true);
     toast({
-      title: "Data tersimpan!",
-      description: `Selamat datang, ${data.name}! Silakan pilih budget Anda.`,
+      title: "Data Anda tersimpan!",
+      description: `Sekarang, silakan pilih budget dan layanan di bawah.`,
     });
-    setTimeout(() => {
-        document.getElementById('budget-selection-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 100);
+    document.getElementById('budget-selection-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   const handleBudgetSelect = (budget: BudgetItem) => {
@@ -181,7 +177,7 @@ function OrderWorkflow() {
                     )}
                    />
                   <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                    {form.formState.isSubmitting ? 'Memproses...' : 'Lanjut Pilih Budget'}
+                    {form.formState.isSubmitting ? 'Menyimpan...' : 'Simpan Data & Lanjut Memilih'}
                     <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
                 </form>
@@ -190,50 +186,38 @@ function OrderWorkflow() {
           </Card>
         </section>
 
-        <AnimatePresence>
-          {infoSubmitted && (
-            <motion.section
-              id="budget-selection-section"
-              className="py-16 md:py-24"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-            >
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">Langkah 2: Pilih Budget Anda</h2>
-                <p className="text-lg text-muted-foreground mt-2">Pilih paket yang sesuai dengan kebutuhan Anda.</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {budgetItems.map((item, index) => (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
-                  >
-                    <Card className={`text-center h-full flex flex-col hover:shadow-lg transition-all duration-300 ${selectedBudget?.id === item.id ? 'border-primary ring-2 ring-primary' : 'hover:border-primary'}`}>
-                      <CardHeader>
-                        <item.icon className="mx-auto h-12 w-12 text-primary mb-4" />
-                        <CardTitle className="font-headline">{item.title}</CardTitle>
-                        <CardDescription>{item.priceRange}</CardDescription>
-                      </CardHeader>
-                      <CardContent className="flex-grow flex flex-col justify-between">
-                        <p className="text-muted-foreground mb-6">{item.description}</p>
-                        <Button onClick={() => handleBudgetSelect(item)} className="w-full">
-                          Pilih Paket Ini <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.section>
-          )}
-        </AnimatePresence>
+        <section
+          id="budget-selection-section"
+          className="py-16 md:py-24"
+        >
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">Langkah 2: Pilih Budget Anda</h2>
+            <p className="text-lg text-muted-foreground mt-2">Pilih paket yang sesuai dengan kebutuhan Anda.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {budgetItems.map((item) => (
+              <Card 
+                key={item.id}
+                className={`text-center h-full flex flex-col hover:shadow-lg transition-all duration-300 ${selectedBudget?.id === item.id ? 'border-primary ring-2 ring-primary' : 'hover:border-primary'}`}
+              >
+                <CardHeader>
+                  <item.icon className="mx-auto h-12 w-12 text-primary mb-4" />
+                  <CardTitle className="font-headline">{item.title}</CardTitle>
+                  <CardDescription>{item.priceRange}</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-grow flex flex-col justify-between">
+                  <p className="text-muted-foreground mb-6">{item.description}</p>
+                  <Button onClick={() => handleBudgetSelect(item)} className="w-full">
+                    Pilih Paket Ini <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
         
         <AnimatePresence>
-        {infoSubmitted && selectedBudget && (
+        {selectedBudget && (
             <motion.section
                 id="catalog-section"
                 className="pt-8 flex-grow"
