@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'DesignFlow Studio',
-  description: 'Wujudkan Desain Impian Anda',
+  title: 'Urgent Studio',
+  description: 'yang urgent-urgent aja',
 };
 
 export default function RootLayout({

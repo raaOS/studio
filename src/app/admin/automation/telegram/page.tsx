@@ -73,7 +73,7 @@ export default function TelegramAutomationPage() {
                 botToken: botToken,
                 telegramId: testTelegramId,
                 orderId: '#TEST-001',
-                updateMessage: 'Ini adalah pesan tes dari integrasi bot Telegram DesignFlow Studio.',
+                updateMessage: 'Ini adalah pesan tes dari integrasi bot Telegram Urgent Studio.',
             });
 
             if (result.success) {

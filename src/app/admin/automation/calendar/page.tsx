@@ -57,7 +57,7 @@ export default function CalendarAutomationPage() {
             <CardContent className="space-y-4">
               <div>
                 <Label htmlFor="meeting-title">Template Judul Meeting</Label>
-                <Input id="meeting-title" defaultValue="Meeting: DesignFlow - [CustomerName] ([OrderID])" />
+                <Input id="meeting-title" defaultValue="Meeting: Urgent Studio - [CustomerName] ([OrderID])" />
               </div>
                <div>
                 <Label htmlFor="deadline-title">Template Judul Deadline</Label>

@@ -58,7 +58,7 @@ export default function MeetAutomationPage() {
             <CardContent className="space-y-4">
               <div>
                 <Label htmlFor="kickoff-title">Template Judul Kickoff Meeting</Label>
-                <Input id="kickoff-title" defaultValue="Kickoff: DesignFlow - [CustomerName] ([OrderID])" />
+                <Input id="kickoff-title" defaultValue="Kickoff: Urgent Studio - [CustomerName] ([OrderID])" />
               </div>
                <div>
                 <Label htmlFor="consultation-title">Template Judul Meeting Konsultasi</Label>

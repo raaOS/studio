@@ -8,7 +8,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-2">
           <Sparkles className="h-8 w-8 text-primary" />
           <h1 className="text-2xl font-headline font-bold text-foreground">
-            DesignFlow Studio
+            Urgent Studio
           </h1>
         </Link>
       </div>
