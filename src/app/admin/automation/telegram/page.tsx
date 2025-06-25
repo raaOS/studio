@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,8 +20,14 @@ const notificationSettings = [
 
 export default function TelegramAutomationPage() {
     const { toast } = useToast();
-    const [testTelegramId, setTestTelegramId] = useState('6116803120');
+    const [adminChatId, setAdminChatId] = useState('6116803120');
+    const [testTelegramId, setTestTelegramId] = useState(adminChatId);
     const [isTesting, setIsTesting] = useState(false);
+
+    useEffect(() => {
+        setTestTelegramId(adminChatId);
+    }, [adminChatId]);
+
 
     const handleTestMessage = async () => {
         if (!testTelegramId) {
@@ -52,7 +58,7 @@ export default function TelegramAutomationPage() {
         } catch (error) {
             toast({
                 title: 'Gagal Mengirim Pesan',
-                description: 'Terjadi kesalahan. Pastikan Token Bot dan Chat ID sudah benar.',
+                description: 'Terjadi kesalahan. Pastikan Token Bot dan Chat ID sudah benar, dan Anda sudah memulai chat dengan bot.',
                 variant: 'destructive',
             });
         } finally {
@@ -81,7 +87,12 @@ export default function TelegramAutomationPage() {
                             </div>
                              <div className="space-y-2">
                                 <Label htmlFor="admin-chat-id">Admin Chat ID</Label>
-                                <Input id="admin-chat-id" placeholder="Contoh: 123456789" defaultValue="6116803120" />
+                                <Input 
+                                    id="admin-chat-id" 
+                                    placeholder="Contoh: 123456789" 
+                                    value={adminChatId}
+                                    onChange={(e) => setAdminChatId(e.target.value)}
+                                />
                                 <p className="text-xs text-muted-foreground">ID ini akan menerima notifikasi untuk admin.</p>
                             </div>
                         </CardContent>
