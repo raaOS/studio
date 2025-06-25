@@ -181,7 +181,7 @@ export default function AdminLayout({
                   <SidebarMenu>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="#">
+                        <Link href="/admin/automation/telegram">
                           <Send />
                           Telegram
                         </Link>
