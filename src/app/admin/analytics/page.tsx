@@ -138,7 +138,7 @@ export default function AdminAnalyticsPage() {
                 </CardContent>
             </Card>
 
-             <Card>
+            <Card>
                 <CardHeader>
                     <CardTitle>Top Converting Budget</CardTitle>
                     <CardDescription>Budget yang paling banyak menghasilkan pesanan.</CardDescription>
@@ -152,18 +152,18 @@ export default function AdminAnalyticsPage() {
                                 <div className="w-32 h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '70%'}}></div></div>
                             </div>
                         </div>
-                         <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center">
                             <span>E-Comm</span>
-                             <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2">
                                 <span className="font-semibold">3.1%</span>
-                                <div className="w-32 h-2 bg-primary rounded-full" style={{width: '50%'}}></div></div>
+                                <div className="w-32 h-2 bg-primary rounded-full" style={{width: '50%'}}></div>
                             </div>
                         </div>
-                         <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center">
                             <span>Kaki Lima</span>
-                             <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2">
                                 <span className="font-semibold">2.5%</span>
-                                <div className="w-32 h-2 bg-primary rounded-full" style={{width: '40%'}}></div></div>
+                                <div className="w-32 h-2 bg-primary rounded-full" style={{width: '40%'}}></div>
                             </div>
                         </div>
                     </div>
