@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from "@/hooks/use-toast";
-import { Send, TestTube2, Save, Terminal, CheckCircle, XCircle, Loader2, RefreshCw } from 'lucide-react';
+import { Send, TestTube2, Save, Terminal, CheckCircle, XCircle, Loader2, RefreshCw, Webhook } from 'lucide-react';
 import { sendTelegramUpdate } from '@/ai/flows/telegram-bot-integration';
 import { verifyTelegramBot } from '@/ai/flows/verify-telegram-bot';
 
@@ -26,9 +26,16 @@ export default function TelegramAutomationPage() {
     const [testTelegramId, setTestTelegramId] = useState('');
     const [isTesting, setIsTesting] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [webhookUrl, setWebhookUrl] = useState('');
 
     const [botStatus, setBotStatus] = useState<'idle' | 'checking' | 'approved' | 'rejected'>('idle');
     const [botStatusMessage, setBotStatusMessage] = useState('');
+
+    useEffect(() => {
+        const origin = window.location.origin;
+        const url = `${origin}/api/telegram/webhook`;
+        setWebhookUrl(url);
+    }, []);
 
     const handleVerifyBot = async () => {
         setBotStatus('checking');
@@ -162,15 +169,36 @@ export default function TelegramAutomationPage() {
                         <CardContent className="space-y-4">
                             <Alert>
                               <Terminal className="h-4 w-4" />
-                              <AlertTitle>Pengaturan Token Bot</AlertTitle>
+                              <AlertTitle>Langkah 1: Pengaturan Token Bot</AlertTitle>
                               <AlertDescription>
                                 Untuk keamanan, Token Bot Telegram sekarang diatur melalui environment variable. Tambahkan baris berikut ke file `.env` Anda:
                                 <code className="block bg-muted text-foreground p-2 rounded-md my-2 text-sm">TELEGRAM_BOT_TOKEN="TOKEN_ANDA_DISINI"</code>
                                 Hubungi developer jika Anda tidak memiliki akses ke file ini.
                               </AlertDescription>
                             </Alert>
+
+                            <Alert>
+                              <Webhook className="h-4 w-4" />
+                              <AlertTitle>Langkah 2: Atur Webhook</AlertTitle>
+                              <AlertDescription>
+                                Agar bot bisa menerima pesan (seperti <code>/start</code>), Anda harus memberitahu Telegram alamat aplikasi Anda. Setelah mengatur token, ikuti langkah ini:
+                                <ol className="list-decimal list-inside my-2 space-y-1 text-xs">
+                                  <li>Salin token bot Anda dari file <strong>.env</strong>.</li>
+                                  <li>Ganti <strong>[TOKEN_BOT_ANDA]</strong> pada URL di bawah ini dengan token yang Anda salin.</li>
+                                  <li>Buka URL lengkap tersebut di tab browser baru (cukup sekali saja).</li>
+                                </ol>
+                                <code className="block bg-muted text-foreground p-2 rounded-md my-2 text-sm break-all">
+                                  https://api.telegram.org/bot[TOKEN_BOT_ANDA]/setWebhook?url={webhookUrl}
+                                </code>
+                                Jika berhasil, Anda akan melihat pesan seperti: <br />
+                                <code className="text-xs">{"{ok:true, description:\"Webhook was set\"}"}</code>.
+                                <br /><br />
+                                Setelah itu, kirim pesan <code>/start</code> ke bot Anda di Telegram untuk mendapatkan ID Chat Anda.
+                              </AlertDescription>
+                            </Alert>
+
                              <div className="space-y-2">
-                                <Label htmlFor="admin-chat-id">Admin Chat ID</Label>
+                                <Label htmlFor="admin-chat-id">Langkah 3: Admin Chat ID</Label>
                                 <Input 
                                     id="admin-chat-id" 
                                     placeholder="Contoh: 123456789" 
@@ -180,7 +208,7 @@ export default function TelegramAutomationPage() {
                                 <p className="text-xs text-muted-foreground">
                                     Ini adalah "alamat" Telegram pribadi Anda, <strong>BUKAN ID bot</strong>. Bot menggunakan ID ini untuk mengirim notifikasi khusus admin ke Anda.
                                     <br />
-                                    <strong>Cara mendapatkan ID Anda:</strong> Kirim pesan <code>/start</code> ke bot Anda, dan bot akan membalas dengan Chat ID Anda.
+                                    <strong>Cara mendapatkan ID Anda:</strong> Setelah menyelesaikan Langkah 2, kirim pesan <code>/start</code> ke bot Anda, dan bot akan membalas dengan Chat ID Anda.
                                 </p>
                             </div>
                         </CardContent>
