@@ -7,7 +7,7 @@ import {
   SidebarMenuButton,
   SidebarInset,
 } from '@/components/ui/sidebar';
-import { ShoppingCart, Users } from 'lucide-react';
+import { LayoutDashboard, ListTodo, Banknote, LineChart, CheckSquare, Wrench } from 'lucide-react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/AdminHeader';
 
@@ -25,18 +25,42 @@ export default function AdminLayout({
             <SidebarContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive>
+                  <SidebarMenuButton asChild>
                     <Link href="/admin">
-                      <ShoppingCart />
-                      Orders
+                      <LayoutDashboard />
+                      Dashboard
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="/admin/queue">
+                      <ListTodo />
+                      Antrian Pesanan
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="#">
+                      <Wrench />
+                      Kelola Pesanan
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <Link href="#">
-                      <Users />
-                      Customers
+                      <CheckSquare />
+                      Validasi Pembayaran
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="#">
+                      <LineChart />
+                      Laporan
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

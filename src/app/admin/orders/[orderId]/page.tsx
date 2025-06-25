@@ -1,182 +1,137 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useParams, notFound, useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useMemo, useState } from 'react';
+import { useParams, notFound } from 'next/navigation';
 import { mockOrders } from '@/lib/data';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Textarea } from '@/components/ui/textarea';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { formatRupiah, cn } from '@/lib/utils';
-import { summarizeDesignBrief } from '@/ai/flows/summarize-design-brief';
-import { generateMeetingAgenda } from '@/ai/flows/generate-meeting-agenda';
-import { ChevronLeft, FileText, Bot, CalendarPlus, Lightbulb } from 'lucide-react';
+import type { OrderStatus } from '@/lib/types';
+import { CheckCircle, Circle, MessageSquare, Send } from 'lucide-react';
+
+const timelineSteps: { status: OrderStatus; label: string }[] = [
+    { status: 'Antri', label: 'Pesanan Dibuat & Pembayaran Divalidasi' },
+    { status: 'Kerja', label: 'Mulai Pengerjaan' },
+    { status: 'Revisi', label: 'Kirim Pratinjau & Revisi' },
+    { status: 'Selesai', label: 'Selesai & File Dikirim' },
+];
 
 export default function OrderDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const orderId = `#${params.orderId}`;
 
-  const [briefSummary, setBriefSummary] = useState('');
-  const [isSummarizing, setIsSummarizing] = useState(false);
-  const [meetingAgenda, setMeetingAgenda] = useState('');
-  const [isGeneratingAgenda, setIsGeneratingAgenda] = useState(false);
-
   const order = useMemo(() => mockOrders.find(o => o.id === orderId), [orderId]);
+  const [currentStatus, setCurrentStatus] = useState<OrderStatus>(order?.status || 'Antri');
 
   if (!order) {
     notFound();
   }
 
-  const allBriefs = useMemo(() => order.items.map(item => item.brief).filter(brief => Object.keys(brief).length > 0), [order.items]);
-
-  const handleSummarize = async () => {
-    if (allBriefs.length === 0) return;
-    setIsSummarizing(true);
-    try {
-      const result = await summarizeDesignBrief({ designBriefs: allBriefs });
-      setBriefSummary(result.summary);
-    } catch (error) {
-      console.error('Failed to summarize brief:', error);
-      setBriefSummary('Gagal meringkas brief. Silakan coba lagi.');
-    } finally {
-      setIsSummarizing(false);
+  const getStatusClass = (status: OrderStatus) => {
+    switch (status) {
+      case 'Antri': return 'bg-yellow-500 hover:bg-yellow-500/90 text-yellow-50';
+      case 'Kerja': return 'bg-blue-500 hover:bg-blue-500/90 text-blue-50';
+      case 'Revisi': return 'bg-orange-500 hover:bg-orange-500/90 text-orange-50';
+      case 'Selesai': return 'bg-green-500 hover:bg-green-500/90 text-green-50';
+      case 'Batal': return 'bg-red-500 hover:bg-red-500/90 text-red-50';
+      default: return 'bg-gray-500 hover:bg-gray-500/90 text-gray-50';
     }
   };
 
-  const handleGenerateAgenda = async () => {
-    setIsGeneratingAgenda(true);
-    try {
-        const orderDetailsText = order.items.map(i => `${i.name} (x${i.quantity})`).join(', ');
-      const result = await generateMeetingAgenda({
-        orderId: order.id,
-        orderDetails: orderDetailsText,
-        revisionHistory: 'No revisions yet.',
-        customerCommunicationLogs: 'Initial order placement via website.',
-      });
-      setMeetingAgenda(result.agenda);
-    } catch (error) {
-        console.error('Failed to generate agenda:', error);
-        setMeetingAgenda('Gagal membuat agenda. Silakan coba lagi.');
-    } finally {
-        setIsGeneratingAgenda(false);
-    }
+  const isStepCompleted = (stepStatus: OrderStatus) => {
+    const stepIndex = timelineSteps.findIndex(s => s.status === stepStatus);
+    const currentIndex = timelineSteps.findIndex(s => s.status === currentStatus);
+    return stepIndex <= currentIndex;
   };
-
+  
   return (
-    <div className="space-y-8">
-        <Button variant="outline" size="sm" onClick={() => router.back()}>
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Back to Orders
-        </Button>
-      <h1 className="text-2xl md:text-3xl font-bold font-headline">Order Details: {order.id}</h1>
+    <div className="space-y-6">
+        <Card>
+            <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div>
+                    <CardTitle className="font-headline text-2xl">Pesanan {order.id} - {order.customerName}</CardTitle>
+                    <CardDescription>
+                        Budget: {order.budget} | Total: {formatRupiah(order.total)} | Pekan: {order.pekan}
+                    </CardDescription>
+                </div>
+                <Badge className={cn("capitalize w-fit mt-2 md:mt-0", getStatusClass(currentStatus))}>{currentStatus}</Badge>
+            </CardHeader>
+        </Card>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
             <Card>
                 <CardHeader>
-                    <CardTitle>Customer & Order Info</CardTitle>
+                    <CardTitle>Detail Pesanan</CardTitle>
                 </CardHeader>
-                <CardContent className="grid grid-cols-2 gap-4">
-                    <div>
-                        <p className="text-sm text-muted-foreground">Customer</p>
-                        <p className="font-medium">{order.customerName}</p>
-                        <p className="text-sm text-primary">{order.customerTelegram}</p>
-                    </div>
-                     <div>
-                        <p className="text-sm text-muted-foreground">Date</p>
-                        <p className="font-medium">{new Date(order.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric'})}</p>
-                    </div>
-                    <div>
-                        <p className="text-sm text-muted-foreground">Status</p>
-                        <Badge className={cn("capitalize text-xs font-medium", {
-                            "bg-chart-2 text-primary-foreground border-transparent hover:bg-chart-2/80": order.status === "Completed",
-                            "bg-primary text-primary-foreground border-transparent hover:bg-primary/80": order.status === "In Progress",
-                            "bg-accent text-accent-foreground border-transparent hover:bg-accent/80": order.status === "Pending",
-                            "bg-destructive text-destructive-foreground border-transparent hover:bg-destructive/80": order.status === "Cancelled",
-                        })}>{order.status}</Badge>
-                    </div>
-                    <div>
-                        <p className="text-sm text-muted-foreground">Payment</p>
-                        <p className="font-medium">{formatRupiah(order.total)} ({order.paymentMethod})</p>
+                <CardContent className="space-y-4">
+                    {order.items.map((item, index) => (
+                        <div key={index}>
+                            <p className="font-semibold">{item.name} (x{item.quantity})</p>
+                            <div className="text-sm text-muted-foreground pl-4 border-l-2 ml-2 mt-1 space-y-2 py-1">
+                                {Object.entries(item.brief).map(([question, answer]) => (
+                                    <div key={question}>
+                                        <p className="font-medium text-foreground/80">{question}</p>
+                                        <p>{answer}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                    <Separator />
+                    <h3 className="font-semibold pt-2">Info Kontak</h3>
+                    <div className="text-sm space-y-1">
+                        <p><strong>Nama:</strong> {order.customerName}</p>
+                        <p><strong>Telegram:</strong> <a href="#" className="text-primary hover:underline">{order.customerTelegram}</a></p>
                     </div>
                 </CardContent>
             </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><FileText /> Design Briefs</CardTitle>
-                    <CardDescription>Detail brief yang diberikan oleh pelanggan untuk setiap item.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    {allBriefs.length > 0 ? (
-                        <Accordion type="single" collapsible className="w-full">
-                        {order.items.map((item, index) => Object.keys(item.brief).length > 0 && (
-                            <AccordionItem key={item.name + index} value={`item-${index}`}>
-                                <AccordionTrigger>{item.name}</AccordionTrigger>
-                                <AccordionContent className="space-y-2">
-                                    {Object.entries(item.brief).map(([question, answer]) => (
-                                        <div key={question}>
-                                            <p className="font-semibold">{question}</p>
-                                            <p className="text-muted-foreground pl-2">{answer}</p>
-                                        </div>
-                                    ))}
-                                </AccordionContent>
-                            </AccordionItem>
-                        ))}
-                    </Accordion>
-                    ) : (
-                        <p className="text-muted-foreground text-center py-4">Tidak ada brief yang diberikan untuk pesanan ini.</p>
-                    )}
-                </CardContent>
-                {allBriefs.length > 0 && (
-                     <CardFooter>
-                        <Button onClick={handleSummarize} disabled={isSummarizing}>
-                            <Bot className="mr-2 h-4 w-4" />
-                            {isSummarizing ? 'Meringkas...' : 'Minta AI Ringkaskan Brief'}
-                        </Button>
-                    </CardFooter>
-                )}
-            </Card>
-
-            {briefSummary && (
-                <Alert>
-                    <Lightbulb className="h-4 w-4" />
-                    <AlertTitle>Ringkasan Brief dari AI</AlertTitle>
-                    <AlertDescription className="whitespace-pre-wrap">{briefSummary}</AlertDescription>
-                </Alert>
-            )}
-
         </div>
 
-        <div className="lg:col-span-1 space-y-8">
+        <div className="lg:col-span-1 space-y-6">
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><CalendarPlus /> Meeting Agenda</CardTitle>
-                    <CardDescription>Gunakan AI untuk membuat agenda meeting dengan klien.</CardDescription>
+                    <CardTitle>Timeline & Aksi</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {isGeneratingAgenda ? (
-                        <div className="space-y-2">
-                            <Skeleton className="h-4 w-3/4" />
-                            <Skeleton className="h-4 w-1/2" />
-                            <Skeleton className="h-20 w-full" />
-                        </div>
-                    ) : meetingAgenda ? (
-                         <div className="prose prose-sm max-w-none text-sm text-foreground whitespace-pre-wrap">{meetingAgenda}</div>
-                    ) : (
-                        <p className="text-sm text-muted-foreground">Belum ada agenda yang dibuat.</p>
-                    )}
+                    <ul className="space-y-4">
+                        {timelineSteps.map((step) => (
+                            <li key={step.status} className="flex items-start gap-3">
+                                {isStepCompleted(step.status) ? (
+                                    <CheckCircle className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                                ) : (
+                                    <Circle className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
+                                )}
+                                <span className={cn("text-sm", isStepCompleted(step.status) ? "font-semibold" : "text-muted-foreground")}>
+                                    {step.label}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
                 </CardContent>
-                <CardFooter>
-                    <Button onClick={handleGenerateAgenda} disabled={isGeneratingAgenda} className="w-full">
-                        <Bot className="mr-2 h-4 w-4" />
-                        {isGeneratingAgenda ? 'Membuat Agenda...' : 'Buat Agenda Meeting'}
+                <CardFooter className="flex flex-col gap-2">
+                    <div className='w-full space-y-2'>
+                        <label className='text-sm font-medium'>Ubah Status</label>
+                         <Select value={currentStatus} onValueChange={(value) => setCurrentStatus(value as OrderStatus)}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Pilih status baru..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {timelineSteps.map(s => <SelectItem key={s.status} value={s.status}>{s.status}</SelectItem>)}
+                                <SelectItem value="Batal">Batal</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <Button className="w-full mt-2">
+                        <Send className="mr-2 h-4 w-4" />
+                        Kirim Update
+                    </Button>
+                    <Button variant="outline" className="w-full">
+                        <MessageSquare className="mr-2 h-4 w-4" />
+                        Chat Klien
                     </Button>
                 </CardFooter>
             </Card>

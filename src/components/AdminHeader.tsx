@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Sparkles, UserCircle, LogOut } from 'lucide-react';
+import { UserCircle, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -17,10 +17,9 @@ export function AdminHeader() {
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center gap-4">
             <SidebarTrigger className="md:hidden" />
-            <Link href="/" className="flex items-center gap-2">
-                <Sparkles className="h-6 w-6 text-primary" />
+            <Link href="/admin">
                 <h1 className="text-xl font-headline font-bold text-foreground">
-                    DesignFlow Studio
+                    Make it Better Studio - Admin Panel
                 </h1>
             </Link>
         </div>
@@ -35,8 +34,6 @@ export function AdminHeader() {
                 <DropdownMenuLabel>Admin Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuSeparator />
                 <DropdownMenuItem>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>

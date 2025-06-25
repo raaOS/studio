@@ -94,13 +94,13 @@ export const services: Service[] = [
 
 export const mockOrders: Order[] = [
   {
-    id: '#DF-1234',
-    customerName: 'Budi Santoso',
-    customerTelegram: '@budisan',
+    id: '#001',
+    customerName: 'John Doe',
+    customerTelegram: '@johndoe',
     items: [
       { 
         name: 'Logo Design', 
-        quantity: 1, 
+        quantity: 2, 
         price: 150000, 
         brief: {
           'Nama Brand': 'Kopi Senja',
@@ -110,45 +110,26 @@ export const mockOrders: Order[] = [
       },
       { 
         name: 'Business Card', 
-        quantity: 2, 
+        quantity: 1, 
         price: 75000,
         brief: {
-          'Nama & Jabatan': 'Budi Santoso, Owner',
+          'Nama & Jabatan': 'John Doe, Owner',
           'Informasi Kontak': '0812345678, kopi.senja@email.com',
           'Alamat': 'Jl. Kenangan No. 10, Jakarta'
         }
       },
     ],
-    total: 300000,
+    total: 375000,
     paymentMethod: 'lunas',
-    status: 'Completed',
+    status: 'Antri',
     date: '2024-05-20',
+    budget: 'UMKM',
+    pekan: 'W1',
   },
   {
-    id: '#DF-5678',
-    customerName: 'Siti Aminah',
-    customerTelegram: '@sitia',
-    items: [
-      { 
-        name: 'Paket Branding UMKM', 
-        quantity: 1, 
-        price: 450000,
-        brief: {
-          'Deskripsi Usaha': 'Menjual aneka kue kering tradisional.',
-          'Target Pasar': 'Ibu rumah tangga dan acara keluarga.',
-          'Pesan yang ingin disampaikan': 'Rasa klasik, resep warisan.'
-        }
-      },
-    ],
-    total: 450000,
-    paymentMethod: 'dp',
-    status: 'In Progress',
-    date: '2024-05-22',
-  },
-  {
-    id: '#DF-9101',
-    customerName: 'Rina Wijaya',
-    customerTelegram: '@rinaw',
+    id: '#002',
+    customerName: 'Jane Smith',
+    customerTelegram: '@janesmith',
     items: [
       { 
         name: 'Social Media Post', 
@@ -162,12 +143,37 @@ export const mockOrders: Order[] = [
       },
     ],
     total: 400000,
-    paymentMethod: 'lunas',
-    status: 'Pending',
-    date: '2024-05-23',
+    paymentMethod: 'dp',
+    status: 'Kerja',
+    date: '2024-05-22',
+    budget: 'Kaki Lima',
+    pekan: 'W1',
   },
   {
-    id: '#DF-1121',
+    id: '#003',
+    customerName: 'Bob Johnson',
+    customerTelegram: '@bobjohnson',
+    items: [
+      { 
+        name: 'Packaging Design', 
+        quantity: 1, 
+        price: 600000,
+        brief: {
+          'Deskripsi Produk': 'Keripik singkong aneka rasa',
+          'Target Pasar': 'Anak muda, penyuka cemilan pedas',
+          'Pesan yang ingin disampaikan': 'Renyah, gurih, bikin nagih!'
+        }
+      },
+    ],
+    total: 600000,
+    paymentMethod: 'lunas',
+    status: 'Revisi',
+    date: '2024-05-23',
+    budget: 'E-Comm',
+    pekan: 'W2',
+  },
+  {
+    id: '#004',
     customerName: 'Agus Setiawan',
     customerTelegram: '@agusset',
     items: [
@@ -184,7 +190,9 @@ export const mockOrders: Order[] = [
     ],
     total: 200000,
     paymentMethod: 'dp',
-    status: 'Cancelled',
+    status: 'Selesai',
     date: '2024-05-24',
+    budget: 'UMKM',
+    pekan: 'W1',
   }
 ];

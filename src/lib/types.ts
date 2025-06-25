@@ -30,6 +30,8 @@ export type Customer = {
   telegram: string;
 };
 
+export type OrderStatus = 'Antri' | 'Kerja' | 'Revisi' | 'Selesai' | 'Batal';
+
 export type Order = {
   id: string;
   customerName: string;
@@ -42,6 +44,8 @@ export type Order = {
   }[];
   total: number;
   paymentMethod: 'dp' | 'lunas';
-  status: 'Pending' | 'In Progress' | 'Completed' | 'Cancelled';
+  status: OrderStatus;
   date: string;
+  budget: 'Kaki Lima' | 'UMKM' | 'E-Comm';
+  pekan: 'W1' | 'W2' | 'W3' | 'W4';
 };
