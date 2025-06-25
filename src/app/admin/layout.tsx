@@ -6,8 +6,31 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarInset,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarSeparator,
 } from '@/components/ui/sidebar';
-import { LayoutDashboard, ListTodo, Banknote, LineChart, CheckSquare, Wrench } from 'lucide-react';
+import { 
+  LayoutDashboard, 
+  ListTodo, 
+  Package,
+  CreditCard,
+  Gift,
+  Ticket,
+  Image as ImageIcon,
+  Users,
+  Mail,
+  Settings,
+  BarChart3,
+  Wrench,
+  LineChart,
+  UserCog,
+  Bot,
+  Send,
+  Folder,
+  Calendar,
+  Video
+} from 'lucide-react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/AdminHeader';
 
@@ -23,48 +46,177 @@ export default function AdminLayout({
         <div className="flex flex-1">
           <Sidebar>
             <SidebarContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/admin">
-                      <LayoutDashboard />
-                      Dashboard
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/admin/queue">
-                      <ListTodo />
-                      Antrian Pesanan
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="#">
-                      <Wrench />
-                      Kelola Pesanan
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="#">
-                      <CheckSquare />
-                      Validasi Pembayaran
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="#">
-                      <LineChart />
-                      Laporan
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
+              <SidebarGroup>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="/admin">
+                          <LayoutDashboard />
+                          Dashboard
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="/admin/queue">
+                          <ListTodo />
+                          Antrian
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="#">
+                          <Package />
+                          Pesanan
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="#">
+                          <CreditCard />
+                          Pembayaran
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+              </SidebarGroup>
+
+              <SidebarSeparator />
+
+              <SidebarGroup>
+                <SidebarGroupLabel>MARKETING</SidebarGroupLabel>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="#">
+                          <Gift />
+                          Promo
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="#">
+                          <Ticket />
+                          Kupon
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="#">
+                          <ImageIcon />
+                          Banner
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="#">
+                          <Users />
+                          Loyalty
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="#">
+                          <Mail />
+                          Email
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+              </SidebarGroup>
+              
+              <SidebarSeparator />
+
+              <SidebarGroup>
+                <SidebarGroupLabel className="flex items-center gap-2">
+                  <Settings />
+                  SETTINGS
+                </SidebarGroupLabel>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="#">
+                          <BarChart3 />
+                          Kapasitas
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="#">
+                          <Wrench />
+                          Integrasi
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="#">
+                          <LineChart />
+                          Analytics
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="#">
+                          <UserCog />
+                          User Mgmt
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+              </SidebarGroup>
+              
+              <SidebarSeparator />
+
+              <SidebarGroup>
+                <SidebarGroupLabel className="flex items-center gap-2">
+                  <Bot />
+                  AUTOMATION
+                </SidebarGroupLabel>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="#">
+                          <Send />
+                          Telegram
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="#">
+                          <Folder />
+                          Drive
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="#">
+                          <Calendar />
+                          Calendar
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="#">
+                          <Video />
+                          Meet
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+              </SidebarGroup>
+
             </SidebarContent>
           </Sidebar>
           <SidebarInset>
