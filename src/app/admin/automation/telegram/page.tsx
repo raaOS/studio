@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,6 @@ const notificationSettings = [
 
 type BotStatus = 'idle' | 'checking' | 'approved' | 'rejected';
 
-// Moved StatusIndicator outside of the main component
 const StatusIndicator = ({ status, message }: { status: BotStatus, message: string }) => {
     if (status === 'idle') {
         return null;
@@ -65,12 +64,12 @@ export default function TelegramAutomationPage() {
     const [botStatusMessage, setBotStatusMessage] = useState('');
 
     useEffect(() => {
-        const origin = window.location.origin;
+        const origin = typeof window !== 'undefined' ? window.location.origin : '';
         const url = `${origin}/api/telegram/webhook`;
         setWebhookUrl(url);
     }, []);
 
-    const handleVerifyBot = async () => {
+    const handleVerifyBot = useCallback(async () => {
         setBotStatus('checking');
         setBotStatusMessage('Memeriksa token bot...');
         try {
@@ -86,12 +85,11 @@ export default function TelegramAutomationPage() {
              setBotStatus('rejected');
              setBotStatusMessage(`Gagal verifikasi: ${e.message}`);
         }
-    };
+    }, []);
     
     useEffect(() => {
         handleVerifyBot();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [handleVerifyBot]);
 
     useEffect(() => {
         const savedAdminId = localStorage.getItem('telegramAdminChatId') ?? '';
@@ -102,7 +100,7 @@ export default function TelegramAutomationPage() {
         setTestTelegramId(adminChatId);
     }, [adminChatId]);
     
-    const handleSaveSettings = () => {
+    const handleSaveSettings = useCallback(() => {
         setIsSaving(true);
         localStorage.setItem('telegramAdminChatId', adminChatId);
         toast({
@@ -110,9 +108,9 @@ export default function TelegramAutomationPage() {
             description: 'ID Chat Admin telah disimpan di browser Anda.',
         });
         setTimeout(() => setIsSaving(false), 1000);
-    };
+    }, [adminChatId, toast]);
 
-    const handleTestMessage = async () => {
+    const handleTestMessage = useCallback(async () => {
         if (!testTelegramId) {
             toast({
                 title: 'ID Telegram dibutuhkan',
@@ -151,7 +149,7 @@ export default function TelegramAutomationPage() {
         } finally {
             setIsTesting(false);
         }
-    };
+    }, [testTelegramId, toast]);
     
     return (
         <div className="space-y-8">
