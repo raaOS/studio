@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { formatRupiah, cn } from '@/lib/utils';
 import type { OrderStatus } from '@/lib/types';
-import { CheckCircle, Circle, MessageSquare, Send } from 'lucide-react';
+import { CheckCircle, Circle, MessageSquare, Send, Folder, Calendar, Video } from 'lucide-react';
 
 const timelineSteps: { status: OrderStatus; label: string }[] = [
     { status: 'Antri', label: 'Pesanan Dibuat & Pembayaran Divalidasi' },
@@ -50,19 +50,26 @@ export default function OrderDetailPage() {
   return (
     <div className="space-y-6">
         <Card>
-            <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between">
-                <div>
-                    <CardTitle className="font-headline text-2xl">Pesanan {order.id} - {order.customerName}</CardTitle>
-                    <CardDescription>
-                        Budget: {order.budget} | Total: {formatRupiah(order.total)} | Pekan: {order.pekan}
-                    </CardDescription>
+            <CardHeader>
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between">
+                    <div>
+                        <CardTitle className="font-headline text-2xl">Pesanan {order.id} - {order.customerName}</CardTitle>
+                        <CardDescription>
+                            Budget: {order.budget} | Total: {formatRupiah(order.total)} | Pekan: {order.pekan} | Revisi: {order.id === '#003' ? '4x' : '1x'}
+                        </CardDescription>
+                    </div>
+                    <Badge className={cn("capitalize w-fit mt-2 md:mt-0", getStatusClass(currentStatus))}>{currentStatus}</Badge>
                 </div>
-                <Badge className={cn("capitalize w-fit mt-2 md:mt-0", getStatusClass(currentStatus))}>{currentStatus}</Badge>
             </CardHeader>
+            <CardFooter className="flex flex-wrap gap-2 pt-4">
+                 <Button variant="outline" size="sm"><Folder className="mr-2 h-4 w-4" /> Drive Folder</Button>
+                 <Button variant="outline" size="sm"><MessageSquare className="mr-2 h-4 w-4" /> Telegram Chat</Button>
+                 <Button variant="outline" size="sm"><Calendar className="mr-2 h-4 w-4" /> Schedule Meeting</Button>
+            </CardFooter>
         </Card>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="lg:col-span-12 xl:col-span-5 space-y-6">
             <Card>
                 <CardHeader>
                     <CardTitle>Detail Pesanan</CardTitle>
@@ -91,7 +98,7 @@ export default function OrderDetailPage() {
             </Card>
         </div>
 
-        <div className="lg:col-span-1 space-y-6">
+        <div className="lg:col-span-6 xl:col-span-4 space-y-6">
             <Card>
                 <CardHeader>
                     <CardTitle>Timeline & Aksi</CardTitle>
@@ -127,13 +134,44 @@ export default function OrderDetailPage() {
                     </div>
                     <Button className="w-full mt-2">
                         <Send className="mr-2 h-4 w-4" />
-                        Kirim Update
+                        Kirim Update ke Klien
                     </Button>
-                    <Button variant="outline" className="w-full">
-                        <MessageSquare className="mr-2 h-4 w-4" />
-                        Chat Klien
+                    <Button variant="secondary" className="w-full">
+                        <Video className="mr-2 h-4 w-4" />
+                        Schedule Meet
+                    </Button>
+                     <Button variant="secondary" className="w-full">
+                        <Send className="mr-2 h-4 w-4" />
+                        Send to Bot
                     </Button>
                 </CardFooter>
+            </Card>
+        </div>
+
+        <div className="lg:col-span-6 xl:col-span-3 space-y-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Integrasi</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold flex items-center gap-2"><Folder className="h-4 w-4" /> Drive Folder</h4>
+                      <p className="text-sm text-muted-foreground">Last updated: 2 hours ago</p>
+                      <Button variant="outline" size="sm" className="mt-2 w-full">Open Folder</Button>
+                    </div>
+                    <Separator />
+                    <div>
+                      <h4 className="font-semibold flex items-center gap-2"><MessageSquare className="h-4 w-4" /> Telegram</h4>
+                      <p className="text-sm text-muted-foreground">Last activity: 5 mins ago</p>
+                      <Button variant="outline" size="sm" className="mt-2 w-full">Open Chat</Button>
+                    </div>
+                    <Separator />
+                    <div>
+                      <h4 className="font-semibold flex items-center gap-2"><Calendar className="h-4 w-4" /> Meeting</h4>
+                      <p className="text-sm text-muted-foreground">No upcoming meetings</p>
+                      <Button variant="outline" size="sm" className="mt-2 w-full">Schedule Now</Button>
+                    </div>
+                </CardContent>
             </Card>
         </div>
       </div>
