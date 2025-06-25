@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from '@/components/ui/button';
@@ -64,7 +64,7 @@ export default function TelegramAutomationPage() {
     const [botStatus, setBotStatus] = useState<BotStatus>('idle');
     const [botStatusMessage, setBotStatusMessage] = useState('');
 
-    const handleVerifyBot = useCallback(async () => {
+    const handleVerifyBot = async () => {
         setBotStatus('checking');
         setBotStatusMessage('Memeriksa token bot...');
         try {
@@ -80,9 +80,9 @@ export default function TelegramAutomationPage() {
              setBotStatus('rejected');
              setBotStatusMessage(`Gagal verifikasi: ${e.message}`);
         }
-    }, []);
+    };
     
-    const handleSaveSettings = useCallback(() => {
+    const handleSaveSettings = () => {
         setIsSaving(true);
         localStorage.setItem('telegramAdminChatId', adminChatId);
         toast({
@@ -90,9 +90,9 @@ export default function TelegramAutomationPage() {
             description: 'ID Chat Admin telah disimpan di browser Anda.',
         });
         setTimeout(() => setIsSaving(false), 1000);
-    }, [adminChatId, toast]);
+    };
 
-    const handleTestMessage = useCallback(async () => {
+    const handleTestMessage = async () => {
         if (!testTelegramId) {
             toast({
                 title: 'ID Telegram dibutuhkan',
@@ -131,7 +131,7 @@ export default function TelegramAutomationPage() {
         } finally {
             setIsTesting(false);
         }
-    }, [testTelegramId, toast]);
+    };
     
     useEffect(() => {
         const origin = typeof window !== 'undefined' ? window.location.origin : '';
@@ -142,7 +142,8 @@ export default function TelegramAutomationPage() {
         if (savedAdminId) {
             setAdminChatId(savedAdminId);
         }
-    }, [handleVerifyBot]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         setTestTelegramId(adminChatId);
@@ -270,3 +271,4 @@ export default function TelegramAutomationPage() {
         </div>
     );
 }
+
