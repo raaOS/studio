@@ -20,7 +20,7 @@ export type CartItem = {
   name: string;
   price: number;
   quantity: number;
-  brief: string;
+  brief: Record<string, string>;
   image: string;
 };
 

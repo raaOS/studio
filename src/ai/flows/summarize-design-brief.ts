@@ -12,7 +12,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const SummarizeDesignBriefInputSchema = z.object({
-  designBriefs: z.array(z.string()).describe('An array of design briefs from the customer.'),
+  designBriefs: z.array(z.record(z.string())).describe('An array of design briefs from the customer, where each brief is an object of question-answer pairs.'),
 });
 
 export type SummarizeDesignBriefInput = z.infer<typeof SummarizeDesignBriefInputSchema>;
@@ -33,10 +33,14 @@ const summarizeDesignBriefPrompt = ai.definePrompt({
   output: {schema: SummarizeDesignBriefOutputSchema},
   prompt: `You are an AI assistant helping an Urgent Studio admin to quickly understand customer design briefs.
 
-  Summarize the following design briefs into a concise summary:
+  Summarize the following design briefs into a concise summary. Each brief consists of several question-answer pairs.
 
   {{#each designBriefs}}
-  - {{{this}}}
+  ---
+  {{#each this as |answer question|}}
+  - **{{question}}**: {{answer}}
+  {{/each}}
+  ---
   {{/each}}
   `,
 });

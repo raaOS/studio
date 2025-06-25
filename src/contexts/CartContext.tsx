@@ -8,7 +8,7 @@ interface CartContextType {
   addItem: (service: Service) => void;
   removeItem: (serviceId: string) => void;
   updateItemQuantity: (serviceId: string, quantity: number) => void;
-  updateBrief: (serviceId: string, brief: string) => void;
+  updateBrief: (serviceId: string, field: string, value: string) => void;
   clearCart: () => void;
   totalPrice: number;
   totalItems: number;
@@ -50,7 +50,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           item.id === service.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      return [...prevItems, { ...service, quantity: 1, brief: '' }];
+      return [...prevItems, { ...service, quantity: 1, brief: {} }];
     });
   }, []);
 
@@ -66,10 +66,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   }, []);
   
-  const updateBrief = useCallback((serviceId: string, brief: string) => {
+  const updateBrief = useCallback((serviceId: string, field: string, value: string) => {
     setCartItems(prevItems =>
       prevItems.map(item =>
-        item.id === serviceId ? { ...item, brief } : item
+        item.id === serviceId 
+          ? { ...item, brief: { ...item.brief, [field]: value } } 
+          : item
       )
     );
   }, []);
