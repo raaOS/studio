@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -15,9 +15,54 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { mockDriveActivityLogs } from '@/lib/data';
-import { CheckCircle, FolderSync, Folder, Save } from 'lucide-react';
+import { CheckCircle, FolderSync, Folder, Save, TestTube2 } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
+import { createDriveFolder } from '@/ai/flows/create-drive-folder';
 
 export default function DriveAutomationPage() {
+  const { toast } = useToast();
+  const [isTesting, setIsTesting] = useState(false);
+  const [testOrderId, setTestOrderId] = useState('');
+  const [testCustomerName, setTestCustomerName] = useState('');
+  const [folderTemplate, setFolderTemplate] = useState('[OrderID] - [CustomerName]');
+
+  const handleTestDrive = async () => {
+    if (!testOrderId || !testCustomerName) {
+      toast({
+        title: 'Data Tes Dibutuhkan',
+        description: 'Mohon masukkan Order ID dan Nama Klien untuk pengujian.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsTesting(true);
+    try {
+      const result = await createDriveFolder({
+        orderId: testOrderId,
+        customerName: testCustomerName,
+        folderTemplate: folderTemplate,
+      });
+
+      if (result.success) {
+        toast({
+          title: 'Folder Tes Berhasil Dibuat!',
+          description: `Folder dengan nama "${result.folderName}" telah disimulasikan.`,
+        });
+      } else {
+        throw new Error('Simulated API call failed.');
+      }
+    } catch (error) {
+      toast({
+        title: 'Gagal Membuat Folder',
+        description: 'Terjadi kesalahan saat pengujian. Periksa kembali pengaturan Anda.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsTesting(false);
+    }
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -56,8 +101,12 @@ export default function DriveAutomationPage() {
             <CardContent>
               <div className="space-y-2">
                 <Label htmlFor="folder-structure">Template Nama Folder</Label>
-                <Input id="folder-structure" defaultValue="[OrderID] - [CustomerName]" />
-                <p className="text-xs text-muted-foreground">
+                <Input 
+                  id="folder-structure" 
+                  value={folderTemplate}
+                  onChange={(e) => setFolderTemplate(e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
                   Variabel yang tersedia: <code>[OrderID]</code>, <code>[CustomerName]</code>, <code>[BudgetType]</code>, <code>[Date]</code>.
                 </p>
               </div>
@@ -68,7 +117,7 @@ export default function DriveAutomationPage() {
           </Card>
         </div>
 
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 space-y-8">
           <Card className="sticky top-24">
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><FolderSync /> Sinkronisasi</CardTitle>
@@ -86,6 +135,37 @@ export default function DriveAutomationPage() {
                     <li>Bagikan folder ke klien (read-only).</li>
                 </ul>
             </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><TestTube2 /> Uji Integrasi</CardTitle>
+                <CardDescription>Buat folder proyek tes untuk memastikan integrasi berjalan.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <div className="space-y-2">
+                    <Label htmlFor="test-order-id">Test Order ID</Label>
+                    <Input 
+                        id="test-order-id" 
+                        placeholder="#TEST-DRV-001" 
+                        value={testOrderId}
+                        onChange={(e) => setTestOrderId(e.target.value)}
+                    />
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="test-customer-name">Test Nama Klien</Label>
+                    <Input 
+                        id="test-customer-name" 
+                        placeholder="Test Customer" 
+                        value={testCustomerName}
+                        onChange={(e) => setTestCustomerName(e.target.value)}
+                    />
+                </div>
+            </CardContent>
+            <CardFooter>
+                <Button className="w-full" onClick={handleTestDrive} disabled={isTesting}>
+                    {isTesting ? 'Membuat...' : <><FolderSync className="mr-2 h-4 w-4" /> Buat Folder Tes</>}
+                </Button>
+            </CardFooter>
           </Card>
         </div>
       </div>
