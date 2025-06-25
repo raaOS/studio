@@ -1,4 +1,4 @@
-import type { BudgetItem, Service } from '@/lib/types';
+import type { BudgetItem, Service, Order } from '@/lib/types';
 import { Briefcase, ShoppingCart, Store } from 'lucide-react';
 
 export const budgetItems: BudgetItem[] = [
@@ -89,5 +89,57 @@ export const services: Service[] = [
     image: 'https://placehold.co/400x300',
     budgets: ['umkm'],
     category: 'Paket Hemat',
+  }
+];
+
+export const mockOrders: Order[] = [
+  {
+    id: '#DF-1234',
+    customerName: 'Budi Santoso',
+    customerTelegram: '@budisan',
+    items: [
+      { name: 'Logo Design', quantity: 1, price: 150000 },
+      { name: 'Business Card', quantity: 2, price: 75000 },
+    ],
+    total: 300000,
+    paymentMethod: 'lunas',
+    status: 'Completed',
+    date: '2024-05-20',
+  },
+  {
+    id: '#DF-5678',
+    customerName: 'Siti Aminah',
+    customerTelegram: '@sitia',
+    items: [
+      { name: 'Paket Branding UMKM', quantity: 1, price: 450000 },
+    ],
+    total: 450000,
+    paymentMethod: 'dp',
+    status: 'In Progress',
+    date: '2024-05-22',
+  },
+  {
+    id: '#DF-9101',
+    customerName: 'Rina Wijaya',
+    customerTelegram: '@rinaw',
+    items: [
+      { name: 'Social Media Post', quantity: 5, price: 80000 },
+    ],
+    total: 400000,
+    paymentMethod: 'lunas',
+    status: 'Pending',
+    date: '2024-05-23',
+  },
+  {
+    id: '#DF-1121',
+    customerName: 'Agus Setiawan',
+    customerTelegram: '@agusset',
+    items: [
+        { name: 'Banner/Spanduk', quantity: 1, price: 200000 },
+    ],
+    total: 200000,
+    paymentMethod: 'dp',
+    status: 'Cancelled',
+    date: '2024-05-24',
   }
 ];

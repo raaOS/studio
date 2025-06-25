@@ -29,3 +29,18 @@ export type Customer = {
   phone: string;
   telegram: string;
 };
+
+export type Order = {
+  id: string;
+  customerName: string;
+  customerTelegram: string;
+  items: {
+    name: string;
+    quantity: number;
+    price: number;
+  }[];
+  total: number;
+  paymentMethod: 'dp' | 'lunas';
+  status: 'Pending' | 'In Progress' | 'Completed' | 'Cancelled';
+  date: string;
+};
