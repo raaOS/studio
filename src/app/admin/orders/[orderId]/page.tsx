@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useParams, notFound } from 'next/navigation';
 import { mockOrders } from '@/lib/data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -21,13 +21,29 @@ const timelineSteps: { status: OrderStatus; label: string }[] = [
 
 export default function OrderDetailPage() {
   const params = useParams();
-  const orderId = `#${params.orderId}`;
+  
+  const order = useMemo(() => {
+    if (!params?.orderId) return null;
+    const orderId = `#${params.orderId}`;
+    return mockOrders.find(o => o.id === orderId) || null;
+  }, [params]);
 
-  const order = useMemo(() => mockOrders.find(o => o.id === orderId), [orderId]);
-  const [currentStatus, setCurrentStatus] = useState<OrderStatus>(order?.status || 'Antri');
+  const [currentStatus, setCurrentStatus] = useState<OrderStatus>('Antri');
 
-  if (!order) {
+  useEffect(() => {
+    if (order) {
+      setCurrentStatus(order.status);
+    }
+  }, [order]);
+
+  // This will be triggered once params are available but no order is found.
+  if (params?.orderId && !order) {
     notFound();
+  }
+
+  // Render a loading state while params are being resolved.
+  if (!order) {
+    return <div>Loading...</div>; // Or a skeleton component
   }
 
   const getStatusClass = (status: OrderStatus) => {
