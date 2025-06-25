@@ -163,52 +163,49 @@ export default function TelegramAutomationPage() {
                 <div className="lg:col-span-2 space-y-8">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Pengaturan Bot</CardTitle>
-                            <CardDescription>Masukkan informasi bot Telegram Anda di sini.</CardDescription>
+                            <CardTitle>Panduan Pengaturan Bot</CardTitle>
+                            <CardDescription>Ikuti 3 langkah berikut untuk menghubungkan bot Anda.</CardDescription>
                         </CardHeader>
-                        <CardContent className="space-y-4">
+                        <CardContent className="space-y-6">
                             <Alert>
                               <Terminal className="h-4 w-4" />
-                              <AlertTitle>Langkah 1: Pengaturan Token Bot</AlertTitle>
+                              <AlertTitle>Langkah 1: Atur Token Bot</AlertTitle>
                               <AlertDescription>
-                                Untuk keamanan, Token Bot Telegram sekarang diatur melalui environment variable. Tambahkan baris berikut ke file `.env` Anda:
+                                Token adalah identitas unik untuk bot Anda. Masukkan token dari BotFather ke file `.env` di proyek Anda.
                                 <code className="block bg-muted text-foreground p-2 rounded-md my-2 text-sm">TELEGRAM_BOT_TOKEN="TOKEN_ANDA_DISINI"</code>
-                                Hubungi developer jika Anda tidak memiliki akses ke file ini.
+                                Setelah disimpan, klik tombol "Verifikasi Token" di bawah untuk memastikan token valid.
                               </AlertDescription>
                             </Alert>
 
-                            <Alert>
+                            <Alert variant="destructive">
                               <Webhook className="h-4 w-4" />
-                              <AlertTitle>Langkah 2: Atur Webhook</AlertTitle>
+                              <AlertTitle>Langkah 2: Atur Webhook (WAJIB!)</AlertTitle>
                               <AlertDescription>
-                                Agar bot bisa menerima pesan (seperti <code>/start</code>), Anda harus memberitahu Telegram alamat aplikasi Anda. Setelah mengatur token, ikuti langkah ini:
-                                <ol className="list-decimal list-inside my-2 space-y-1 text-xs">
+                                Webhook adalah "jembatan" yang menghubungkan Telegram ke aplikasi Anda. **Bot Anda tidak akan bisa merespons pesan apapun (termasuk `/start`) sebelum langkah ini selesai.**
+                                <ol className="list-decimal list-inside my-2 space-y-1">
                                   <li>Salin token bot Anda dari file <strong>.env</strong>.</li>
-                                  <li>Ganti <strong>[TOKEN_BOT_ANDA]</strong> pada URL di bawah ini dengan token yang Anda salin.</li>
-                                  <li>Buka URL lengkap tersebut di tab browser baru (cukup sekali saja).</li>
+                                  <li>Ganti <code>[TOKEN_BOT_ANDA]</code> pada URL di bawah ini dengan token yang sudah Anda salin.</li>
+                                  <li>Kunjungi URL lengkap tersebut di tab browser baru (cukup sekali).</li>
                                 </ol>
-                                <code className="block bg-muted text-foreground p-2 rounded-md my-2 text-sm break-all">
+                                <code className="block bg-muted text-destructive-foreground p-2 rounded-md my-2 text-sm break-all">
                                   https://api.telegram.org/bot[TOKEN_BOT_ANDA]/setWebhook?url={webhookUrl}
                                 </code>
-                                Jika berhasil, Anda akan melihat pesan seperti: <br />
-                                <code className="text-xs">{"{ok:true, description:\"Webhook was set\"}"}</code>.
-                                <br /><br />
-                                Setelah itu, kirim pesan <code>/start</code> ke bot Anda di Telegram untuk mendapatkan ID Chat Anda.
+                                Jika berhasil, browser akan menampilkan pesan: `{"ok":true,"result":true,"description":"Webhook was set"}`.
                               </AlertDescription>
                             </Alert>
 
                              <div className="space-y-2">
-                                <Label htmlFor="admin-chat-id">Langkah 3: Admin Chat ID</Label>
+                                <Label htmlFor="admin-chat-id">Langkah 3: Masukkan Admin Chat ID Anda</Label>
                                 <Input 
                                     id="admin-chat-id" 
-                                    placeholder="Contoh: 123456789" 
+                                    placeholder="Dapatkan dari bot setelah Langkah 2 berhasil" 
                                     value={adminChatId}
                                     onChange={(e) => setAdminChatId(e.target.value)}
                                 />
                                 <p className="text-xs text-muted-foreground">
-                                    Ini adalah "alamat" Telegram pribadi Anda, <strong>BUKAN ID bot</strong>. Bot menggunakan ID ini untuk mengirim notifikasi khusus admin ke Anda.
+                                    Ini adalah "alamat" Telegram pribadi Anda agar bot bisa mengirim notifikasi khusus admin kepada Anda.
                                     <br />
-                                    <strong>Cara mendapatkan ID Anda:</strong> Setelah menyelesaikan Langkah 2, kirim pesan <code>/start</code> ke bot Anda, dan bot akan membalas dengan Chat ID Anda.
+                                    <strong>Cara mendapatkan:</strong> Setelah Langkah 1 & 2 selesai, kirim pesan <code>/start</code> ke bot Anda. Bot akan membalas dengan Chat ID Anda.
                                 </p>
                             </div>
                         </CardContent>
@@ -219,7 +216,7 @@ export default function TelegramAutomationPage() {
                             </Button>
                             <Button variant="outline" onClick={handleVerifyBot} disabled={botStatus === 'checking'}>
                                <RefreshCw className={`mr-2 h-4 w-4 ${botStatus === 'checking' ? 'animate-spin' : ''}`} />
-                               Verifikasi
+                               Verifikasi Token
                             </Button>
                            </div>
                            <StatusIndicator />
