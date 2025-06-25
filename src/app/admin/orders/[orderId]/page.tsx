@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useParams, notFound } from 'next/navigation';
 import { mockOrders } from '@/lib/data';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -75,7 +75,7 @@ export default function OrderDetailPage() {
                                 {Object.entries(item.brief).map(([question, answer]) => (
                                     <div key={question}>
                                         <p className="font-medium text-foreground/80">{question}</p>
-                                        <p>{answer}</p>
+                                        <p>{answer as string}</p>
                                     </div>
                                 ))}
                             </div>
@@ -112,7 +112,7 @@ export default function OrderDetailPage() {
                         ))}
                     </ul>
                 </CardContent>
-                <CardFooter className="flex flex-col gap-2">
+                <CardFooter className="flex flex-col gap-2 items-stretch">
                     <div className='w-full space-y-2'>
                         <label className='text-sm font-medium'>Ubah Status</label>
                          <Select value={currentStatus} onValueChange={(value) => setCurrentStatus(value as OrderStatus)}>
