@@ -58,11 +58,11 @@ export default function AdminQueuePage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <h1 className="text-2xl md:text-3xl font-bold font-headline">Antrian Pesanan</h1>
       
       <Card>
-        <CardContent className="p-4 flex flex-col md:flex-row gap-4">
+        <CardContent className="p-4 flex flex-col md:flex-row items-center gap-4">
           <Select value={filters.status} onValueChange={value => handleFilterChange('status', value)}>
             <SelectTrigger className="w-full md:w-[180px]">
               <SelectValue placeholder="Status" />
@@ -92,7 +92,7 @@ export default function AdminQueuePage() {
             placeholder="Cari kode atau nama..."
             value={filters.search}
             onChange={handleSearchChange}
-            className="w-full md:w-auto md:flex-1"
+            className="w-full md:flex-1"
           />
         </CardContent>
       </Card>
@@ -107,7 +107,7 @@ export default function AdminQueuePage() {
                 <TableHead>Budget</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Pekan</TableHead>
-                <TableHead>Aksi</TableHead>
+                <TableHead className="text-right">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -123,11 +123,12 @@ export default function AdminQueuePage() {
                       </Badge>
                     </TableCell>
                     <TableCell>{order.pekan}</TableCell>
-                    <TableCell className="space-x-2">
-                       {order.status === 'Antri' && <Button size="sm" variant="outline">Mulai</Button>}
-                       {order.status === 'Kerja' && <Button size="sm" variant="outline">Pratinjau</Button>}
-                       {order.status === 'Revisi' && <Button size="sm" variant="outline">Update</Button>}
-                       <Button asChild size="sm">
+                    <TableCell className="text-right space-x-2">
+                       {order.status === 'Antri' && <Button size="sm" variant="default">Mulai</Button>}
+                       {order.status === 'Kerja' && <Button size="sm" variant="default">Pratinjau</Button>}
+                       {order.status === 'Revisi' && <Button size="sm" variant="default">Update</Button>}
+                       {order.status === 'Revisi' && <Button size="sm" variant="outline">Chat</Button>}
+                       <Button asChild size="sm" variant="ghost">
                           <Link href={`/admin/orders/${order.id.substring(1)}`}>Detail</Link>
                        </Button>
                     </TableCell>
