@@ -4,11 +4,18 @@
  * @fileOverview Implements a Genkit flow for verifying the Telegram Bot Token.
  *
  * - verifyTelegramBot - Checks if the bot token is valid by calling the getMe endpoint.
+ * - VerifyTelegramBotInput - The input type for the verifyTelegramBot function.
  * - VerifyTelegramBotOutput - The return type for the verifyTelegramBot function.
  */
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
+
+const VerifyTelegramBotInputSchema = z.object({
+  botToken: z.string().describe('The Telegram Bot Token to verify.'),
+});
+export type VerifyTelegramBotInput = z.infer<typeof VerifyTelegramBotInputSchema>;
+
 
 const VerifyTelegramBotOutputSchema = z.object({
   success: z.boolean().describe('Whether the token is valid.'),
@@ -17,20 +24,20 @@ const VerifyTelegramBotOutputSchema = z.object({
 });
 export type VerifyTelegramBotOutput = z.infer<typeof VerifyTelegramBotOutputSchema>;
 
-export async function verifyTelegramBot(): Promise<VerifyTelegramBotOutput> {
-  return verifyTelegramBotFlow();
+export async function verifyTelegramBot(input: VerifyTelegramBotInput): Promise<VerifyTelegramBotOutput> {
+  return verifyTelegramBotFlow(input);
 }
 
 const verifyTelegramBotFlow = ai.defineFlow(
   {
     name: 'verifyTelegramBotFlow',
+    inputSchema: VerifyTelegramBotInputSchema,
     outputSchema: VerifyTelegramBotOutputSchema,
   },
-  async () => {
-    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  async ({ botToken }) => {
 
     if (!botToken) {
-      const errorMsg = 'TELEGRAM_BOT_TOKEN is not set in environment variables.';
+      const errorMsg = 'Bot Token is required for verification.';
       console.error(errorMsg);
       return { success: false, error: errorMsg };
     }
