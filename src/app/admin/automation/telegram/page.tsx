@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -22,37 +23,32 @@ const notificationSettings = [
 
 type BotStatus = 'idle' | 'checking' | 'approved' | 'rejected';
 
+// Moved StatusIndicator outside of the main component
 const StatusIndicator = ({ status, message }: { status: BotStatus, message: string }) => {
-    let indicator = null;
-
-    if (status === 'checking') {
-        indicator = (
-            <div className="flex items-center gap-2 text-muted-foreground text-sm">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <span>{message}</span>
-            </div>
-        );
-    } else if (status === 'approved') {
-        indicator = (
-            <div className="flex items-center gap-2 text-green-600 text-sm">
-            <CheckCircle className="h-4 w-4" />
-            <span>{message}</span>
-            </div>
-        );
-    } else if (status === 'rejected') {
-        indicator = (
-            <div className="flex items-center gap-2 text-destructive text-sm">
-            <XCircle className="h-4 w-4" />
-            <span>{message}</span>
-            </div>
-        );
+    if (status === 'idle') {
+        return null;
     }
 
-    if(status === 'idle' || !indicator) return null;
+    let icon = null;
+    let textColor = '';
+
+    if (status === 'checking') {
+        icon = <Loader2 className="h-4 w-4 animate-spin" />;
+        textColor = 'text-muted-foreground';
+    } else if (status === 'approved') {
+        icon = <CheckCircle className="h-4 w-4" />;
+        textColor = 'text-green-600';
+    } else if (status === 'rejected') {
+        icon = <XCircle className="h-4 w-4" />;
+        textColor = 'text-destructive';
+    }
 
     return (
         <div className="flex flex-col gap-2 flex-grow">
-            {indicator}
+            <div className={`flex items-center gap-2 text-sm ${textColor}`}>
+                {icon}
+                <span>{message}</span>
+            </div>
         </div>
     );
 };
@@ -79,12 +75,12 @@ export default function TelegramAutomationPage() {
         setBotStatusMessage('Memeriksa token bot...');
         try {
             const result = await verifyTelegramBot();
-            if (result.success) {
+            if (result.success && result.botName) {
                 setBotStatus('approved');
                 setBotStatusMessage(`Bot direstui: @${result.botName}`);
             } else {
                 setBotStatus('rejected');
-                setBotStatusMessage(`Bot tidak direstui: ${result.error}`);
+                setBotStatusMessage(`Bot tidak direstui: ${result.error || 'Token tidak valid.'}`);
             }
         } catch (e: any) {
              setBotStatus('rejected');
@@ -94,6 +90,7 @@ export default function TelegramAutomationPage() {
     
     useEffect(() => {
         handleVerifyBot();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
