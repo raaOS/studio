@@ -82,12 +82,16 @@ export default function TelegramAutomationPage() {
                     description: `Pesan berhasil dikirim ke ID ${testTelegramId}.`,
                 });
             } else {
-                throw new Error('Telegram API call failed. Check console for details.');
+                toast({
+                    title: 'Gagal Mengirim Pesan',
+                    description: result.error || 'Pastikan Token Bot dan Chat ID sudah benar, dan Anda sudah memulai chat dengan bot.',
+                    variant: 'destructive',
+                });
             }
-        } catch (error) {
+        } catch (error: any) {
             toast({
                 title: 'Gagal Mengirim Pesan',
-                description: 'Terjadi kesalahan. Pastikan Token Bot dan Chat ID sudah benar, dan Anda sudah memulai chat dengan bot.',
+                description: error.message || 'Terjadi kesalahan. Pastikan Token Bot dan Chat ID sudah benar, dan Anda sudah memulai chat dengan bot.',
                 variant: 'destructive',
             });
         } finally {

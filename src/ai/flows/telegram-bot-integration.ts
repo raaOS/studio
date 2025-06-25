@@ -21,6 +21,7 @@ export type SendTelegramUpdateInput = z.infer<typeof SendTelegramUpdateInputSche
 
 const SendTelegramUpdateOutputSchema = z.object({
   success: z.boolean().describe('Whether the message was sent successfully.'),
+  error: z.string().optional().describe('Error message if the update failed.'),
 });
 export type SendTelegramUpdateOutput = z.infer<typeof SendTelegramUpdateOutputSchema>;
 
@@ -38,8 +39,9 @@ const sendTelegramUpdateFlow = ai.defineFlow(
     const botToken = input.botToken?.trim();
 
     if (!botToken) {
-      console.error('Telegram Bot Token is not provided.');
-      return { success: false };
+      const errorMsg = 'Telegram Bot Token is not provided.';
+      console.error(errorMsg);
+      return { success: false, error: errorMsg };
     }
 
     try {
@@ -57,18 +59,19 @@ const sendTelegramUpdateFlow = ai.defineFlow(
         }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error(`Telegram API error: ${response.statusText}`, errorData);
-        throw new Error(`Telegram API error: ${errorData.description || response.statusText}`);
+        const errorMessage = data.description || response.statusText;
+        console.error(`Telegram API error: ${response.statusText}`, data);
+        return { success: false, error: `Telegram API Error: ${errorMessage}` };
       }
 
-      const data = await response.json();
       return { success: data.ok };
 
     } catch (error: any) {
       console.error('Error sending Telegram update:', error);
-      return { success: false };
+      return { success: false, error: error.message || 'An unexpected error occurred.' };
     }
   }
 );

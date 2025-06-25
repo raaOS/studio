@@ -12,7 +12,6 @@ import { useState, useEffect } from "react";
 import type { Customer } from "@/lib/types";
 
 export function OrderSummary() {
-    // Removed setPaymentMethod as it's now handled upstream
     const { cartItems, totalPrice, totalItems, paymentMethod, updateItemQuantity, clearCart } = useCart();
     const { toast } = useToast();
     const [customer, setCustomer] = useState<Customer | null>(null);
@@ -75,20 +74,24 @@ Terima kasih!`;
                 updateMessage: message,
             });
 
-            if (!result.success) {
-                throw new Error('Telegram API call failed from order summary.');
+            if (result.success) {
+                toast({
+                    title: 'Pesanan Terkirim!',
+                    description: `Terima kasih! Pesanan Anda ${orderId} sedang diproses. Cek Telegram untuk konfirmasi.`,
+                });
+                clearCart();
+            } else {
+                 toast({
+                    title: 'Gagal Mengirim Pesanan',
+                    description: result.error || 'Terjadi kesalahan. Pastikan Anda sudah memulai chat dengan bot kami.',
+                    variant: 'destructive',
+                });
             }
-
-            toast({
-                title: 'Pesanan Terkirim!',
-                description: `Terima kasih! Pesanan Anda ${orderId} sedang diproses. Cek Telegram untuk konfirmasi.`,
-            });
-            clearCart();
-        } catch (error) {
+        } catch (error: any) {
             console.error("Failed to send order:", error);
             toast({
                 title: 'Gagal Mengirim Pesanan',
-                description: 'Terjadi kesalahan. Silakan coba lagi atau hubungi admin.',
+                description: error.message || 'Terjadi kesalahan. Silakan coba lagi atau hubungi admin.',
                 variant: 'destructive',
             });
         } finally {
