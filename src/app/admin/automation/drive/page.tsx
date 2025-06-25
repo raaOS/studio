@@ -82,7 +82,7 @@ export default function DriveAutomationPage() {
                     <div className="flex items-center gap-3">
                         <Folder className="h-8 w-8 text-blue-500" />
                         <div>
-                            <p className="font-semibold">admin@designflow.com</p>
+                            <p className="font-semibold">urgentstudio.official@gmail.com</p>
                             <Badge variant="outline" className="border-green-500/30 bg-green-500/20 text-green-700 mt-1">
                                 <CheckCircle className="mr-1 h-3 w-3" /> Terhubung
                             </Badge>
