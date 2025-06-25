@@ -12,7 +12,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const SendTelegramUpdateInputSchema = z.object({
-  telegramId: z.string().describe('The Telegram user ID to send the message to.'),
+  telegramId: z.string().describe('The Telegram user ID or @username to send the message to.'),
   orderId: z.string().describe('The ID of the order.'),
   updateMessage: z.string().describe('The message to send to the user.'),
 });
@@ -27,54 +27,47 @@ export async function sendTelegramUpdate(input: SendTelegramUpdateInput): Promis
   return sendTelegramUpdateFlow(input);
 }
 
-const sendTelegramUpdatePrompt = ai.definePrompt({
-  name: 'sendTelegramUpdatePrompt',
-  input: {schema: SendTelegramUpdateInputSchema},
-  output: {schema: SendTelegramUpdateOutputSchema},
-  prompt: `Send the following message to the Telegram user with ID {{telegramId}}:
-
-{{updateMessage}}
-
-Order ID: {{orderId}}`,
-});
-
 const sendTelegramUpdateFlow = ai.defineFlow(
   {
     name: 'sendTelegramUpdateFlow',
     inputSchema: SendTelegramUpdateInputSchema,
     outputSchema: SendTelegramUpdateOutputSchema,
   },
-  async input => {
+  async (input) => {
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+
+    if (!botToken || botToken === 'YOUR_BOT_TOKEN_HERE') {
+      console.error('TELEGRAM_BOT_TOKEN is not set in the .env file.');
+      return { success: false };
+    }
+
     try {
-      // Simulate sending a message to Telegram (replace with actual API call)
-      console.log(`Sending message to Telegram user ${input.telegramId}: ${input.updateMessage}`);
-      // In a real implementation, you would use a Telegram bot API to send the message.
-      // For example:
-      // const telegramApiUrl = `https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage`;
-      // const response = await fetch(telegramApiUrl, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     chat_id: input.telegramId,
-      //     text: input.updateMessage,
-      //   }),
-      // });
+      const telegramApiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+      const fullMessage = `${input.updateMessage}\n\nOrder ID: ${input.orderId}`;
+      
+      const response = await fetch(telegramApiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: input.telegramId,
+          text: fullMessage,
+        }),
+      });
 
-      // if (!response.ok) {
-      //   throw new Error(`Telegram API error: ${response.statusText}`);
-      // }
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error(`Telegram API error: ${response.statusText}`, errorData);
+        throw new Error(`Telegram API error: ${errorData.description || response.statusText}`);
+      }
 
-      // const data = await response.json();
-      // return { success: data.ok };
+      const data = await response.json();
+      return { success: data.ok };
 
-      // For now, we just return a successful response.
-      const {output} = await sendTelegramUpdatePrompt(input);
-      return {success: true};
     } catch (error: any) {
       console.error('Error sending Telegram update:', error);
-      return {success: false};
+      return { success: false };
     }
   }
 );
