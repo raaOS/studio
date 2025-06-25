@@ -6,81 +6,163 @@ export const budgetItems: BudgetItem[] = [
     id: 'kaki-lima',
     title: 'Budget Kaki Lima',
     description: 'Cocok untuk usaha rintisan dan kebutuhan personal dengan budget terjangkau.',
-    priceRange: 'Mulai dari Rp 50K',
+    priceRange: 'Mulai dari Rp 35K',
     icon: Store,
   },
   {
     id: 'umkm',
     title: 'Budget UMKM',
     description: 'Untuk UMKM dan startup yang ingin membangun identitas brand yang kuat.',
-    priceRange: 'Mulai dari Rp 150K',
+    priceRange: 'Mulai dari Rp 70K',
     icon: Briefcase,
   },
   {
     id: 'e-comm',
     title: 'Budget E-Commerce',
     description: 'Paket komprehensif untuk bisnis e-commerce yang butuh aset visual lengkap.',
-    priceRange: 'Mulai dari Rp 500K',
+    priceRange: 'Mulai dari Rp 120K',
     icon: ShoppingCart,
   },
 ];
 
 export const services: Service[] = [
+    // Kategori: Branding
   {
     id: 'logo-design',
     name: 'Logo Design',
-    prices: { 'kaki-lima': 150000, 'umkm': 250000, 'e-comm': 400000 },
-    image: 'https://placehold.co/400x300',
-    category: 'Branding',
-  },
-  {
-    id: 'business-card',
-    name: 'Business Card',
-    prices: { 'kaki-lima': 75000, 'umkm': 125000, 'e-comm': 200000 },
+    prices: { 'kaki-lima': 75000, 'umkm': 150000, 'e-comm': 300000 },
     image: 'https://placehold.co/400x300',
     category: 'Branding',
   },
   {
     id: 'company-profile',
     name: 'Company Profile',
-    prices: { 'kaki-lima': 300000, 'umkm': 500000, 'e-comm': 750000 },
+    prices: { 'kaki-lima': 100000, 'umkm': 200000, 'e-comm': 400000 },
     image: 'https://placehold.co/400x300',
     category: 'Branding',
   },
   {
-    id: 'paket-branding',
-    name: 'Paket Branding Lengkap',
-    prices: { 'kaki-lima': 450000, 'umkm': 750000, 'e-comm': 1200000 },
+    id: 'brand-guideline',
+    name: 'Brand Guideline',
+    prices: { 'kaki-lima': 150000, 'umkm': 300000, 'e-comm': 600000 },
     image: 'https://placehold.co/400x300',
     category: 'Branding',
   },
   {
-    id: 'banner',
-    name: 'Banner/Spanduk',
-    prices: { 'kaki-lima': 100000, 'umkm': 175000, 'e-comm': 250000 },
+    id: 'business-card',
+    name: 'Business Card',
+    prices: { 'kaki-lima': 50000, 'umkm': 100000, 'e-comm': 150000 },
     image: 'https://placehold.co/400x300',
-    category: 'Marketing',
+    category: 'Branding',
+  },
+  // Kategori: Marketing & Promosi
+  {
+    id: 'social-media-feeds',
+    name: 'Social Media Feeds',
+    prices: { 'kaki-lima': 35000, 'umkm': 70000, 'e-comm': 120000 },
+    image: 'https://placehold.co/400x300',
+    category: 'Marketing & Promosi',
+  },
+  {
+    id: 'social-media-banner',
+    name: 'Social Media Banner',
+    prices: { 'kaki-lima': 40000, 'umkm': 80000, 'e-comm': 130000 },
+    image: 'https://placehold.co/400x300',
+    category: 'Marketing & Promosi',
   },
   {
     id: 'flyer',
-    name: 'Flyer/Brosur',
-    prices: { 'kaki-lima': 80000, 'umkm': 150000, 'e-comm': 225000 },
+    name: 'Flyer',
+    prices: { 'kaki-lima': 60000, 'umkm': 120000, 'e-comm': 200000 },
     image: 'https://placehold.co/400x300',
-    category: 'Marketing',
+    category: 'Marketing & Promosi',
   },
   {
-    id: 'social-media-post',
-    name: 'Social Media Post',
-    prices: { 'kaki-lima': 50000, 'umkm': 80000, 'e-comm': 120000 },
+    id: 'poster',
+    name: 'Poster',
+    prices: { 'kaki-lima': 65000, 'umkm': 130000, 'e-comm': 220000 },
     image: 'https://placehold.co/400x300',
-    category: 'Marketing',
+    category: 'Marketing & Promosi',
   },
   {
-    id: 'packaging-design',
-    name: 'Packaging Design',
-    prices: { 'kaki-lima': 250000, 'umkm': 400000, 'e-comm': 600000 },
+    id: 'banner-spanduk',
+    name: 'Banner/Spanduk',
+    prices: { 'kaki-lima': 80000, 'umkm': 160000, 'e-comm': 280000 },
     image: 'https://placehold.co/400x300',
-    category: 'Product',
+    category: 'Marketing & Promosi',
+  },
+  {
+    id: 'menu-book',
+    name: 'Menu Book',
+    prices: { 'kaki-lima': 90000, 'umkm': 180000, 'e-comm': 350000 },
+    image: 'https://placehold.co/400x300',
+    category: 'Marketing & Promosi',
+  },
+  // Kategori: Desain Produk
+  {
+    id: 'packaging',
+    name: 'Packaging',
+    prices: { 'kaki-lima': 120000, 'umkm': 250000, 'e-comm': 500000 },
+    image: 'https://placehold.co/400x300',
+    category: 'Desain Produk',
+  },
+  {
+    id: 'label-design',
+    name: 'Label Design',
+    prices: { 'kaki-lima': 45000, 'umkm': 90000, 'e-comm': 160000 },
+    image: 'https://placehold.co/400x300',
+    category: 'Desain Produk',
+  },
+  {
+    id: 'pouch-design',
+    name: 'Pouch Design',
+    prices: { 'kaki-lima': 70000, 'umkm': 140000, 'e-comm': 250000 },
+    image: 'https://placehold.co/400x300',
+    category: 'Desain Produk',
+  },
+  // Kategori: Digital & Web
+  {
+    id: 'menu-digital',
+    name: 'Menu Digital',
+    prices: { 'kaki-lima': 60000, 'umkm': 120000, 'e-comm': 200000 },
+    image: 'https://placehold.co/400x300',
+    category: 'Digital & Web',
+  },
+  {
+    id: 'katalog-digital',
+    name: 'Katalog Digital',
+    prices: { 'kaki-lima': 100000, 'umkm': 200000, 'e-comm': 380000 },
+    image: 'https://placehold.co/400x300',
+    category: 'Digital & Web',
+  },
+  // Kategori: Kreatif & Personal
+  {
+    id: 'illustrasi',
+    name: 'Illustrasi',
+    prices: { 'kaki-lima': 150000, 'umkm': 300000, 'e-comm': 600000 },
+    image: 'https://placehold.co/400x300',
+    category: 'Kreatif & Personal',
+  },
+  {
+    id: 'tshirt-design',
+    name: 'T-shirt Design',
+    prices: { 'kaki-lima': 85000, 'umkm': 170000, 'e-comm': 300000 },
+    image: 'https://placehold.co/400x300',
+    category: 'Kreatif & Personal',
+  },
+  {
+    id: 'cv',
+    name: 'CV',
+    prices: { 'kaki-lima': 50000, 'umkm': 100000, 'e-comm': 150000 },
+    image: 'https://placehold.co/400x300',
+    category: 'Kreatif & Personal',
+  },
+  {
+    id: 'portofolio',
+    name: 'Portofolio',
+    prices: { 'kaki-lima': 100000, 'umkm': 200000, 'e-comm': 400000 },
+    image: 'https://placehold.co/400x300',
+    category: 'Kreatif & Personal',
   },
 ];
 
@@ -126,7 +208,7 @@ export const mockOrders: Order[] = [
     customerTelegram: '@janesmith',
     items: [
       { 
-        name: 'Social Media Post', 
+        name: 'Social Media Feeds', 
         quantity: 5, 
         price: 80000,
         brief: {
@@ -150,7 +232,7 @@ export const mockOrders: Order[] = [
     customerTelegram: '@bobjohnson',
     items: [
       { 
-        name: 'Packaging Design', 
+        name: 'Packaging', 
         quantity: 1, 
         price: 600000,
         brief: {
@@ -198,7 +280,7 @@ export const mockOrders: Order[] = [
     customerTelegram: '@sitiaminah',
     items: [
       { 
-        name: 'Flyer/Brosur', 
+        name: 'Flyer', 
         quantity: 1, 
         price: 100000,
         brief: {
