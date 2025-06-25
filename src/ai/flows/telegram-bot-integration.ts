@@ -34,7 +34,7 @@ const sendTelegramUpdateFlow = ai.defineFlow(
     outputSchema: SendTelegramUpdateOutputSchema,
   },
   async (input) => {
-    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const botToken = process.env.TELEGRAM_BOT_TOKEN?.trim();
 
     if (!botToken || botToken === 'YOUR_BOT_TOKEN_HERE') {
       console.error('TELEGRAM_BOT_TOKEN is not set in the .env file.');
