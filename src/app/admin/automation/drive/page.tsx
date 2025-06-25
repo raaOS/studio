@@ -15,10 +15,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { mockDriveActivityLogs } from '@/lib/data';
-import { FolderSync, Folder, Save, TestTube2, Info } from 'lucide-react';
+import { FolderSync, Save, TestTube2, Info } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
+import type { DriveActivityLog } from '@/lib/types';
 
 export default function DriveAutomationPage() {
   const { toast } = useToast();
@@ -26,6 +27,7 @@ export default function DriveAutomationPage() {
   const [testOrderId, setTestOrderId] = useState('');
   const [testCustomerName, setTestCustomerName] = useState('');
   const [folderTemplate, setFolderTemplate] = useState('[OrderID] - [CustomerName]');
+  const [activityLogs, setActivityLogs] = useState<DriveActivityLog[]>(mockDriveActivityLogs);
 
   const handleTestDrive = async () => {
     if (!testOrderId || !testCustomerName) {
@@ -50,6 +52,16 @@ export default function DriveAutomationPage() {
           title: 'Folder Tes Berhasil Dibuat!',
           description: `Folder dengan nama "${result.folderName}" telah disimulasikan.`,
         });
+        
+        const newLog: DriveActivityLog = {
+          id: `sim_${Date.now()}`,
+          orderId: testOrderId,
+          activity: `Folder Created: ${result.folderName}`,
+          timestamp: new Date().toLocaleString('id-ID'),
+          user: 'System (Simulasi)',
+        };
+        setActivityLogs(prevLogs => [newLog, ...prevLogs]);
+
       } else {
         throw new Error('Simulated API call failed.');
       }
@@ -174,12 +186,12 @@ export default function DriveAutomationPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockDriveActivityLogs.map((log) => (
+              {activityLogs.map((log) => (
                 <TableRow key={log.id}>
                   <TableCell className="font-medium">{log.orderId}</TableCell>
                   <TableCell>{log.activity}</TableCell>
                   <TableCell>{log.timestamp}</TableCell>
-                  <TableCell>{log.user}</TableCell>
+                  <TableCell><Badge variant="secondary">{log.user}</Badge></TableCell>
                 </TableRow>
               ))}
             </TableBody>
