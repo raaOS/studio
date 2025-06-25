@@ -13,10 +13,9 @@ import { SidebarTrigger } from './ui/sidebar';
 
 export function AdminHeader() {
   return (
-    <header className="py-2 px-4 md:px-6 bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
-      <div className="container mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-4">
-            <SidebarTrigger className="md:hidden" />
+    <header className="flex h-14 items-center gap-4 border-b bg-background px-4 md:px-6 sticky top-0 z-30">
+        <SidebarTrigger className="md:hidden" />
+        <div className="flex-1">
             <Link href="/admin">
                 <h1 className="text-xl font-headline font-bold text-foreground">
                     Make it Better Studio - Admin Panel
@@ -40,7 +39,6 @@ export function AdminHeader() {
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
-      </div>
     </header>
   );
 }

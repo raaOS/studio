@@ -5,7 +5,6 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarInset,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarSeparator,
@@ -41,10 +40,8 @@ export default function AdminLayout({
 }) {
   return (
     <SidebarProvider>
-      <div className="flex flex-col min-h-screen bg-muted/40">
-        <AdminHeader />
-        <div className="flex flex-1">
-          <Sidebar>
+      <div className="flex min-h-screen bg-muted/40">
+        <Sidebar>
             <SidebarContent>
               <SidebarGroup>
                   <SidebarMenu>
@@ -218,12 +215,12 @@ export default function AdminLayout({
               </SidebarGroup>
 
             </SidebarContent>
-          </Sidebar>
-          <SidebarInset>
-            <div className="p-4 sm:p-6 lg:p-8">
-              {children}
-            </div>
-          </SidebarInset>
+        </Sidebar>
+        <div className="flex flex-1 flex-col">
+            <AdminHeader />
+            <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">
+                {children}
+            </main>
         </div>
       </div>
     </SidebarProvider>
