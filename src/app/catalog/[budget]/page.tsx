@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Home, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -15,12 +15,9 @@ import { FloatingCart } from '@/components/FloatingCart';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
-type CatalogPageProps = {
-  params: { budget: string };
-};
-
-export default function CatalogPage({ params }: CatalogPageProps) {
-  const budgetType = params.budget;
+export default function CatalogPage() {
+  const params = useParams();
+  const budgetType = params.budget as string;
   const isMobile = useIsMobile();
 
   const budgetInfo = useMemo(() => budgetItems.find(b => b.id === budgetType), [budgetType]);
