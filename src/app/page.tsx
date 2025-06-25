@@ -17,7 +17,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { User, Phone, Send, ChevronRight, ArrowRight } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { User, Phone, Send, ChevronRight, ArrowRight, Info } from 'lucide-react';
 
 // Hooks & Context
 import { CartProvider, useCart } from '@/contexts/CartContext';
@@ -86,7 +87,19 @@ function OrderWorkflow() {
         <section id="info-section" className="max-w-2xl mx-auto">
            <Card>
             <CardHeader>
-              <CardTitle className="font-headline text-2xl">Langkah 1: Data Diri & Pembayaran</CardTitle>
+              <CardTitle className="font-headline text-2xl flex items-center gap-2">
+                <span>Langkah 1: Data Diri & Pembayaran</span>
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Info className="h-5 w-5 text-muted-foreground cursor-pointer" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Data Anda hanya digunakan untuk konfirmasi pesanan.</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+              </CardTitle>
               <CardDescription>
                 Isi data Anda untuk memulai proses pemesanan.
               </CardDescription>
