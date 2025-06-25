@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from "@/hooks/use-toast";
-import { Send, TestTube2, Save } from 'lucide-react';
+import { Send, TestTube2, Save, Terminal } from 'lucide-react';
 import { sendTelegramUpdate } from '@/ai/flows/telegram-bot-integration';
 
 const notificationSettings = [
@@ -20,16 +21,13 @@ const notificationSettings = [
 
 export default function TelegramAutomationPage() {
     const { toast } = useToast();
-    const [botToken, setBotToken] = useState('');
     const [adminChatId, setAdminChatId] = useState('');
     const [testTelegramId, setTestTelegramId] = useState('');
     const [isTesting, setIsTesting] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
-        const savedToken = localStorage.getItem('telegramBotToken') ?? '7441750744:AAE9ZpwiJ65DQHzmoyfhBdTzuXC2G3P7nFA';
         const savedAdminId = localStorage.getItem('telegramAdminChatId') ?? '6116803120';
-        setBotToken(savedToken);
         setAdminChatId(savedAdminId);
     }, []);
 
@@ -39,11 +37,10 @@ export default function TelegramAutomationPage() {
     
     const handleSaveSettings = () => {
         setIsSaving(true);
-        localStorage.setItem('telegramBotToken', botToken);
         localStorage.setItem('telegramAdminChatId', adminChatId);
         toast({
             title: 'Pengaturan Disimpan!',
-            description: 'Token Bot dan ID Chat Admin telah disimpan di browser Anda.',
+            description: 'ID Chat Admin telah disimpan di browser Anda.',
         });
         setTimeout(() => setIsSaving(false), 1000);
     };
@@ -58,22 +55,12 @@ export default function TelegramAutomationPage() {
             return;
         }
 
-        if (!botToken) {
-            toast({
-                title: 'Token Bot dibutuhkan',
-                description: 'Mohon masukkan Token Bot Anda dan simpan pengaturan.',
-                variant: 'destructive',
-            });
-            return;
-        }
-
         setIsTesting(true);
         try {
             const result = await sendTelegramUpdate({
-                botToken: botToken,
                 telegramId: testTelegramId,
                 orderId: '#TEST-001',
-                updateMessage: 'Ini adalah pesan tes dari integrasi bot Telegram Urgent Studio.',
+                message: 'Ini adalah pesan tes dari integrasi bot Telegram Urgent Studio.',
             });
 
             if (result.success) {
@@ -84,14 +71,14 @@ export default function TelegramAutomationPage() {
             } else {
                 toast({
                     title: 'Gagal Mengirim Pesan',
-                    description: result.error || 'Pastikan Token Bot dan Chat ID sudah benar, dan Anda sudah memulai chat dengan bot.',
+                    description: result.error || 'Terjadi kesalahan. Pastikan Token Bot sudah benar di file .env, dan Anda sudah memulai chat dengan bot.',
                     variant: 'destructive',
                 });
             }
         } catch (error: any) {
             toast({
                 title: 'Gagal Mengirim Pesan',
-                description: error.message || 'Terjadi kesalahan. Pastikan Token Bot dan Chat ID sudah benar, dan Anda sudah memulai chat dengan bot.',
+                description: error.message || 'Terjadi kesalahan. Pastikan Token Bot sudah benar di file .env, dan Anda sudah memulai chat dengan bot.',
                 variant: 'destructive',
             });
         } finally {
@@ -114,16 +101,15 @@ export default function TelegramAutomationPage() {
                             <CardDescription>Masukkan informasi bot Telegram Anda di sini.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="bot-token">Bot Token</Label>
-                                <Input 
-                                    id="bot-token" 
-                                    type="password" 
-                                    placeholder="Masukkan token bot Anda..." 
-                                    value={botToken}
-                                    onChange={(e) => setBotToken(e.target.value)}
-                                />
-                            </div>
+                            <Alert>
+                              <Terminal className="h-4 w-4" />
+                              <AlertTitle>Pengaturan Token Bot</AlertTitle>
+                              <AlertDescription>
+                                Untuk keamanan, Token Bot Telegram sekarang diatur melalui environment variable. Tambahkan baris berikut ke file `.env` Anda:
+                                <code className="block bg-muted text-foreground p-2 rounded-md my-2 text-sm">TELEGRAM_BOT_TOKEN="TOKEN_ANDA_DISINI"</code>
+                                Hubungi developer jika Anda tidak memiliki akses ke file ini.
+                              </AlertDescription>
+                            </Alert>
                              <div className="space-y-2">
                                 <Label htmlFor="admin-chat-id">Admin Chat ID</Label>
                                 <Input 
@@ -132,12 +118,12 @@ export default function TelegramAutomationPage() {
                                     value={adminChatId}
                                     onChange={(e) => setAdminChatId(e.target.value)}
                                 />
-                                <p className="text-xs text-muted-foreground">ID ini akan menerima notifikasi untuk admin.</p>
+                                <p className="text-xs text-muted-foreground">ID ini akan menerima notifikasi untuk admin. Anda bisa mendapatkan ID ini dengan mengirim `/start` ke bot Anda.</p>
                             </div>
                         </CardContent>
                         <CardFooter>
                             <Button onClick={handleSaveSettings} disabled={isSaving}>
-                                {isSaving ? 'Menyimpan...' : <><Save className="mr-2 h-4 w-4" /> Simpan Pengaturan</>}
+                                {isSaving ? 'Menyimpan...' : <><Save className="mr-2 h-4 w-4" /> Simpan ID Admin</>}
                             </Button>
                         </CardFooter>
                     </Card>
@@ -173,7 +159,7 @@ export default function TelegramAutomationPage() {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="test-telegram-id">ID Telegram Klien</Label>
+                                <Label htmlFor="test-telegram-id">ID Telegram Tujuan</Label>
                                 <Input 
                                     id="test-telegram-id" 
                                     placeholder="@username atau ID" 

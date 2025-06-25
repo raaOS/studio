@@ -16,16 +16,11 @@ export function OrderSummary() {
     const { toast } = useToast();
     const [customer, setCustomer] = useState<Customer | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [botToken, setBotToken] = useState('');
 
     useEffect(() => {
         const savedCustomerData = localStorage.getItem('customerData');
         if (savedCustomerData) {
             setCustomer(JSON.parse(savedCustomerData));
-        }
-        const savedToken = localStorage.getItem('telegramBotToken');
-        if (savedToken) {
-            setBotToken(savedToken);
         }
     }, []);
 
@@ -39,28 +34,19 @@ export function OrderSummary() {
             return;
         }
 
-        if (!customer) {
+        if (!customer?.telegram) {
             toast({
-                title: 'Data Pelanggan Tidak Ditemukan',
-                description: 'Mohon kembali ke halaman utama dan isi data Anda.',
+                title: 'Data Pelanggan Tidak Lengkap',
+                description: 'Mohon kembali ke Langkah 1 dan isi username Telegram Anda.',
                 variant: 'destructive',
             });
             return;
         }
         
-        if (!botToken) {
-            toast({
-                title: 'Token Bot Telegram Tidak Ditemukan',
-                description: 'Admin belum mengatur token bot di panel admin.',
-                variant: 'destructive',
-            });
-            return;
-        }
-
         setIsSubmitting(true);
         const orderId = `#${Math.floor(1000 + Math.random() * 9000)}`;
         const orderDetails = cartItems.map(item => `${item.name} (x${item.quantity})`).join(', ');
-        const message = `Halo ${customer.name}, pesanan baru Anda ${orderId} telah kami terima.
+        const message = `Halo ${customer.name}, pesanan baru Anda telah kami terima.
 Rincian: ${orderDetails}.
 Total: ${formatRupiah(totalPrice)}.
 Metode Bayar: ${paymentMethod === 'dp' ? 'DP 50%' : 'Lunas'}.
@@ -68,10 +54,9 @@ Terima kasih!`;
 
         try {
             const result = await sendTelegramUpdate({
-                botToken: botToken,
                 telegramId: customer.telegram,
                 orderId: orderId,
-                updateMessage: message,
+                message: message,
             });
 
             if (result.success) {

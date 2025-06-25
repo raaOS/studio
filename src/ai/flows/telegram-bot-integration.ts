@@ -13,9 +13,8 @@ import {z} from 'genkit';
 
 const SendTelegramUpdateInputSchema = z.object({
   telegramId: z.string().describe('The Telegram user ID or @username to send the message to.'),
-  orderId: z.string().describe('The ID of the order.'),
-  updateMessage: z.string().describe('The message to send to the user.'),
-  botToken: z.string().describe('The Telegram Bot API Token.'),
+  message: z.string().describe('The message to send to the user.'),
+  orderId: z.string().optional().describe('The ID of the order, if applicable.'),
 });
 export type SendTelegramUpdateInput = z.infer<typeof SendTelegramUpdateInputSchema>;
 
@@ -36,17 +35,21 @@ const sendTelegramUpdateFlow = ai.defineFlow(
     outputSchema: SendTelegramUpdateOutputSchema,
   },
   async (input) => {
-    const botToken = input.botToken?.trim();
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
 
     if (!botToken) {
-      const errorMsg = 'Telegram Bot Token is not provided.';
+      const errorMsg = 'TELEGRAM_BOT_TOKEN is not set in environment variables.';
       console.error(errorMsg);
       return { success: false, error: errorMsg };
     }
 
     try {
       const telegramApiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
-      const fullMessage = `${input.updateMessage}\n\nOrder ID: ${input.orderId}`;
+      
+      let fullMessage = input.message;
+      if (input.orderId) {
+          fullMessage += `\n\nOrder ID: ${input.orderId}`;
+      }
       
       const response = await fetch(telegramApiUrl, {
         method: 'POST',
@@ -56,18 +59,19 @@ const sendTelegramUpdateFlow = ai.defineFlow(
         body: JSON.stringify({
           chat_id: input.telegramId,
           text: fullMessage,
+          parse_mode: 'Markdown',
         }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        const errorMessage = data.description || response.statusText;
-        console.error(`Telegram API error: ${response.statusText}`, data);
+      if (!data.ok) {
+        const errorMessage = data.description || 'Unknown error';
+        console.error(`Telegram API error: ${errorMessage}`, data);
         return { success: false, error: `Telegram API Error: ${errorMessage}` };
       }
 
-      return { success: data.ok };
+      return { success: true };
 
     } catch (error: any) {
       console.error('Error sending Telegram update:', error);
