@@ -95,3 +95,11 @@ export type DriveActivityLog = {
   timestamp: string;
   user: string;
 };
+
+export type CalendarActivityLog = {
+  id: string;
+  orderId: string;
+  activity: string;
+  timestamp: string;
+  trigger: string;
+};
