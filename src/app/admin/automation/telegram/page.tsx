@@ -177,7 +177,9 @@ export default function TelegramAutomationPage() {
                                     value={adminChatId}
                                     onChange={(e) => setAdminChatId(e.target.value)}
                                 />
-                                <p className="text-xs text-muted-foreground">ID ini akan menerima notifikasi untuk admin. Anda bisa mendapatkan ID ini dengan mengirim `/start` ke bot Anda.</p>
+                                <p className="text-xs text-muted-foreground">
+                                    Ini adalah Chat ID pribadi Anda dengan bot. Bot akan menggunakan ID ini untuk mengirim notifikasi penting khusus untuk admin. Untuk mendapatkannya, kirim pesan <strong>/start</strong> ke bot Anda di Telegram, lalu salin Chat ID yang ditampilkan di pesan balasan.
+                                </p>
                             </div>
                         </CardContent>
                         <CardFooter className="flex flex-wrap items-center justify-between gap-4">
