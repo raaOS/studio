@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -10,26 +11,22 @@ import { formatRupiah, cn } from '@/lib/utils';
 import { useState } from 'react';
 import { ProductDetailDialog } from './ProductDetailDialog';
 import { PlusCircle } from 'lucide-react';
+import { budgetItems } from '@/lib/data';
 
 interface ServiceCardProps {
   service: Service;
 }
 
 export function ServiceCard({ service }: ServiceCardProps) {
-  const { getItemQuantity, selectedBudget } = useCart();
-  const quantity = getItemQuantity(service.id);
+  const { getCartItem } = useCart();
+  const cartItem = getCartItem(service.id);
+  const quantity = cartItem?.quantity ?? 0;
   
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const isBudgetSelected = !!selectedBudget;
-  const price =
-    isBudgetSelected && service.prices[selectedBudget.id] !== undefined
-      ? service.prices[selectedBudget.id]
-      : 0;
-
   return (
     <>
-      <Card className={cn("flex flex-col h-full relative overflow-hidden")}>
+      <Card className="flex flex-col h-full overflow-hidden">
         <CardHeader className="p-0">
           <Image
             src={service.image}
@@ -43,17 +40,21 @@ export function ServiceCard({ service }: ServiceCardProps) {
 
         <CardContent className="p-4 flex-grow">
           <CardTitle className="font-headline text-lg mb-2">{service.name}</CardTitle>
-          <p className="text-primary font-semibold text-lg">
-            {isBudgetSelected ? formatRupiah(price) : 'Pilih budget dulu'}
-          </p>
+          <div className="space-y-1 text-sm">
+            {budgetItems.map(budget => (
+              <div key={budget.id} className="flex justify-between items-center">
+                <span className="text-muted-foreground">{budget.title}</span>
+                <span className="font-medium">{formatRupiah(service.prices[budget.id])}</span>
+              </div>
+            ))}
+          </div>
         </CardContent>
 
         <CardFooter className="p-4 pt-0">
           <Button 
             className="w-full" 
             variant={quantity > 0 ? "secondary" : "default"}
-            onClick={() => setIsDialogOpen(true)} 
-            disabled={!isBudgetSelected}
+            onClick={() => setIsDialogOpen(true)}
           >
             {quantity > 0 ? (
               <div className='flex items-center justify-center'>

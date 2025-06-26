@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -14,11 +15,16 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Separator } from '@/components/ui/separator';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { QuantityStepper } from '@/components/QuantityStepper';
 import { useCart } from '@/contexts/CartContext';
 import { generateDynamicBrief } from '@/ai/flows/generate-dynamic-brief';
-import type { Service } from '@/lib/types';
+import type { Service, BudgetTier } from '@/lib/types';
+import { budgetItems } from '@/lib/data';
+import { formatRupiah } from '@/lib/utils';
 import { ShoppingCart } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductDetailDialogProps {
   service: Service;
@@ -33,20 +39,25 @@ const fallbackBriefFields = [
 ];
 
 export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDetailDialogProps) {
-  const { addOrUpdateItem, getItemQuantity, getItemBrief } = useCart();
+  const { addOrUpdateItem, getCartItem } = useCart();
+  const { toast } = useToast();
   
   const [quantity, setQuantity] = useState(1);
   const [brief, setBrief] = useState<Record<string, string>>({});
   const [briefFields, setBriefFields] = useState<{name: string, placeholder: string, type: 'textarea' | 'input'}[]>([]);
   const [isGeneratingBrief, setIsGeneratingBrief] = useState(false);
+  const [selectedTier, setSelectedTier] = useState<BudgetTier | null>(null);
 
   useEffect(() => {
     if (isOpen) {
-      const initialQuantity = getItemQuantity(service.id);
-      const initialBrief = getItemBrief(service.id);
-      
+      const cartItem = getCartItem(service.id);
+      const initialQuantity = cartItem?.quantity || 0;
+      const initialBrief = cartItem?.brief || {};
+      const initialTier = cartItem?.budgetTier || null;
+
       setQuantity(initialQuantity === 0 ? 1 : initialQuantity);
       setBrief(initialBrief);
+      setSelectedTier(initialTier);
 
       if (briefFields.length === 0) {
         setIsGeneratingBrief(true);
@@ -71,14 +82,22 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
     } else {
       setBriefFields([]);
     }
-  }, [isOpen, service.id, service.name, getItemQuantity, getItemBrief, briefFields.length]);
+  }, [isOpen, service.id, service.name, getCartItem, briefFields.length]);
 
   const handleBriefChange = (field: string, value: string) => {
     setBrief(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSave = () => {
-    addOrUpdateItem(service, quantity, brief);
+    if (!selectedTier) {
+      toast({
+        title: "Pilih Budget Dulu",
+        description: "Anda harus memilih salah satu tipe budget sebelum melanjutkan.",
+        variant: "destructive",
+      });
+      return;
+    }
+    addOrUpdateItem(service, quantity, brief, selectedTier);
     onOpenChange(false);
   };
 
@@ -88,11 +107,39 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl">{service.name}</DialogTitle>
           <DialogDescription>
-            Isi detail pesanan Anda di bawah ini.
+            Pilih budget dan isi detail pesanan Anda di bawah ini.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-4">
+            <div className="space-y-2">
+                <Label>Pilih Tipe Budget</Label>
+                <RadioGroup
+                    value={selectedTier ?? ""}
+                    onValueChange={(value) => setSelectedTier(value as BudgetTier)}
+                    className="grid grid-cols-1 gap-2"
+                >
+                    {budgetItems.map((budget) => (
+                    <Label 
+                        key={budget.id}
+                        htmlFor={`${service.id}-${budget.id}`}
+                        className={`flex items-start justify-between rounded-md border-2 p-3 cursor-pointer transition-colors ${selectedTier === budget.id ? 'border-primary bg-primary/5' : 'border-muted hover:bg-accent/50'}`}
+                    >
+                        <div className="flex-1">
+                            <p className="font-semibold">{budget.title}</p>
+                            <p className="text-sm text-muted-foreground">{budget.description}</p>
+                        </div>
+                        <div className="text-right ml-4 flex-shrink-0">
+                            <p className="font-bold text-lg">{formatRupiah(service.prices[budget.id])}</p>
+                            <RadioGroupItem value={budget.id} id={`${service.id}-${budget.id}`} className="mt-2 ml-auto" />
+                        </div>
+                    </Label>
+                    ))}
+                </RadioGroup>
+            </div>
+            
+            <Separator />
+            
           {isGeneratingBrief ? (
             <div className="space-y-4 pt-2">
                 <Skeleton className="h-6 w-1/3" />
@@ -134,9 +181,9 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
             Batal
           </Button>
-          <Button type="button" onClick={handleSave}>
+          <Button type="button" onClick={handleSave} disabled={!selectedTier}>
             <ShoppingCart className="mr-2 h-4 w-4" />
-            {getItemQuantity(service.id) > 0 ? 'Simpan Perubahan' : 'Tambahkan ke Keranjang'}
+            {getCartItem(service.id) ? 'Simpan Perubahan' : 'Tambahkan ke Keranjang'}
           </Button>
         </DialogFooter>
       </DialogContent>

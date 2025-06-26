@@ -26,6 +26,8 @@ export type CartItem = {
   quantity: number;
   brief: Record<string, string>;
   image: string;
+  budgetTier: BudgetTier;
+  budgetName: string;
 };
 
 export type Customer = {

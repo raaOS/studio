@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useMemo, useState, useEffect, useCallback } from 'react';
@@ -37,7 +38,7 @@ type CustomerInfoFormValues = z.infer<typeof customerInfoFormSchema>;
 
 
 function OrderWorkflow() {
-  const { selectedBudget, setSelectedBudget, clearCart, setPaymentMethod, paymentMethod } = useCart();
+  const { setPaymentMethod, paymentMethod } = useCart();
   const [modalImage, setModalImage] = useState<{src: string, alt: string} | null>(null);
 
   const form = useForm<CustomerInfoFormValues>({
@@ -63,18 +64,6 @@ function OrderWorkflow() {
   
   const handlePaymentSelect = (method: 'dp' | 'lunas') => {
     setPaymentMethod(method);
-  };
-
-  const handleBudgetSelect = (budget: BudgetItem) => {
-    if (selectedBudget?.id !== budget.id) {
-        clearCart();
-    }
-    setSelectedBudget(budget);
-  };
-
-  const handleImageClick = (e: React.MouseEvent, item: BudgetItem) => {
-    e.stopPropagation(); // Prevent the card's onClick from firing
-    setModalImage({ src: item.icon, alt: item.title });
   };
   
   const serviceCategories = useMemo(() => {
@@ -184,43 +173,11 @@ function OrderWorkflow() {
                   </CardContent>
               </Card>
           </section>
-
-          {/* Budget Selection */}
-          <section id="budget-selection-section">
-              <div className="text-center mb-10">
-                  <h2 className="text-2xl font-headline font-semibold text-foreground">Langkah 3: Budget kamu yang mana, nih?</h2>
-                  <p className="text-sm text-muted-foreground mt-2 max-w-2xl mx-auto">Harga layanan nanti bakal nyesuain sama pilihan budget kamu di sini.</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
-                  {budgetItems.map((item) => (
-                  <Card 
-                      key={item.id}
-                      onClick={() => handleBudgetSelect(item)}
-                      className={`cursor-pointer h-full flex flex-col hover:shadow-lg transition-all duration-300 overflow-hidden ${selectedBudget?.id === item.id ? 'border-primary ring-2 ring-primary shadow-lg' : 'hover:border-primary/50'}`}
-                  >
-                      <div onClick={(e) => handleImageClick(e, item)} className="relative w-full aspect-video cursor-pointer">
-                          <Image
-                              src={item.icon}
-                              alt={item.title}
-                              fill
-                              className="object-cover transition-transform hover:scale-105"
-                              data-ai-hint={item.dataAiHint}
-                          />
-                      </div>
-                      <CardContent className="p-6 text-center flex-grow">
-                          <CardTitle className="font-headline text-xl">{item.title}</CardTitle>
-                          <CardDescription>{item.priceRange}</CardDescription>
-                          <p className="text-muted-foreground mt-4">{item.description}</p>
-                      </CardContent>
-                  </Card>
-                  ))}
-              </div>
-          </section>
           
           {/* Catalog */}
           <section id="catalog-section" className="pt-8 flex-grow">
               <div className="text-center mb-10">
-                  <h2 className="text-2xl font-headline font-semibold text-foreground">Langkah 4: Terakhir, pilih layanannya!</h2>
+                  <h2 className="text-2xl font-headline font-semibold text-foreground">Langkah 3: Terakhir, pilih layanannya!</h2>
                   <p className="text-sm text-muted-foreground mt-2 max-w-2xl mx-auto">Scroll ke bawah dan masukkin semua yang kamu butuhin ke keranjang.</p>
               </div>
               <div className="space-y-8">
@@ -233,7 +190,7 @@ function OrderWorkflow() {
           {/* Order Summary */}
           <section id="summary-section" className="pt-16">
             <div className="text-center mb-10">
-              <h2 className="text-2xl font-headline font-semibold text-foreground">Langkah 5: Periksa Kembali Pesanan Anda</h2>
+              <h2 className="text-2xl font-headline font-semibold text-foreground">Langkah 4: Periksa Kembali Pesanan Anda</h2>
               <p className="text-sm text-muted-foreground mt-2 max-w-2xl mx-auto">Pastikan semua sudah benar sebelum mengirim pesanan.</p>
             </div>
             <div className="max-w-3xl mx-auto">

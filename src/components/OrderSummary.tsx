@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 import type { Customer } from "@/lib/types";
 
 export function OrderSummary() {
-    const { cartItems, totalPrice, totalItems, paymentMethod, updateItemQuantity, clearCart } = useCart();
+    const { cartItems, totalPrice, totalItems, paymentMethod, removeItem, clearCart } = useCart();
     const { toast } = useToast();
     const [customer, setCustomer] = useState<Customer | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -67,7 +67,7 @@ export function OrderSummary() {
             folderCreationError = error.message || 'Terjadi kesalahan saat menghubungi layanan Drive.';
         }
 
-        const orderDetails = cartItems.map(item => `- ${item.name} (x${item.quantity})`).join('\n');
+        const orderDetails = cartItems.map(item => `- ${item.name} (${item.budgetName}) (x${item.quantity})`).join('\n');
         const message = `✅ *Pesanan Baru Diterima!*\n\n*Order ID:* \`${orderId}\`\n*Nama:* ${customer.name}\n*Telegram:* ${customer.telegram}\n\n*Rincian Pesanan:*\n${orderDetails}\n\n*Total Tagihan:* ${formatRupiah(totalPrice)}\n*Metode Bayar:* ${paymentMethod === 'dp' ? 'DP 50%' : 'Lunas'}\n\n*Folder Google Drive:*\n${folderUrl}\n\nTerima kasih! Tim kami akan segera memprosesnya.`;
 
         try {
@@ -128,6 +128,7 @@ export function OrderSummary() {
                             <div key={item.id} className="flex justify-between items-start text-sm">
                                 <div>
                                     <p className="font-medium">{item.name} <span className="text-muted-foreground">x{item.quantity}</span></p>
+                                    <p className="text-xs text-muted-foreground -mt-1">{item.budgetName}</p>
                                     <p className="text-muted-foreground">{formatRupiah(item.price * item.quantity)}</p>
                                     {item.brief && Object.values(item.brief).some(v => v) && (
                                         <div className="text-xs text-muted-foreground pl-4 border-l-2 ml-2 mt-2 space-y-1 py-1">
@@ -140,7 +141,7 @@ export function OrderSummary() {
                                         </div>
                                     )}
                                 </div>
-                                <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={() => updateItemQuantity(item, 0)}>
+                                <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={() => removeItem(item.id)}>
                                     <Trash2 className="h-4 w-4 text-destructive" />
                                 </Button>
                             </div>
