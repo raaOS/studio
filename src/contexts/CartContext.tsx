@@ -3,18 +3,19 @@
 
 import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import type { CartItem, Service, BudgetItem } from '@/lib/types';
-import { services as allServices } from '@/lib/data';
 
 interface CartContextType {
   cartItems: CartItem[];
   updateItemQuantity: (service: Service, quantity: number) => void;
   updateBrief: (serviceId: string, field: string, value: string) => void;
+  addOrUpdateItem: (service: Service, quantity: number, brief: Record<string, string>) => void;
   clearCart: () => void;
   totalPrice: number;
   totalItems: number;
   paymentMethod: 'dp' | 'lunas' | null;
   setPaymentMethod: (method: 'dp' | 'lunas' | null) => void;
   getItemQuantity: (serviceId: string) => number;
+  getItemBrief: (serviceId: string) => Record<string, string>;
   selectedBudget: BudgetItem | null;
   setSelectedBudget: (budget: BudgetItem | null) => void;
 }
@@ -30,37 +31,55 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     return cartItems.find(item => item.id === serviceId)?.quantity ?? 0;
   }, [cartItems]);
 
-  const updateItemQuantity = useCallback((service: Service, quantity: number) => {
+  const getItemBrief = useCallback((serviceId: string) => {
+    return cartItems.find(item => item.id === serviceId)?.brief ?? {};
+  }, [cartItems]);
+
+  const addOrUpdateItem = useCallback((service: Service, quantity: number, brief: Record<string, string>) => {
     if (!selectedBudget) {
-      console.error("Budget not selected. Cannot update item quantity.");
+      console.error("Budget not selected. Cannot add or update item.");
       return;
     }
     
     setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.id === service.id);
+      const existingItemIndex = prevItems.findIndex(item => item.id === service.id);
       
       if (quantity <= 0) {
         return prevItems.filter(item => item.id !== service.id);
       }
-      
-      if (existingItem) {
-        return prevItems.map(item =>
-          item.id === service.id ? { ...item, quantity } : item
-        );
+
+      const newItemData: CartItem = {
+        ...service,
+        quantity,
+        price: service.prices[selectedBudget.id],
+        brief,
+      };
+
+      if (existingItemIndex > -1) {
+        const updatedItems = [...prevItems];
+        updatedItems[existingItemIndex] = newItemData;
+        return updatedItems;
       } else {
-        const price = service.prices[selectedBudget.id];
-        return [...prevItems, { ...service, quantity, price, brief: {} }];
+        return [...prevItems, newItemData];
       }
     });
   }, [selectedBudget]);
   
+  const updateItemQuantity = useCallback((service: Service, quantity: number) => {
+    if (!selectedBudget) return;
+    const currentBrief = cartItems.find(item => item.id === service.id)?.brief ?? {};
+    addOrUpdateItem(service, quantity, currentBrief);
+  }, [selectedBudget, cartItems, addOrUpdateItem]);
+  
   const updateBrief = useCallback((serviceId: string, field: string, value: string) => {
     setCartItems(prevItems =>
-      prevItems.map(item =>
-        item.id === serviceId 
-          ? { ...item, brief: { ...item.brief, [field]: value } } 
-          : item
-      )
+      prevItems.map(item => {
+        if (item.id === serviceId) {
+          const newBrief = { ...item.brief, [field]: value };
+          return { ...item, brief: newBrief };
+        }
+        return item;
+      })
     );
   }, []);
 
@@ -77,12 +96,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         cartItems,
         updateItemQuantity,
         updateBrief,
+        addOrUpdateItem,
         clearCart,
         totalPrice,
         totalItems,
         paymentMethod,
         setPaymentMethod,
         getItemQuantity,
+        getItemBrief,
         selectedBudget,
         setSelectedBudget
       }}

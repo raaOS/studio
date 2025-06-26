@@ -129,6 +129,16 @@ export function OrderSummary() {
                                 <div>
                                     <p className="font-medium">{item.name} <span className="text-muted-foreground">x{item.quantity}</span></p>
                                     <p className="text-muted-foreground">{formatRupiah(item.price * item.quantity)}</p>
+                                    {item.brief && Object.values(item.brief).some(v => v) && (
+                                        <div className="text-xs text-muted-foreground pl-4 border-l-2 ml-2 mt-2 space-y-1 py-1">
+                                            {Object.entries(item.brief).filter(([, answer]) => answer).map(([question, answer]) => (
+                                                <div key={question}>
+                                                    <p className="font-medium text-foreground/70">{question}</p>
+                                                    <p className="whitespace-pre-wrap">{answer as string}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                                 <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={() => updateItemQuantity(item, 0)}>
                                     <Trash2 className="h-4 w-4 text-destructive" />
