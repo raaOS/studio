@@ -23,7 +23,7 @@ import type { Service, BudgetTier } from '@/lib/types';
 import { budgetItems } from '@/lib/data';
 import { formatRupiah, cn } from '@/lib/utils';
 import { useToast } from "@/hooks/use-toast";
-import { Ticket } from 'lucide-react';
+import { Ticket, CheckCircle } from 'lucide-react';
 import { Separator } from './ui/separator';
 
 interface ProductDetailDialogProps {
@@ -149,7 +149,6 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="p-0 sm:max-w-2xl max-h-[90vh] flex flex-col">
         
-        {/* === Mobile Header === */}
         <DialogHeader className="p-4 border-b shrink-0 sm:hidden">
            <div className="flex items-start gap-4">
             <div className="relative aspect-square w-24 rounded-lg overflow-hidden shrink-0">
@@ -183,11 +182,6 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
               <DialogTitle className="font-headline text-base text-left leading-tight pt-1">{service.name}</DialogTitle>
             </div>
           </div>
-        </DialogHeader>
-
-        {/* === Desktop Header === */}
-        <DialogHeader className="hidden sm:block p-0">
-          {/* This is empty because on desktop, the content is in the two-column grid */}
         </DialogHeader>
         
         <div className="flex-1 overflow-y-auto sm:grid sm:grid-cols-2 sm:gap-6 sm:items-start">
@@ -242,11 +236,16 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                         key={budget.id}
                         onClick={() => setSelectedTier(budget.id)}
                         className={cn(
-                            "w-full text-left p-2 border-2 rounded-lg transition-colors",
+                            "w-full text-left p-2 border-2 rounded-lg transition-colors relative",
                             "flex items-center gap-2",
                             selectedTier === budget.id ? 'border-primary' : 'border-muted bg-popover hover:bg-accent/50'
                         )}
                       >
+                         {selectedTier === budget.id && (
+                            <div className="absolute top-1 right-1 bg-green-500 text-white rounded-full p-0.5">
+                                <CheckCircle className="h-3 w-3" />
+                            </div>
+                         )}
                         <Image src={budget.image} alt={budget.title} width={32} height={32} className="rounded-md shrink-0" data-ai-hint="logo" />
                         <div>
                             <p className="font-semibold text-sm leading-tight">{budget.title}</p>
@@ -288,20 +287,22 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                   <div className="flex justify-between items-center">
                       <Label htmlFor="width" className="font-semibold text-sm">Ukuran</Label>
                       <div className="flex items-center gap-1">
-                        <Input 
+                        <Input
                           id='width'
-                          placeholder="L" 
-                          className="w-14 text-center h-9" 
+                          placeholder="L"
+                          className="h-9 text-center"
                           value={size.width}
                           onChange={(e) => setSize(s => ({...s, width: e.target.value}))}
+                          style={{width: `${(size.width.length || 1) + 2}ch`, minWidth: '3rem'}}
                         />
                         <span className="text-muted-foreground">x</span>
-                        <Input 
+                        <Input
                           id='height'
-                          placeholder="T" 
-                          className="w-14 text-center h-9"
+                          placeholder="T"
+                          className="h-9 text-center"
                           value={size.height}
                           onChange={(e) => setSize(s => ({...s, height: e.target.value}))}
+                          style={{width: `${(size.height.length || 1) + 2}ch`, minWidth: '3rem'}}
                         />
                         <Select value={size.unit} onValueChange={(value) => setSize(s => ({...s, unit: value as 'px' | 'cm' | 'm'}))}>
                           <SelectTrigger className="w-[70px] h-9">
