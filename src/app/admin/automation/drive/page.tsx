@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { mockDriveActivityLogs } from '@/lib/data';
-import { FolderSync, Save, TestTube2, Info } from 'lucide-react';
+import { FolderSync, Save, TestTube2, AlertCircle, Link as LinkIcon, FolderCog } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
@@ -24,16 +24,36 @@ import type { DriveActivityLog } from '@/lib/types';
 export default function DriveAutomationPage() {
   const { toast } = useToast();
   const [isTesting, setIsTesting] = useState(false);
-  const [testOrderId, setTestOrderId] = useState('');
-  const [testCustomerName, setTestCustomerName] = useState('');
+  const [testOrderId, setTestOrderId] = useState('DSN-TEST-001');
+  const [testCustomerName, setTestCustomerName] = useState('Pelanggan Uji');
   const [folderTemplate, setFolderTemplate] = useState('[OrderID] - [CustomerName]');
+  const [parentFolderId, setParentFolderId] = useState('');
   const [activityLogs, setActivityLogs] = useState<DriveActivityLog[]>(mockDriveActivityLogs);
+
+  // Effect to load parent folder ID from env var placeholder on client-side
+  // In a real app, this might be fetched from a secure config endpoint
+  useEffect(() => {
+    // This is a placeholder for demonstrating where the env var would be used.
+    // In Next.js, `process.env` is not directly available in the client like this
+    // without being prefixed with NEXT_PUBLIC_. For server-side values, we
+    // would fetch them from an API route. Here we'll just leave it blank
+    // and let the user input it.
+  }, []);
 
   const handleTestDrive = async () => {
     if (!testOrderId || !testCustomerName) {
       toast({
         title: 'Data Tes Dibutuhkan',
         description: 'Mohon masukkan Order ID dan Nama Klien untuk pengujian.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    if (!parentFolderId) {
+       toast({
+        title: 'Parent Folder ID Diperlukan',
+        description: 'Mohon masukkan ID folder utama di Google Drive tempat folder baru akan dibuat.',
         variant: 'destructive',
       });
       return;
@@ -45,30 +65,36 @@ export default function DriveAutomationPage() {
         orderId: testOrderId,
         customerName: testCustomerName,
         folderTemplate: folderTemplate,
+        parentFolderId: parentFolderId,
       });
 
-      if (result.success) {
+      if (result.success && result.folderId) {
         toast({
           title: 'Folder Tes Berhasil Dibuat!',
-          description: `Folder dengan nama "${result.folderName}" telah disimulasikan.`,
+          description: `Folder "${result.folderName}" telah dibuat di Google Drive Anda.`,
+          action: result.folderUrl ? (
+            <Button asChild variant="secondary" size="sm">
+                <a href={result.folderUrl} target="_blank" rel="noopener noreferrer">Buka Folder</a>
+            </Button>
+          ) : undefined,
         });
         
         const newLog: DriveActivityLog = {
-          id: `sim_${Date.now()}`,
+          id: result.folderId,
           orderId: testOrderId,
           activity: `Folder Created: ${result.folderName}`,
           timestamp: new Date().toLocaleString('id-ID'),
-          user: 'System (Simulasi)',
+          user: 'System (Live Test)',
         };
         setActivityLogs(prevLogs => [newLog, ...prevLogs]);
 
       } else {
-        throw new Error('Simulated API call failed.');
+        throw new Error(result.error || 'Terjadi kesalahan tidak diketahui.');
       }
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: 'Gagal Membuat Folder',
-        description: 'Terjadi kesalahan saat pengujian. Periksa kembali pengaturan Anda.',
+        description: error.message,
         variant: 'destructive',
       });
     } finally {
@@ -79,15 +105,20 @@ export default function DriveAutomationPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl md:text-3xl font-bold font-headline">Otomasi Folder Proyek</h1>
-        <p className="text-muted-foreground">Kelola folder proyek otomatis untuk setiap pesanan.</p>
+        <h1 className="text-2xl md:text-3xl font-bold font-headline">Otomasi Google Drive</h1>
+        <p className="text-muted-foreground">Kelola folder proyek otomatis untuk setiap pesanan langsung di Google Drive.</p>
       </div>
 
-       <Alert variant="default" className="bg-blue-50 border-blue-200 dark:bg-blue-950 dark:border-blue-800">
-          <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-          <AlertTitle className="text-blue-800 dark:text-blue-300">Mode Simulasi Aktif</AlertTitle>
-          <AlertDescription className="text-blue-700 dark:text-blue-400">
-            Fitur otomasi folder sedang berjalan dalam mode simulasi. Tidak ada file atau koneksi nyata yang dibuat. Ini 100% aman untuk pengujian.
+       <Alert variant="destructive" className="bg-yellow-50 border-yellow-300 dark:bg-yellow-950 dark:border-yellow-800">
+          <AlertCircle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+          <AlertTitle className="text-yellow-800 dark:text-yellow-300 font-bold">Konfigurasi Diperlukan</AlertTitle>
+          <AlertDescription className="text-yellow-700 dark:text-yellow-400">
+            Integrasi ini sekarang **nyata**. Untuk bekerja, Anda harus:
+            <ol className="list-decimal list-inside mt-2 space-y-1">
+                <li>Membuat **Service Account** di Google Cloud Console dan mengunduh file kredensial JSON-nya.</li>
+                <li>Menambahkan isi file JSON tersebut ke variabel <code>DRIVE_SERVICE_ACCOUNT_JSON</code> di file <code>.env</code> Anda.</li>
+                <li>Mendapatkan **ID Folder Induk** dari URL Google Drive dan memasukkannya di bawah atau di variabel <code>DRIVE_PARENT_FOLDER_ID</code>.</li>
+            </ol>
           </AlertDescription>
         </Alert>
 
@@ -95,10 +126,22 @@ export default function DriveAutomationPage() {
         <div className="lg:col-span-2 space-y-8">
           <Card>
             <CardHeader>
-              <CardTitle>Struktur Folder</CardTitle>
-              <CardDescription>Atur format penamaan untuk folder proyek yang dibuat secara otomatis.</CardDescription>
+              <CardTitle className="flex items-center gap-2"><FolderCog/>Struktur Folder</CardTitle>
+              <CardDescription>Atur format penamaan dan lokasi folder proyek di Google Drive.</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="parent-folder-id">ID Folder Induk Google Drive</Label>
+                <Input 
+                  id="parent-folder-id" 
+                  placeholder="Contoh: 1a2b3c4d5e6f7g8h9i0j_kL"
+                  value={parentFolderId}
+                  onChange={(e) => setParentFolderId(e.target.value)}
+                />
+                 <p className="text-xs text-muted-foreground mt-1">
+                  Ambil ID dari URL folder utama di Google Drive Anda. Folder baru akan dibuat di dalamnya.
+                </p>
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="folder-structure">Template Nama Folder</Label>
                 <Input 
@@ -107,39 +150,57 @@ export default function DriveAutomationPage() {
                   onChange={(e) => setFolderTemplate(e.target.value)}
                 />
                 <p className="text-xs text-muted-foreground mt-1">
-                  Variabel yang tersedia: <code>[OrderID]</code>, <code>[CustomerName]</code>, <code>[BudgetType]</code>, <code>[Date]</code>.
+                  Variabel yang tersedia: <code>[OrderID]</code>, <code>[CustomerName]</code>.
                 </p>
               </div>
             </CardContent>
             <CardFooter>
-                <Button><Save className="mr-2 h-4 w-4" /> Simpan Struktur</Button>
+                <Button><Save className="mr-2 h-4 w-4" /> Simpan Pengaturan (Simulasi)</Button>
             </CardFooter>
+          </Card>
+
+           <Card>
+            <CardHeader>
+              <CardTitle>Log Aktivitas</CardTitle>
+              <CardDescription>Riwayat aktivitas sinkronisasi folder yang berhasil.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Order ID</TableHead>
+                    <TableHead>Aktivitas</TableHead>
+                    <TableHead>Timestamp</TableHead>
+                    <TableHead>Tipe</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {activityLogs.map((log) => (
+                    <TableRow key={log.id}>
+                      <TableCell className="font-medium">{log.orderId}</TableCell>
+                      <TableCell className="flex items-center gap-2">
+                        {log.activity}
+                        {log.user === 'System (Live Test)' && (
+                             <Button asChild variant="ghost" size="icon" className="h-6 w-6">
+                                <a href={`https://drive.google.com/drive/folders/${log.id}`} target="_blank" rel="noopener noreferrer"><LinkIcon className="h-3 w-3" /></a>
+                             </Button>
+                        )}
+                      </TableCell>
+                      <TableCell>{log.timestamp}</TableCell>
+                      <TableCell><Badge variant={log.user === 'System (Live Test)' ? 'default' : 'secondary'} className={log.user === 'System (Live Test)' ? 'bg-green-600' : ''}>{log.user}</Badge></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
           </Card>
         </div>
 
         <div className="lg:col-span-1 space-y-8">
           <Card className="sticky top-24">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><FolderSync /> Alur Sinkronisasi</CardTitle>
-              <CardDescription>Atur file apa saja yang akan disinkronkan secara otomatis.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm">
-                <p><strong>Saat Pesanan Dibuat:</strong></p>
-                <ul className="list-disc list-inside text-muted-foreground pl-2">
-                    <li>Buat folder proyek baru.</li>
-                    <li>Upload ringkasan brief (brief.pdf).</li>
-                </ul>
-                  <p className="mt-4"><strong>Saat Pesanan Selesai:</strong></p>
-                  <ul className="list-disc list-inside text-muted-foreground pl-2">
-                    <li>Upload semua file final (final_assets.zip).</li>
-                    <li>Bagikan folder ke klien (read-only).</li>
-                </ul>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2"><TestTube2 /> Uji Simulasi</CardTitle>
-                <CardDescription>Buat folder proyek tes untuk memastikan alur simulasi berjalan.</CardDescription>
+                <CardTitle className="flex items-center gap-2"><TestTube2 /> Uji Integrasi</CardTitle>
+                <CardDescription>Buat folder proyek tes untuk memastikan koneksi ke Google Drive berjalan.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="space-y-2">
@@ -163,42 +224,12 @@ export default function DriveAutomationPage() {
             </CardContent>
             <CardFooter>
                 <Button className="w-full" onClick={handleTestDrive} disabled={isTesting}>
-                    {isTesting ? 'Menjalankan...' : <><FolderSync className="mr-2 h-4 w-4" /> Jalankan Simulasi</>}
+                    {isTesting ? <><FolderSync className="mr-2 h-4 w-4 animate-spin" /> Membuat...</> : <><FolderSync className="mr-2 h-4 w-4" /> Uji Buat Folder</>}
                 </Button>
             </CardFooter>
           </Card>
         </div>
       </div>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Log Aktivitas (Simulasi)</CardTitle>
-          <CardDescription>Riwayat aktivitas sinkronisasi folder yang disimulasikan.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Aktivitas</TableHead>
-                <TableHead>Timestamp</TableHead>
-                <TableHead>User</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {activityLogs.map((log) => (
-                <TableRow key={log.id}>
-                  <TableCell className="font-medium">{log.orderId}</TableCell>
-                  <TableCell>{log.activity}</TableCell>
-                  <TableCell>{log.timestamp}</TableCell>
-                  <TableCell><Badge variant="secondary">{log.user}</Badge></TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
     </div>
   );
 }

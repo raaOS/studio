@@ -1,27 +1,31 @@
 'use server';
 
 /**
- * @fileOverview Implements a Genkit flow for creating a simulated order folder on the local server.
+ * @fileOverview Implements a Genkit flow for creating a real Google Drive folder.
  *
- * - createOrderFolder - Creates a folder for a given order (simulated).
+ * - createOrderFolder - Creates a folder for a given order in Google Drive.
  * - CreateOrderFolderInput - The input type for the createOrderFolder function.
  * - CreateOrderFolderOutput - The return type for the createOrderFolder function.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import {google} from 'googleapis';
 
 const CreateOrderFolderInputSchema = z.object({
   orderId: z.string().describe('The ID of the order.'),
   customerName: z.string().describe('The name of the customer.'),
   folderTemplate: z.string().describe('The template for the folder name, e.g., "[OrderID] - [CustomerName]".'),
+  parentFolderId: z.string().optional().describe('The ID of the parent folder in Google Drive where the new folder will be created.'),
 });
 export type CreateOrderFolderInput = z.infer<typeof CreateOrderFolderInputSchema>;
 
 const CreateOrderFolderOutputSchema = z.object({
   success: z.boolean().describe('Whether the folder was created successfully.'),
   folderName: z.string().describe('The name of the created folder.'),
-  folderPath: z.string().describe('The simulated path of the created folder on the server.'),
+  folderId: z.string().optional().describe('The ID of the created Google Drive folder.'),
+  folderUrl: z.string().optional().describe('The URL to access the created Google Drive folder.'),
+  error: z.string().optional().describe('Error message if the operation failed.'),
 });
 export type CreateOrderFolderOutput = z.infer<typeof CreateOrderFolderOutputSchema>;
 
@@ -36,32 +40,62 @@ const createOrderFolderFlow = ai.defineFlow(
     outputSchema: CreateOrderFolderOutputSchema,
   },
   async (input) => {
+    const serviceAccountJson = process.env.DRIVE_SERVICE_ACCOUNT_JSON;
+    const parentFolderId = input.parentFolderId || process.env.DRIVE_PARENT_FOLDER_ID;
+
+    if (!serviceAccountJson) {
+      const errorMsg = 'DRIVE_SERVICE_ACCOUNT_JSON environment variable is not set.';
+      console.error(errorMsg);
+      return { success: false, folderName: '', error: errorMsg };
+    }
+    
+    if (!parentFolderId) {
+       const errorMsg = 'Parent Folder ID is not provided or set in DRIVE_PARENT_FOLDER_ID environment variable.';
+       console.error(errorMsg);
+       return { success: false, folderName: '', error: errorMsg };
+    }
+
     try {
-      const folderName = input.folderTemplate
-        .replace('[OrderID]', input.orderId)
-        .replace('[CustomerName]', input.customerName);
+        const credentials = JSON.parse(serviceAccountJson);
+        const auth = new google.auth.JWT(
+            credentials.client_email,
+            undefined,
+            credentials.private_key,
+            ['https://www.googleapis.com/auth/drive']
+        );
 
-      // Simulate creating a folder on the local server
-      console.log(`Simulating folder creation for order ${input.orderId}...`);
-      console.log(`Folder Name: ${folderName}`);
-      
-      // In a real implementation, you would use Node.js's 'fs' module here.
-      // For now, we just simulate a success response with a server path.
-      const simulatedPath = `/uploads/orders/simulated_${Date.now()}`;
+        const drive = google.drive({ version: 'v3', auth });
 
-      console.log(`Successfully created folder. Path: ${simulatedPath}`);
-      
-      return { 
-        success: true,
-        folderName: folderName,
-        folderPath: simulatedPath
-      };
+        const folderName = input.folderTemplate
+            .replace('[OrderID]', input.orderId)
+            .replace('[CustomerName]', input.customerName);
+
+        const fileMetadata = {
+            name: folderName,
+            mimeType: 'application/vnd.google-apps.folder',
+            parents: [parentFolderId],
+        };
+
+        const file = await drive.files.create({
+            requestBody: fileMetadata,
+            fields: 'id, webViewLink',
+        });
+        
+        console.log(`Successfully created folder in Google Drive. ID: ${file.data.id}`);
+
+        return { 
+            success: true,
+            folderName: folderName,
+            folderId: file.data.id || '',
+            folderUrl: file.data.webViewLink || '',
+        };
     } catch (error: any) {
-      console.error('Error creating order folder:', error);
+      console.error('Error creating Google Drive folder:', error);
+      const errorMessage = error.response?.data?.error?.message || error.message || 'An unexpected error occurred.';
       return { 
         success: false,
         folderName: '',
-        folderPath: ''
+        error: `Google Drive API Error: ${errorMessage}`,
       };
     }
   }
