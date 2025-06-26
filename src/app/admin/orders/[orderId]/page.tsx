@@ -10,11 +10,14 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Separator } from '@/components/ui/separator';
 import { formatRupiah, cn } from '@/lib/utils';
 import type { Order, OrderStatus } from '@/lib/types';
-import { MessageSquare, Send, Folder, Calendar, Video, History } from 'lucide-react';
+import { MessageSquare, Send, Folder, Calendar, Video, History, FolderSync } from 'lucide-react';
+import { createOrderFolder } from '@/ai/flows/create-drive-folder';
+import { useToast } from '@/hooks/use-toast';
 
 export default function OrderDetailPage() {
   const params = useParams();
   const orderId = params?.orderId as string;
+  const { toast } = useToast();
   
   const order: Order | null = useMemo(() => {
     if (!orderId) return null;
@@ -22,10 +25,13 @@ export default function OrderDetailPage() {
   }, [orderId]);
 
   const [currentStatus, setCurrentStatus] = useState<OrderStatus>('Masuk Antrian');
+  const [driveUrl, setDriveUrl] = useState(order?.driveFolderUrl);
+  const [isCreatingFolder, setIsCreatingFolder] = useState(false);
 
   useEffect(() => {
     if (order) {
       setCurrentStatus(order.status_pesanan);
+      setDriveUrl(order.driveFolderUrl);
     }
   }, [order]);
 
@@ -36,6 +42,40 @@ export default function OrderDetailPage() {
   if (!order) {
     return <div>Loading...</div>;
   }
+  
+  const handleCreateFolder = async () => {
+    setIsCreatingFolder(true);
+    try {
+      const result = await createOrderFolder({
+        orderId: order.kode_order,
+        customerName: order.nama_klien,
+        folderTemplate: '[OrderID] - [CustomerName]',
+      });
+
+      if (result.success && result.folderUrl) {
+        setDriveUrl(result.folderUrl);
+        toast({
+          title: 'Folder Berhasil Dibuat!',
+          description: `Folder untuk pesanan ${order.kode_order} telah dibuat.`,
+        });
+        // Note: In a real app, you'd update this in your database.
+        // For this mock setup, we just update the local state.
+        const orderInMock = mockOrders.find(o => o.kode_order === orderId);
+        if(orderInMock) orderInMock.driveFolderUrl = result.folderUrl;
+
+      } else {
+        throw new Error(result.error || 'Gagal membuat folder.');
+      }
+    } catch (error: any) {
+      toast({
+        title: 'Gagal Membuat Folder',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsCreatingFolder(false);
+    }
+  };
 
   const getStatusClass = (status: OrderStatus) => {
     switch (status) {
@@ -175,17 +215,21 @@ export default function OrderDetailPage() {
                     <div>
                       <h4 className="font-semibold flex items-center gap-2"><Folder className="h-4 w-4" /> Drive Folder</h4>
                       <p className="text-sm text-muted-foreground">
-                        {order.driveFolderUrl ? `Folder telah dibuat` : 'Belum dibuat'}
+                        {driveUrl ? `Folder telah dibuat.` : 'Folder belum dibuat.'}
                       </p>
-                      {order.driveFolderUrl ? (
+                      {driveUrl ? (
                         <Button asChild variant="outline" size="sm" className="mt-2 w-full">
-                          <a href={order.driveFolderUrl} target="_blank" rel="noopener noreferrer">
+                          <a href={driveUrl} target="_blank" rel="noopener noreferrer">
                             Buka Folder
                           </a>
                         </Button>
                       ) : (
-                        <Button variant="outline" size="sm" className="mt-2 w-full" disabled>
-                            Buka Folder
+                        <Button variant="outline" size="sm" className="mt-2 w-full" onClick={handleCreateFolder} disabled={isCreatingFolder}>
+                          {isCreatingFolder ? (
+                            <><FolderSync className="mr-2 h-4 w-4 animate-spin" /> Membuat...</>
+                          ) : (
+                            'Buat Folder Sekarang'
+                          )}
                         </Button>
                       )}
                     </div>
