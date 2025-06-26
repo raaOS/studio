@@ -29,8 +29,8 @@ export default function AdminPaymentsPage() {
       const statusMatch = filters.status === 'All' || order.paymentStatus === filters.status;
       const searchMatch =
         filters.search === '' ||
-        order.id.toLowerCase().includes(filters.search.toLowerCase()) ||
-        order.customerName.toLowerCase().includes(filters.search.toLowerCase());
+        order.kode_order.toLowerCase().includes(filters.search.toLowerCase()) ||
+        order.nama_klien.toLowerCase().includes(filters.search.toLowerCase());
       return statusMatch && searchMatch;
     });
   }, [filters]);
@@ -96,25 +96,25 @@ export default function AdminPaymentsPage() {
             <TableBody>
               {filteredOrders.length > 0 ? (
                 filteredOrders.map(order => (
-                  <TableRow key={order.id}>
+                  <TableRow key={order.kode_order}>
                     <TableCell className="font-medium">
-                      <Link href={`/admin/orders/${order.id.substring(1)}`} className="text-primary hover:underline">
-                        {order.id}
+                      <Link href={`/admin/orders/${order.kode_order.substring(1)}`} className="text-primary hover:underline">
+                        {order.kode_order}
                       </Link>
                     </TableCell>
-                    <TableCell>{order.customerName}</TableCell>
-                    <TableCell>{formatRupiah(order.total)}</TableCell>
+                    <TableCell>{order.nama_klien}</TableCell>
+                    <TableCell>{formatRupiah(order.jumlah_transfer)}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className={cn("capitalize", getStatusClass(order.paymentStatus))}>
                         {order.paymentStatus}
                       </Badge>
                     </TableCell>
-                    <TableCell>{order.date}</TableCell>
+                    <TableCell>{order.timestamp}</TableCell>
                     <TableCell className="text-right space-x-2">
                        {order.paymentStatus !== 'Lunas' && order.paymentStatus !== 'Batal' && <Button size="sm" variant="default">Validasi Pembayaran</Button>}
                        {order.paymentStatus === 'Belum Lunas' && <Button size="sm" variant="outline">Kirim Pengingat</Button>}
                        <Button asChild size="sm" variant="ghost">
-                          <Link href={`/admin/orders/${order.id.substring(1)}`}>Detail</Link>
+                          <Link href={`/admin/orders/${order.kode_order.substring(1)}`}>Detail</Link>
                        </Button>
                     </TableCell>
                   </TableRow>

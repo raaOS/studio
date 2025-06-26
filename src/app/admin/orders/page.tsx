@@ -21,19 +21,20 @@ import type { OrderStatus } from '@/lib/types';
 import { Folder } from 'lucide-react';
 
 const allOrderStatuses: OrderStatus[] = [
-    'Menunggu Pembayaran',
-    'Masuk Antrian',
-    'Sedang Dikerjakan',
-    'Siap Kirim Pratinjau',
-    'Menunggu Respon Klien',
-    'Sedang Direvisi',
-    'Selesai',
-    'Perlu Tinjauan Owner',
-    'Eskalasi: Revisi di Luar Lingkup',
-    'Dibatalkan (Tidak Dibayar)',
-    'Dibatalkan (Refund 90%)',
-    'Tidak Puas (Refund 50%)',
-    'Ditutup (Tanpa Refund)',
+  'Menunggu Pembayaran',
+  'Masuk Antrian',
+  'Masuk Antrian (Minggu Depan)',
+  'Sedang Dikerjakan',
+  'Siap Kirim Pratinjau',
+  'Menunggu Respon Klien',
+  'Sedang Direvisi',
+  'Selesai',
+  'Perlu Tinjauan Owner',
+  'Eskalasi: Revisi di Luar Lingkup',
+  'Dibatalkan (Belum Dikerjakan)',
+  'Dibatalkan (Sudah Dikerjakan)',
+  'Tidak Puas (Refund 50%)',
+  'Ditutup (Tanpa Refund)',
 ];
 
 
@@ -46,12 +47,12 @@ export default function AdminOrdersPage() {
 
   const filteredOrders = useMemo(() => {
     return mockOrders.filter(order => {
-      const statusMatch = filters.status === 'All' || order.status === filters.status;
+      const statusMatch = filters.status === 'All' || order.status_pesanan === filters.status;
       const pekanMatch = filters.pekan === 'All' || order.pekan === filters.pekan;
       const searchMatch =
         filters.search === '' ||
-        order.id.toLowerCase().includes(filters.search.toLowerCase()) ||
-        order.customerName.toLowerCase().includes(filters.search.toLowerCase());
+        order.kode_order.toLowerCase().includes(filters.search.toLowerCase()) ||
+        order.nama_klien.toLowerCase().includes(filters.search.toLowerCase());
       return statusMatch && pekanMatch && searchMatch;
     });
   }, [filters]);
@@ -82,8 +83,8 @@ export default function AdminOrdersPage() {
       case 'Eskalasi: Revisi di Luar Lingkup': return 'bg-orange-500/20 text-orange-700 border-orange-500/30 font-bold';
 
       // Negative/Cancellation statuses
-      case 'Dibatalkan (Tidak Dibayar)': return 'bg-red-500/20 text-red-700 border-red-500/30';
-      case 'Dibatalkan (Refund 90%)': return 'bg-red-500/20 text-red-700 border-red-500/30';
+      case 'Dibatalkan (Belum Dikerjakan)': return 'bg-red-500/20 text-red-700 border-red-500/30';
+      case 'Dibatalkan (Sudah Dikerjakan)': return 'bg-red-600/20 text-red-800 border-red-600/30';
       case 'Tidak Puas (Refund 50%)': return 'bg-pink-500/20 text-pink-700 border-pink-500/30';
       case 'Ditutup (Tanpa Refund)': return 'bg-neutral-500/20 text-neutral-700 border-neutral-500/30';
 
@@ -149,17 +150,17 @@ export default function AdminOrdersPage() {
             <TableBody>
               {filteredOrders.length > 0 ? (
                 filteredOrders.map(order => (
-                  <TableRow key={order.id}>
-                    <TableCell className="font-medium">{order.id}</TableCell>
+                  <TableRow key={order.kode_order}>
+                    <TableCell className="font-medium">{order.kode_order}</TableCell>
                     <TableCell>
-                       <Link href={`/admin/customers/${getCustomerId(order.customerName)}`} className="hover:underline text-primary">
-                        {order.customerName}
+                       <Link href={`/admin/customers/${getCustomerId(order.nama_klien)}`} className="hover:underline text-primary">
+                        {order.nama_klien}
                       </Link>
                     </TableCell>
                     <TableCell>{order.budget}</TableCell>
                     <TableCell>
-                      <Badge variant="outline" className={cn("capitalize", getStatusClass(order.status))}>
-                        {order.status}
+                      <Badge variant="outline" className={cn("capitalize", getStatusClass(order.status_pesanan))}>
+                        {order.status_pesanan}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -172,13 +173,13 @@ export default function AdminOrdersPage() {
                       )}
                     </TableCell>
                     <TableCell className="text-right space-x-2">
-                       {order.status === 'Masuk Antrian' && <Button size="sm" variant="default">Mulai</Button>}
-                       {order.status === 'Sedang Dikerjakan' && <Button size="sm" variant="default">Pratinjau</Button>}
-                       {order.status === 'Sedang Direvisi' && <Button size="sm" variant="default">Update</Button>}
-                       {order.status === 'Menunggu Respon Klien' && <Button size="sm" variant="outline">Kirim Pengingat</Button>}
-                       {order.status === 'Perlu Tinjauan Owner' && <Button size="sm" variant="destructive">Tinjau</Button>}
+                       {order.status_pesanan === 'Masuk Antrian' && <Button size="sm" variant="default">Mulai</Button>}
+                       {order.status_pesanan === 'Sedang Dikerjakan' && <Button size="sm" variant="default">Pratinjau</Button>}
+                       {order.status_pesanan === 'Sedang Direvisi' && <Button size="sm" variant="default">Update</Button>}
+                       {order.status_pesanan === 'Menunggu Respon Klien' && <Button size="sm" variant="outline">Kirim Pengingat</Button>}
+                       {order.status_pesanan === 'Perlu Tinjauan Owner' && <Button size="sm" variant="destructive">Tinjau</Button>}
                        <Button asChild size="sm" variant="ghost">
-                          <Link href={`/admin/orders/${order.id.substring(1)}`}>Detail</Link>
+                          <Link href={`/admin/orders/${order.kode_order.substring(1)}`}>Detail</Link>
                        </Button>
                     </TableCell>
                   </TableRow>

@@ -13,19 +13,20 @@ import type { OrderStatus } from '@/lib/types';
 import { MessageSquare, Send, Folder, Calendar, Video } from 'lucide-react';
 
 const allOrderStatuses: OrderStatus[] = [
-    'Menunggu Pembayaran',
-    'Masuk Antrian',
-    'Sedang Dikerjakan',
-    'Siap Kirim Pratinjau',
-    'Menunggu Respon Klien',
-    'Sedang Direvisi',
-    'Selesai',
-    'Perlu Tinjauan Owner',
-    'Eskalasi: Revisi di Luar Lingkup',
-    'Dibatalkan (Tidak Dibayar)',
-    'Dibatalkan (Refund 90%)',
-    'Tidak Puas (Refund 50%)',
-    'Ditutup (Tanpa Refund)',
+  'Menunggu Pembayaran',
+  'Masuk Antrian',
+  'Masuk Antrian (Minggu Depan)',
+  'Sedang Dikerjakan',
+  'Siap Kirim Pratinjau',
+  'Menunggu Respon Klien',
+  'Sedang Direvisi',
+  'Selesai',
+  'Perlu Tinjauan Owner',
+  'Eskalasi: Revisi di Luar Lingkup',
+  'Dibatalkan (Belum Dikerjakan)',
+  'Dibatalkan (Sudah Dikerjakan)',
+  'Tidak Puas (Refund 50%)',
+  'Ditutup (Tanpa Refund)',
 ];
 
 
@@ -35,14 +36,14 @@ export default function OrderDetailPage() {
   const order = useMemo(() => {
     if (!params?.orderId) return null;
     const orderId = `#${params.orderId}`;
-    return mockOrders.find(o => o.id === orderId) || null;
+    return mockOrders.find(o => o.kode_order === orderId) || null;
   }, [params]);
 
   const [currentStatus, setCurrentStatus] = useState<OrderStatus>('Masuk Antrian');
 
   useEffect(() => {
     if (order) {
-      setCurrentStatus(order.status);
+      setCurrentStatus(order.status_pesanan);
     }
   }, [order]);
 
@@ -74,8 +75,8 @@ export default function OrderDetailPage() {
       case 'Eskalasi: Revisi di Luar Lingkup': return 'bg-orange-500 hover:bg-orange-500/90 text-orange-50 font-bold';
 
       // Negative/Cancellation statuses
-      case 'Dibatalkan (Tidak Dibayar)': return 'bg-red-600 hover:bg-red-600/90 text-red-50';
-      case 'Dibatalkan (Refund 90%)': return 'bg-red-500 hover:bg-red-500/90 text-red-50';
+      case 'Dibatalkan (Belum Dikerjakan)': return 'bg-red-500 hover:bg-red-500/90 text-red-50';
+      case 'Dibatalkan (Sudah Dikerjakan)': return 'bg-red-600 hover:bg-red-600/90 text-red-50';
       case 'Tidak Puas (Refund 50%)': return 'bg-pink-500 hover:bg-pink-500/90 text-pink-50';
       case 'Ditutup (Tanpa Refund)': return 'bg-neutral-600 hover:bg-neutral-600/90 text-neutral-50';
 
@@ -83,19 +84,15 @@ export default function OrderDetailPage() {
     }
   };
 
-  // The visual timeline is complex with the new statuses. 
-  // For now, we will focus on correct data display.
-  // A more advanced timeline component can be built later.
-  
   return (
     <div className="space-y-6">
         <Card>
             <CardHeader>
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between">
                     <div>
-                        <CardTitle className="font-headline text-2xl">Pesanan {order.id} - {order.customerName}</CardTitle>
+                        <CardTitle className="font-headline text-2xl">Pesanan {order.kode_order} - {order.nama_klien}</CardTitle>
                         <CardDescription>
-                            Budget: {order.budget} | Total: {formatRupiah(order.total)} | Pekan: {order.pekan}
+                            Budget: {order.budget} | Total: {formatRupiah(order.jumlah_transfer)} | Pekan: {order.pekan}
                         </CardDescription>
                     </div>
                     <Badge className={cn("capitalize w-fit mt-2 md:mt-0", getStatusClass(currentStatus))}>{currentStatus}</Badge>
@@ -126,7 +123,7 @@ export default function OrderDetailPage() {
                     <Separator />
                     <h3 className="font-semibold pt-2">Info Kontak</h3>
                     <div className="text-sm space-y-1">
-                        <p><strong>Nama:</strong> {order.customerName}</p>
+                        <p><strong>Nama:</strong> {order.nama_klien}</p>
                         <p><strong>Telegram:</strong> <a href="#" className="text-primary hover:underline">{order.customerTelegram}</a></p>
                     </div>
                 </CardContent>

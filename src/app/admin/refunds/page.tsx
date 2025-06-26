@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import {
   Table,
   TableBody,
@@ -14,15 +15,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { PlusCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { formatRupiah } from '@/lib/utils';
-
-
-// Mock data for refunds, we can expand this later
-const mockRefunds = [
-    { id: 'ref-001', orderId: '#006', amount: 180000, reason: 'Eskalasi: Revisi di Luar Lingkup', status: 'Pending', date: '2024-05-27' },
-    { id: 'ref-002', orderId: '#008', amount: 50000, reason: 'Tidak Puas (Refund 50%)', status: 'Completed', date: '2024-05-26' },
-];
+import { mockOrders } from '@/lib/data';
 
 export default function AdminRefundsPage() {
+  const refunds = mockOrders.filter(order => order.total_refund > 0);
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -46,28 +43,32 @@ export default function AdminRefundsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Order ID</TableHead>
-                <TableHead>Jumlah</TableHead>
-                <TableHead>Alasan</TableHead>
-                <TableHead>Tanggal</TableHead>
+                <TableHead>Nama Klien</TableHead>
+                <TableHead>Jumlah Refund</TableHead>
+                <TableHead>Jenis Potongan</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockRefunds.length > 0 ? (
-                mockRefunds.map((refund) => (
-                  <TableRow key={refund.id}>
-                    <TableCell className="font-medium text-primary hover:underline cursor-pointer">{refund.orderId}</TableCell>
-                    <TableCell>{formatRupiah(refund.amount)}</TableCell>
-                    <TableCell>{refund.reason}</TableCell>
-                    <TableCell>{refund.date}</TableCell>
+              {refunds.length > 0 ? (
+                refunds.map((refund) => (
+                  <TableRow key={refund.kode_order}>
+                    <TableCell className="font-medium">
+                      <Link href={`/admin/orders/${refund.kode_order.substring(1)}`} className="text-primary hover:underline">
+                        {refund.kode_order}
+                      </Link>
+                    </TableCell>
+                    <TableCell>{refund.nama_klien}</TableCell>
+                    <TableCell>{formatRupiah(refund.total_refund)}</TableCell>
+                    <TableCell>{refund.jenis_potongan}</TableCell>
                     <TableCell>
-                        <Badge variant={refund.status === 'Completed' ? 'default' : 'secondary'} className={refund.status === 'Completed' ? 'bg-green-600' : ''}>
-                            {refund.status}
+                        <Badge variant={refund.status_refund === 'Sudah' ? 'default' : 'secondary'} className={refund.status_refund === 'Sudah' ? 'bg-green-600' : ''}>
+                            {refund.status_refund}
                         </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                       {refund.status === 'Pending' && <Button size="sm" variant="outline">Tandai Selesai</Button>}
+                       {refund.status_refund === 'Belum' && <Button size="sm" variant="outline">Tandai Sudah Ditransfer</Button>}
                     </TableCell>
                   </TableRow>
                 ))

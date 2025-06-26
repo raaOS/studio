@@ -32,31 +32,41 @@ export type Customer = {
   telegram: string;
 };
 
-// The single source of truth for all possible order statuses
+// Sesuai dengan spesifikasi terbaru
 export type OrderStatus =
-  // --- Triggered by Bot/System ---
-  | 'Menunggu Pembayaran'          // New order, waiting for owner to validate payment
-  | 'Masuk Antrian'                // Payment validated, ready for designer
-  | 'Masuk Antrian (Minggu Depan)' // Queue for this week is full
-  | 'Sedang Direvisi'              // Client requested a revision
-  | 'Menunggu Respon Klien'        // Preview sent, waiting for client feedback
-  | 'Selesai'                      // Project completed and closed
-  | 'Dibatalkan (Tidak Dibayar)'   // Order auto-cancelled due to no payment
-  | 'Dibatalkan (Refund 90%)'      // Client cancelled before work started
-  | 'Tidak Puas (Refund 50%)'      // Client cancelled during revision
-  | 'Ditutup (Tanpa Refund)'       // Client became unresponsive
+  // Otomatis (Sistem)
+  | 'Menunggu Pembayaran'
+  | 'Masuk Antrian'
+  | 'Masuk Antrian (Minggu Depan)'
+  | 'Sedang Direvisi'
+  | 'Menunggu Respon Klien'
+  | 'Selesai'
+  | 'Dibatalkan (Belum Dikerjakan)'
+  | 'Dibatalkan (Sudah Dikerjakan)'
+  | 'Ditutup (Tanpa Refund)'
+  | 'Tidak Puas (Refund 50%)'
+  // Intervensi Owner
+  | 'Perlu Tinjauan Owner'
+  // Manual (Desainer)
+  | 'Sedang Dikerjakan'
+  | 'Siap Kirim Pratinjau'
+  | 'Eskalasi: Revisi di Luar Lingkup';
 
-  // --- Triggered by Designer ---
-  | 'Sedang Dikerjakan'            // Designer started working on the order
-  | 'Siap Kirim Pratinjau'         // Designer finished the first draft
-  | 'Eskalasi: Revisi di Luar Lingkup' // Designer needs owner intervention for out-of-scope revisions
-
-  // --- Triggered by Owner ---
-  | 'Perlu Tinjauan Owner';        // General status for when owner action is required
-
+// Struktur data baru sesuai spesifikasi
 export type Order = {
-  id: string;
-  customerName: string;
+  kode_order: string;
+  nama_klien: string;
+  status_pesanan: OrderStatus;
+  tipe_pembayaran: 'LUNAS' | 'DP';
+  jumlah_transfer: number;
+  potongan_refund: number;
+  jenis_potongan: 'Biaya Admin & Slot Booking' | 'Biaya Produksi Awal' | '';
+  total_refund: number;
+  status_refund: 'Sudah' | 'Belum' | '';
+  log_aktivitas?: string[];
+  timestamp: string;
+
+  // Fields tambahan yang diperlukan oleh UI
   customerTelegram: string;
   items: {
     name: string;
@@ -64,15 +74,12 @@ export type Order = {
     price: number;
     brief: Record<string, string>;
   }[];
-  total: number;
-  paymentMethod: 'dp' | 'lunas';
-  paymentStatus: string;
-  status: OrderStatus;
-  date: string;
   budget: 'Kaki Lima' | 'UMKM' | 'E-Comm';
   pekan: 'W1' | 'W2' | 'W3' | 'W4';
   driveFolderUrl?: string;
+  paymentStatus: string;
 };
+
 
 export type Promo = {
   id: string;

@@ -194,158 +194,166 @@ export const services: Service[] = [
 
 export const mockOrders: Order[] = [
   {
-    id: '#001',
-    customerName: 'John Doe',
+    kode_order: '#001',
+    nama_klien: 'John Doe',
     customerTelegram: '@johndoe',
     items: [
-      { 
-        name: 'Desain Kartu Nama', 
-        quantity: 2, 
-        price: 30000, 
-        brief: {
-          'Nama Brand': 'Kopi Senja',
-          'Slogan': 'Secangkir cerita di kala senja',
-          'Warna yang diinginkan': 'Coklat, oranye, dan krem'
-        }
-      },
-      { 
-        name: 'Desain Kop Surat (Letterhead)', 
-        quantity: 1, 
-        price: 28000,
-        brief: {
-          'Nama & Jabatan': 'John Doe, Owner',
-          'Informasi Kontak': '0812345678, kopi.senja@email.com',
-          'Alamat': 'Jl. Kenangan No. 10, Jakarta'
-        }
-      },
+      { name: 'Desain Kartu Nama', quantity: 2, price: 30000, brief: {'Nama Brand': 'Kopi Senja', 'Slogan': 'Secangkir cerita di kala senja', 'Warna yang diinginkan': 'Coklat, oranye, dan krem'} },
+      { name: 'Desain Kop Surat (Letterhead)', quantity: 1, price: 28000, brief: {'Nama & Jabatan': 'John Doe, Owner', 'Informasi Kontak': '0812345678, kopi.senja@email.com', 'Alamat': 'Jl. Kenangan No. 10, Jakarta'} },
     ],
-    total: 88000,
-    paymentMethod: 'lunas',
+    jumlah_transfer: 88000,
+    tipe_pembayaran: 'LUNAS',
     paymentStatus: 'Lunas',
-    status: 'Masuk Antrian',
-    date: '2024-05-20',
+    status_pesanan: 'Masuk Antrian',
+    timestamp: '2024-05-20',
     budget: 'UMKM',
     pekan: 'W1',
-    driveFolderUrl: '/uploads/orders/001'
+    driveFolderUrl: '/uploads/orders/001',
+    potongan_refund: 0,
+    jenis_potongan: '',
+    total_refund: 0,
+    status_refund: '',
   },
   {
-    id: '#002',
-    customerName: 'Jane Smith',
+    kode_order: '#002',
+    nama_klien: 'Jane Smith',
     customerTelegram: '@janesmith',
     items: [
-      { 
-        name: 'Desain Konten Feed (Single Post)', 
-        quantity: 5, 
-        price: 15000,
-        brief: {
-          'Tema Konten': 'Promosi diskon 50% untuk produk fashion.',
-          'Platform': 'Instagram & Facebook',
-          'Call to Action': 'Belanja sekarang, klik link di bio!'
-        }
-      },
+      { name: 'Desain Konten Feed (Single Post)', quantity: 5, price: 15000, brief: {'Tema Konten': 'Promosi diskon 50% untuk produk fashion.', 'Platform': 'Instagram & Facebook', 'Call to Action': 'Belanja sekarang, klik link di bio!'} },
     ],
-    total: 75000,
-    paymentMethod: 'dp',
+    jumlah_transfer: 75000,
+    tipe_pembayaran: 'DP',
     paymentStatus: 'DP',
-    status: 'Sedang Dikerjakan',
-    date: '2024-05-22',
+    status_pesanan: 'Sedang Dikerjakan',
+    timestamp: '2024-05-22',
     budget: 'Kaki Lima',
     pekan: 'W1',
-    driveFolderUrl: '/uploads/orders/002'
+    driveFolderUrl: '/uploads/orders/002',
+    potongan_refund: 0,
+    jenis_potongan: '',
+    total_refund: 0,
+    status_refund: '',
   },
   {
-    id: '#003',
-    customerName: 'Bob Johnson',
+    kode_order: '#003',
+    nama_klien: 'Bob Johnson',
     customerTelegram: '@bobjohnson',
     items: [
-      { 
-        name: 'Desain Visual Landing Page', 
-        quantity: 1, 
-        price: 950000,
-        brief: {
-          'Deskripsi Produk': 'Keripik singkong aneka rasa',
-          'Target Pasar': 'Anak muda, penyuka cemilan pedas',
-          'Pesan yang ingin disampaikan': 'Renyah, gurih, bikin nagih!'
-        }
-      },
+      { name: 'Desain Visual Landing Page', quantity: 1, price: 950000, brief: {'Deskripsi Produk': 'Keripik singkong aneka rasa', 'Target Pasar': 'Anak muda, penyuka cemilan pedas', 'Pesan yang ingin disampaikan': 'Renyah, gurih, bikin nagih!'} },
     ],
-    total: 950000,
-    paymentMethod: 'lunas',
+    jumlah_transfer: 950000,
+    tipe_pembayaran: 'LUNAS',
     paymentStatus: 'Lunas',
-    status: 'Menunggu Respon Klien',
-    date: '2024-05-23',
+    status_pesanan: 'Menunggu Respon Klien',
+    timestamp: '2024-05-23',
     budget: 'E-Comm',
     pekan: 'W2',
-    driveFolderUrl: '/uploads/orders/003'
+    driveFolderUrl: '/uploads/orders/003',
+    potongan_refund: 0,
+    jenis_potongan: '',
+    total_refund: 0,
+    status_refund: '',
   },
   {
-    id: '#004',
-    customerName: 'Agus Setiawan',
+    kode_order: '#004',
+    nama_klien: 'Agus Setiawan',
     customerTelegram: '@agusset',
     items: [
-        { 
-          name: 'Desain Spanduk / Banner Outdoor', 
-          quantity: 1, 
-          price: 85000,
-          brief: {
-            'Ukuran Banner': '3x1 meter',
-            'Teks Utama': 'Grand Opening Toko "Maju Jaya"',
-            'Informasi Tambahan': 'Diskon 20% selama minggu pertama.'
-          }
-        },
+        { name: 'Desain Spanduk / Banner Outdoor', quantity: 1, price: 85000, brief: {'Ukuran Banner': '3x1 meter', 'Teks Utama': 'Grand Opening Toko "Maju Jaya"', 'Informasi Tambahan': 'Diskon 20% selama minggu pertama.'} },
     ],
-    total: 85000,
-    paymentMethod: 'dp',
+    jumlah_transfer: 85000,
+    tipe_pembayaran: 'DP',
     paymentStatus: 'Lunas',
-    status: 'Selesai',
-    date: '2024-05-24',
+    status_pesanan: 'Selesai',
+    timestamp: '2024-05-24',
     budget: 'UMKM',
     pekan: 'W1',
-    driveFolderUrl: '/uploads/orders/004'
+    driveFolderUrl: '/uploads/orders/004',
+    potongan_refund: 0,
+    jenis_potongan: '',
+    total_refund: 0,
+    status_refund: '',
   },
   {
-    id: '#005',
-    customerName: 'Siti Aminah',
+    kode_order: '#005',
+    nama_klien: 'Siti Aminah',
     customerTelegram: '@sitiaminah',
     items: [
-      { 
-        name: 'Desain Brosur / Pamflet Promosi', 
-        quantity: 1, 
-        price: 35000,
-        brief: {
-          'Judul': 'Promo Jasa Desain Grafis',
-          'Isi': 'Diskon 30% untuk semua layanan',
-        }
-      },
+      { name: 'Desain Brosur / Pamflet Promosi', quantity: 1, price: 35000, brief: {'Judul': 'Promo Jasa Desain Grafis', 'Isi': 'Diskon 30% untuk semua layanan'} },
     ],
-    total: 35000,
-    paymentMethod: 'lunas',
+    jumlah_transfer: 35000,
+    tipe_pembayaran: 'LUNAS',
     paymentStatus: 'Belum Lunas',
-    status: 'Menunggu Pembayaran',
-    date: '2024-05-25',
+    status_pesanan: 'Menunggu Pembayaran',
+    timestamp: '2024-05-25',
     budget: 'Kaki Lima',
     pekan: 'W2',
+    driveFolderUrl: undefined,
+    potongan_refund: 0,
+    jenis_potongan: '',
+    total_refund: 0,
+    status_refund: '',
   },
   {
-    id: '#006',
-    customerName: 'Budi Santoso',
+    kode_order: '#006',
+    nama_klien: 'Budi Santoso',
     customerTelegram: '@budisan',
     items: [
-      { 
-        name: 'Desain Lanyard / Tali ID Card', 
-        quantity: 10, 
-        price: 20000,
-        brief: { 'Detail': 'Desain lanyard untuk acara kantor.' }
-      },
+      { name: 'Desain Lanyard / Tali ID Card', quantity: 10, price: 20000, brief: { 'Detail': 'Desain lanyard untuk acara kantor.' } },
     ],
-    total: 200000,
-    paymentMethod: 'dp',
+    jumlah_transfer: 200000,
+    tipe_pembayaran: 'DP',
     paymentStatus: 'DP',
-    status: 'Eskalasi: Revisi di Luar Lingkup',
-    date: '2024-05-26',
+    status_pesanan: 'Eskalasi: Revisi di Luar Lingkup',
+    timestamp: '2024-05-26',
     budget: 'Kaki Lima',
     pekan: 'W2',
-    driveFolderUrl: '/uploads/orders/006'
+    driveFolderUrl: '/uploads/orders/006',
+    potongan_refund: 0,
+    jenis_potongan: '',
+    total_refund: 0,
+    status_refund: '',
+  },
+  // New mock order for refund scenario
+  {
+    kode_order: '#007',
+    nama_klien: 'Rina Wati',
+    customerTelegram: '@rinawati',
+    items: [
+      { name: 'Desain Buku Menu', quantity: 1, price: 60000, brief: { 'Detail': 'Menu untuk restoran seafood' } },
+    ],
+    jumlah_transfer: 30000, // DP 50%
+    tipe_pembayaran: 'DP',
+    paymentStatus: 'DP',
+    status_pesanan: 'Dibatalkan (Belum Dikerjakan)',
+    timestamp: '2024-05-27',
+    budget: 'UMKM',
+    pekan: 'W3',
+    driveFolderUrl: undefined,
+    potongan_refund: 6000, // 10% of total (60000)
+    jenis_potongan: 'Biaya Admin & Slot Booking',
+    total_refund: 24000, // 30000 - 6000
+    status_refund: 'Belum',
+  },
+  {
+    kode_order: '#008',
+    nama_klien: 'Eko Prasetyo',
+    customerTelegram: '@ekopras',
+    items: [
+      { name: 'Desain Konten Carousel (3 Slide)', quantity: 1, price: 180000, brief: { 'Detail': 'Carousel untuk produk mobil baru' } },
+    ],
+    jumlah_transfer: 180000, // Lunas
+    tipe_pembayaran: 'LUNAS',
+    paymentStatus: 'Lunas',
+    status_pesanan: 'Dibatalkan (Sudah Dikerjakan)',
+    timestamp: '2024-05-28',
+    budget: 'E-Comm',
+    pekan: 'W3',
+    driveFolderUrl: '/uploads/orders/008',
+    potongan_refund: 45000, // 25% of total (180000)
+    jenis_potongan: 'Biaya Produksi Awal',
+    total_refund: 135000, // 180000 - 45000
+    status_refund: 'Sudah',
   }
 ];
 
@@ -353,7 +361,7 @@ export const mockOrders: Order[] = [
 const customerData = new Map<string, { id: string; name: string; email: string; telegram: string; totalOrders: number; ltv: number; lastOrderDate: string; avatar: string; }>();
 
 mockOrders.forEach((order, index) => {
-  const customerName = order.customerName;
+  const customerName = order.nama_klien;
   if (!customerData.has(customerName)) {
     customerData.set(customerName, {
       id: `cust-${index + 1}`,
@@ -369,9 +377,9 @@ mockOrders.forEach((order, index) => {
 
   const currentCustomer = customerData.get(customerName)!;
   currentCustomer.totalOrders += 1;
-  currentCustomer.ltv += order.total;
-  if (order.date > currentCustomer.lastOrderDate) {
-    currentCustomer.lastOrderDate = order.date;
+  currentCustomer.ltv += order.jumlah_transfer;
+  if (order.timestamp > currentCustomer.lastOrderDate) {
+    currentCustomer.lastOrderDate = order.timestamp;
   }
 });
 

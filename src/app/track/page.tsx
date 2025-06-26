@@ -29,7 +29,7 @@ export default function TrackOrderPage() {
 
     // Simulate API call
     setTimeout(() => {
-      const order = mockOrders.find(o => o.id.toLowerCase() === orderIdInput.toLowerCase());
+      const order = mockOrders.find(o => o.kode_order.toLowerCase() === orderIdInput.toLowerCase());
       if (order) {
         setFoundOrder(order);
       } else {
@@ -47,7 +47,7 @@ export default function TrackOrderPage() {
       case 'Selesai': return 'bg-green-500/20 text-green-700 border-green-500/30';
       case 'Menunggu Pembayaran': return 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30';
       case 'Menunggu Respon Klien': return 'bg-amber-500/20 text-amber-700 border-amber-500/30';
-      case 'Dibatalkan (Tidak Dibayar)': return 'bg-red-500/20 text-red-700 border-red-500/30';
+      case 'Dibatalkan (Belum Dikerjakan)': return 'bg-red-500/20 text-red-700 border-red-500/30';
       default: return 'bg-gray-500/20 text-gray-700 border-gray-500/30';
     }
   };
@@ -104,7 +104,7 @@ export default function TrackOrderPage() {
                     <div className="flex justify-between items-start">
                         <div>
                             <CardTitle>Pesanan Ditemukan!</CardTitle>
-                            <CardDescription>Kode: {foundOrder.id}</CardDescription>
+                            <CardDescription>Kode: {foundOrder.kode_order}</CardDescription>
                         </div>
                         <PackageCheck className="h-8 w-8 text-green-500" />
                     </div>
@@ -112,12 +112,12 @@ export default function TrackOrderPage() {
                 <CardContent className="space-y-4">
                     <div>
                         <p className="text-sm text-muted-foreground">Pelanggan</p>
-                        <p className="font-semibold">{foundOrder.customerName}</p>
+                        <p className="font-semibold">{foundOrder.nama_klien}</p>
                     </div>
                     <div>
                         <p className="text-sm text-muted-foreground">Status Saat Ini</p>
-                        <Badge variant="outline" className={cn("capitalize text-base mt-1", getStatusClass(foundOrder.status))}>
-                            {foundOrder.status}
+                        <Badge variant="outline" className={cn("capitalize text-base mt-1", getStatusClass(foundOrder.status_pesanan))}>
+                            {foundOrder.status_pesanan}
                         </Badge>
                     </div>
                     <p className="text-xs text-center text-muted-foreground pt-4">
