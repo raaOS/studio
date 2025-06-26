@@ -84,7 +84,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl">{service.name}</DialogTitle>
           <DialogDescription>
