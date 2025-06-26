@@ -51,7 +51,7 @@ function OrderWorkflow() {
           </section>
 
           {/* Order Summary */}
-          <section id="summary-section" className="pt-16">
+          <section id="summary-section" className="pt-16 hidden md:block">
             <div className="text-center mb-10">
               <h2 className="text-2xl font-headline font-semibold text-foreground">Langkah 2: Periksa & Kirim Pesanan Anda</h2>
               <p className="text-sm text-muted-foreground mt-2 max-w-2xl mx-auto">Pastikan semua sudah benar sebelum mengisi data diri dan mengirim pesanan.</p>
@@ -65,16 +65,19 @@ function OrderWorkflow() {
 
 
       <Dialog open={!!modalImage} onOpenChange={(isOpen) => !isOpen && setModalImage(null)}>
-        <DialogContent className="sm:max-w-[500px] p-2">
+        <DialogContent className="p-0 border-0 max-w-4xl bg-transparent shadow-none">
+            <DialogTitle className="sr-only">{modalImage?.alt}</DialogTitle>
+            <DialogDescription className="sr-only">
+                Gambar pratinjau untuk {modalImage?.alt}
+            </DialogDescription>
             {modalImage && (
-                <>
-                <DialogHeader className="p-4 pb-0">
-                    <DialogTitle>{modalImage.alt}</DialogTitle>
-                </DialogHeader>
-                <div className="relative aspect-square w-full">
-                    <Image src={modalImage.src} alt={modalImage.alt} fill className="object-contain" />
-                </div>
-                </>
+                <Image 
+                    src={modalImage.src} 
+                    alt={modalImage.alt} 
+                    width={1200}
+                    height={1200}
+                    className="object-contain w-full h-auto rounded-lg"
+                />
             )}
         </DialogContent>
       </Dialog>
