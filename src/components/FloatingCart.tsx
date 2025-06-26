@@ -41,11 +41,12 @@ export function FloatingCart() {
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
           <div className="container mx-auto grid h-16 grid-cols-2 items-stretch divide-x divide-border">
-              <Link href="/track" passHref legacyBehavior>
-                <a className="flex flex-col items-center justify-center gap-1 text-xs font-medium text-muted-foreground hover:text-primary transition-colors">
-                    <PackageSearch className="h-6 w-6" />
-                    <span>Lacak Pesanan</span>
-                </a>
+              <Link
+                href="/track"
+                className="flex flex-col items-center justify-center gap-1 text-xs font-medium text-muted-foreground hover:text-primary transition-colors"
+              >
+                <PackageSearch className="h-6 w-6" />
+                <span>Lacak Pesanan</span>
               </Link>
               
               {/* Sheet for Order Summary */}
