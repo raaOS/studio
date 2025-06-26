@@ -5,6 +5,8 @@ import { useCart } from "@/contexts/CartContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ShoppingCart, Trash2, Percent, CheckCircle } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -173,6 +175,14 @@ export function OrderSummary() {
                               <p className="text-muted-foreground text-xs">Dapatkan prioritas pengerjaan.</p>
                           </div>
                       </div>
+                </div>
+
+                <div className="space-y-2">
+                    <Label htmlFor="coupon-code" className="text-sm font-medium">Punya Kode Kupon?</Label>
+                    <div className="flex space-x-2">
+                        <Input id="coupon-code" placeholder="Masukkan kode kupon" />
+                        <Button variant="secondary" className="shrink-0">Terapkan</Button>
+                    </div>
                 </div>
 
                 <Separator />
