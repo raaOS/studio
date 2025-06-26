@@ -5,8 +5,8 @@ import { CheckCircle, Inbox, Loader2 } from "lucide-react";
 import type { Order } from '@/lib/types';
 
 const getDashboardStats = (orders: Order[]) => {
-  const pesananMasuk = orders.filter(o => o.status === 'Antri').length;
-  const antrianAktif = orders.filter(o => ['Kerja', 'Revisi'].includes(o.status)).length;
+  const pesananMasuk = orders.filter(o => o.status === 'Masuk Antrian').length;
+  const antrianAktif = orders.filter(o => ['Sedang Dikerjakan', 'Sedang Direvisi'].includes(o.status)).length;
   const selesaiBulanIni = orders.filter(o => o.status === 'Selesai').length;
 
   const weeklyQueue = {

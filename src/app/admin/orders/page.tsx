@@ -21,11 +21,19 @@ import type { OrderStatus } from '@/lib/types';
 import { Folder } from 'lucide-react';
 
 const allOrderStatuses: OrderStatus[] = [
-    'Menunggu Pembayaran', 'Masuk Antrian', 'Sedang Dikerjakan',
-    'Siap Kirim Pratinjau', 'Menunggu Respon Klien', 'Sedang Direvisi',
-    'Selesai', 'Perlu Tinjauan Owner', 'Eskalasi: Revisi di Luar Lingkup',
-    'Dibatalkan (Tidak Dibayar)', 'Dibatalkan (Refund 90%)',
-    'Tidak Puas (Refund 50%)', 'Ditutup (Tanpa Refund)'
+    'Menunggu Pembayaran',
+    'Masuk Antrian',
+    'Sedang Dikerjakan',
+    'Siap Kirim Pratinjau',
+    'Menunggu Respon Klien',
+    'Sedang Direvisi',
+    'Selesai',
+    'Perlu Tinjauan Owner',
+    'Eskalasi: Revisi di Luar Lingkup',
+    'Dibatalkan (Tidak Dibayar)',
+    'Dibatalkan (Refund 90%)',
+    'Tidak Puas (Refund 50%)',
+    'Ditutup (Tanpa Refund)',
 ];
 
 
@@ -78,12 +86,6 @@ export default function AdminOrdersPage() {
       case 'Dibatalkan (Refund 90%)': return 'bg-red-500/20 text-red-700 border-red-500/30';
       case 'Tidak Puas (Refund 50%)': return 'bg-pink-500/20 text-pink-700 border-pink-500/30';
       case 'Ditutup (Tanpa Refund)': return 'bg-neutral-500/20 text-neutral-700 border-neutral-500/30';
-      
-      // Legacy for transition
-      case 'Antri': return 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30';
-      case 'Kerja': return 'bg-blue-500/20 text-blue-700 border-blue-500/30';
-      case 'Revisi': return 'bg-orange-500/20 text-orange-700 border-orange-500/30';
-      case 'Batal': return 'bg-red-500/20 text-red-700 border-red-500/30';
 
       default: return 'bg-gray-500/20 text-gray-700 border-gray-500/30';
     }

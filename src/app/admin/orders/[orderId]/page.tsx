@@ -13,11 +13,19 @@ import type { OrderStatus } from '@/lib/types';
 import { MessageSquare, Send, Folder, Calendar, Video } from 'lucide-react';
 
 const allOrderStatuses: OrderStatus[] = [
-    'Menunggu Pembayaran', 'Masuk Antrian', 'Sedang Dikerjakan',
-    'Siap Kirim Pratinjau', 'Menunggu Respon Klien', 'Sedang Direvisi',
-    'Selesai', 'Perlu Tinjauan Owner', 'Eskalasi: Revisi di Luar Lingkup',
-    'Dibatalkan (Tidak Dibayar)', 'Dibatalkan (Refund 90%)',
-    'Tidak Puas (Refund 50%)', 'Ditutup (Tanpa Refund)'
+    'Menunggu Pembayaran',
+    'Masuk Antrian',
+    'Sedang Dikerjakan',
+    'Siap Kirim Pratinjau',
+    'Menunggu Respon Klien',
+    'Sedang Direvisi',
+    'Selesai',
+    'Perlu Tinjauan Owner',
+    'Eskalasi: Revisi di Luar Lingkup',
+    'Dibatalkan (Tidak Dibayar)',
+    'Dibatalkan (Refund 90%)',
+    'Tidak Puas (Refund 50%)',
+    'Ditutup (Tanpa Refund)',
 ];
 
 
@@ -30,7 +38,7 @@ export default function OrderDetailPage() {
     return mockOrders.find(o => o.id === orderId) || null;
   }, [params]);
 
-  const [currentStatus, setCurrentStatus] = useState<OrderStatus>('Antri');
+  const [currentStatus, setCurrentStatus] = useState<OrderStatus>('Masuk Antrian');
 
   useEffect(() => {
     if (order) {
@@ -70,12 +78,6 @@ export default function OrderDetailPage() {
       case 'Dibatalkan (Refund 90%)': return 'bg-red-500 hover:bg-red-500/90 text-red-50';
       case 'Tidak Puas (Refund 50%)': return 'bg-pink-500 hover:bg-pink-500/90 text-pink-50';
       case 'Ditutup (Tanpa Refund)': return 'bg-neutral-600 hover:bg-neutral-600/90 text-neutral-50';
-
-      // Legacy statuses for smooth transition
-      case 'Antri': return 'bg-yellow-500 hover:bg-yellow-500/90 text-yellow-50';
-      case 'Kerja': return 'bg-blue-500 hover:bg-blue-500/90 text-blue-50';
-      case 'Revisi': return 'bg-orange-500 hover:bg-orange-500/90 text-orange-50';
-      case 'Batal': return 'bg-red-500 hover:bg-red-500/90 text-red-50';
 
       default: return 'bg-gray-500 hover:bg-gray-500/90 text-gray-50';
     }

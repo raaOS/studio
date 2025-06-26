@@ -32,32 +32,27 @@ export type Customer = {
   telegram: string;
 };
 
-// New, more detailed order status system
-export type OrderStatus = 
-  // Bot-driven statuses
-  | 'Menunggu Pembayaran'
-  | 'Masuk Antrian'
-  | 'Masuk Antrian (Minggu Depan)'
-  | 'Sedang Direvisi'
-  | 'Menunggu Respon Klien'
-  | 'Selesai'
-  // Owner-driven statuses
-  | 'Perlu Tinjauan Owner'
-  | 'Setujui Pembayaran Terlambat'
-  // Designer-driven statuses
-  | 'Sedang Dikerjakan'
-  | 'Siap Kirim Pratinjau'
-  | 'Eskalasi: Revisi di Luar Lingkup'
-  // Cancellation/Refund statuses
-  | 'Dibatalkan (Tidak Dibayar)'
-  | 'Dibatalkan (Refund 90%)'
-  | 'Tidak Puas (Refund 50%)'
-  | 'Ditutup (Tanpa Refund)'
-  // Legacy statuses for smooth transition (can be removed later)
-  | 'Antri' 
-  | 'Kerja' 
-  | 'Revisi' 
-  | 'Batal';
+// The single source of truth for all possible order statuses
+export type OrderStatus =
+  // --- Triggered by Bot/System ---
+  | 'Menunggu Pembayaran'          // New order, waiting for owner to validate payment
+  | 'Masuk Antrian'                // Payment validated, ready for designer
+  | 'Masuk Antrian (Minggu Depan)' // Queue for this week is full
+  | 'Sedang Direvisi'              // Client requested a revision
+  | 'Menunggu Respon Klien'        // Preview sent, waiting for client feedback
+  | 'Selesai'                      // Project completed and closed
+  | 'Dibatalkan (Tidak Dibayar)'   // Order auto-cancelled due to no payment
+  | 'Dibatalkan (Refund 90%)'      // Client cancelled before work started
+  | 'Tidak Puas (Refund 50%)'      // Client cancelled during revision
+  | 'Ditutup (Tanpa Refund)'       // Client became unresponsive
+
+  // --- Triggered by Designer ---
+  | 'Sedang Dikerjakan'            // Designer started working on the order
+  | 'Siap Kirim Pratinjau'         // Designer finished the first draft
+  | 'Eskalasi: Revisi di Luar Lingkup' // Designer needs owner intervention for out-of-scope revisions
+
+  // --- Triggered by Owner ---
+  | 'Perlu Tinjauan Owner';        // General status for when owner action is required
 
 export type Order = {
   id: string;

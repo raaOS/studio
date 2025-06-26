@@ -47,9 +47,7 @@ export default function TrackOrderPage() {
       case 'Selesai': return 'bg-green-500/20 text-green-700 border-green-500/30';
       case 'Menunggu Pembayaran': return 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30';
       case 'Menunggu Respon Klien': return 'bg-amber-500/20 text-amber-700 border-amber-500/30';
-      case 'Dibatalkan (Tidak Dibayar)':
-      case 'Batal':
-        return 'bg-red-500/20 text-red-700 border-red-500/30';
+      case 'Dibatalkan (Tidak Dibayar)': return 'bg-red-500/20 text-red-700 border-red-500/30';
       default: return 'bg-gray-500/20 text-gray-700 border-gray-500/30';
     }
   };
