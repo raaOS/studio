@@ -198,23 +198,21 @@ function OrderWorkflow() {
                 <Card 
                     key={item.id}
                     onClick={() => handleBudgetSelect(item)}
-                    className={`cursor-pointer text-center h-full flex flex-col hover:shadow-lg transition-all duration-300 ${selectedBudget?.id === item.id ? 'border-primary ring-2 ring-primary shadow-lg' : 'hover:border-primary/50'}`}
+                    className={`cursor-pointer h-full flex flex-col hover:shadow-lg transition-all duration-300 overflow-hidden ${selectedBudget?.id === item.id ? 'border-primary ring-2 ring-primary shadow-lg' : 'hover:border-primary/50'}`}
                 >
-                    <CardHeader className="pt-8">
-                        <div onClick={(e) => handleImageClick(e, item)} className="relative mx-auto h-24 w-24 mb-4 cursor-pointer hover:scale-105 transition-transform">
-                          <Image
+                    <div onClick={(e) => handleImageClick(e, item)} className="relative w-full aspect-video cursor-pointer">
+                        <Image
                             src={item.icon}
                             alt={item.title}
                             fill
-                            className="object-cover rounded-full"
+                            className="object-cover transition-transform hover:scale-105"
                             data-ai-hint={item.dataAiHint}
-                          />
-                        </div>
+                        />
+                    </div>
+                    <CardContent className="p-6 text-center flex-grow">
                         <CardTitle className="font-headline text-xl">{item.title}</CardTitle>
                         <CardDescription>{item.priceRange}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex-grow flex items-center justify-center p-6">
-                        <p className="text-muted-foreground">{item.description}</p>
+                        <p className="text-muted-foreground mt-4">{item.description}</p>
                     </CardContent>
                 </Card>
                 ))}
