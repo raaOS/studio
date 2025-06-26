@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { mockDriveActivityLogs } from '@/lib/data';
-import { FolderSync, Save, TestTube2, Link as LinkIcon, FolderCog, KeyRound, FileJson, FolderInput } from 'lucide-react';
+import { FolderSync, Save, TestTube2, Link as LinkIcon, FolderCog, KeyRound, FileJson, FolderInput, Lightbulb } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
 import type { DriveActivityLog } from '@/lib/types';
@@ -129,12 +129,18 @@ export default function DriveAutomationPage() {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-3"><FileJson className="h-6 w-6"/> Langkah 2: Simpan Kunci di File .env</CardTitle>
-                    <CardDescription>Salin isi file JSON yang Anda unduh tadi ke dalam file `.env` di proyek ini.</CardDescription>
+                    <CardDescription>Salin isi file JSON yang Anda unduh tadi ke dalam file <code>.env</code> di proyek ini.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                    <div className="text-sm p-3 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-800 flex items-start gap-3">
+                        <Lightbulb className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                        <div>
+                            <strong>Petunjuk Lokasi File:</strong> File <code>.env</code> berada di direktori utama (root) proyek Anda, di panel file di sebelah kiri. Levelnya sejajar dengan file <code>package.json</code>.
+                        </div>
+                    </div>
                     <p className="text-sm">Buka file JSON yang baru saja diunduh dengan text editor. Salin **seluruh isinya**.</p>
                     <div>
-                        <Label>Tempelkan di file `.env` dengan format seperti ini:</Label>
+                        <Label>Tempelkan di file <code>.env</code> dengan format seperti ini:</Label>
                         <code className="relative block rounded bg-muted px-4 py-2 mt-2 text-sm">
                            <span className="text-primary font-semibold">DRIVE_SERVICE_ACCOUNT_JSON</span>=
                            <span className="text-muted-foreground">'{'{'}"type": "service_account", ...{'}'}'</span>
