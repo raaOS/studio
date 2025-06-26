@@ -89,7 +89,7 @@ function OrderWorkflow() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen overflow-x-hidden">
+    <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow container mx-auto px-4 pt-10 pb-16 space-y-6">
         

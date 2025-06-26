@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="light">
       <body className={cn(
-        "font-body antialiased",
+        "font-body antialiased overflow-x-hidden",
         inter.variable,
         poppins.variable
       )}>
