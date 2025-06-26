@@ -161,7 +161,8 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                 />
             </div>
             <div className="flex-1 space-y-1">
-               <div className="space-y-1">
+              <DialogTitle className="font-headline text-base text-left leading-tight">{service.name}</DialogTitle>
+               <div className="space-y-1 pt-1">
                   {promo.active && selectedTier ? (
                       <div className="flex flex-col items-start">
                           <div className="flex items-center gap-2 flex-wrap">
@@ -179,7 +180,6 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                       </p>
                   )}
               </div>
-              <DialogTitle className="font-headline text-base text-left leading-tight pt-1">{service.name}</DialogTitle>
             </div>
           </div>
         </DialogHeader>
