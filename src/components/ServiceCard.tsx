@@ -65,7 +65,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
   }, [quantity, isBudgetSelected, service.name, isGeneratingBrief, briefFields.length]);
 
   return (
-    <Card className={cn("flex flex-col h-full relative")}>
+    <Card className={cn("flex flex-col h-full relative overflow-hidden")}>
       <CardHeader className="p-0">
         <Image
           src={service.image}
