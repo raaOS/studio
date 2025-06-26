@@ -23,7 +23,8 @@ import type { Service, BudgetTier } from '@/lib/types';
 import { budgetItems } from '@/lib/data';
 import { formatRupiah, cn } from '@/lib/utils';
 import { useToast } from "@/hooks/use-toast";
-import { Check, Ticket } from 'lucide-react';
+import { Ticket } from 'lucide-react';
+import { Separator } from './ui/separator';
 
 interface ProductDetailDialogProps {
   service: Service;
@@ -86,13 +87,14 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
       }
 
     } else {
+      // Reset state after dialog closes to prevent stale data
       setTimeout(() => {
         setQuantity(1);
         setBrief({});
         setSelectedTier(null);
         setSelectedImage(service.image);
         setSize({ width: '', height: '', unit: 'px' });
-      }, 300);
+      }, 300); // Delay to allow closing animation
     }
   }, [isOpen, service, getCartItem]);
   
@@ -145,11 +147,54 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col">
-        <DialogHeader>
-          <div className="flex flex-col sm:flex-row gap-6 items-start">
-            <div className="w-full sm:w-1/3 flex-shrink-0">
-              <div className="relative aspect-square w-full overflow-hidden rounded-lg">
+      <DialogContent className="p-0 sm:max-w-2xl max-h-[90vh] flex flex-col">
+        
+        {/* === Mobile Header === */}
+        <DialogHeader className="p-4 border-b shrink-0 sm:hidden">
+           <div className="flex items-start gap-4">
+            <div className="relative aspect-square w-24 rounded-lg overflow-hidden shrink-0">
+               <Image 
+                    key={selectedImage}
+                    src={selectedImage} 
+                    alt={service.name} 
+                    fill 
+                    className="object-cover animate-in fade-in"
+                />
+            </div>
+            <div className="flex-1 space-y-1">
+               <div className="space-y-1">
+                  {promo.active && selectedTier ? (
+                      <div className="flex flex-col items-start">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <p className="text-xl font-bold text-red-600">{formatRupiah(currentPrice * quantity)}</p>
+                            <p className="text-sm font-medium text-muted-foreground line-through">{formatRupiah(promo.originalPrice * quantity)}</p>
+                          </div>
+                          <div className="mt-1 flex items-center gap-2 rounded-md border border-red-500/50 bg-red-500/10 px-2 py-0.5 text-xs text-red-600">
+                              <Ticket className="h-3 w-3"/>
+                              <span>Hemat {formatRupiah(promo.hemat * quantity)}!</span>
+                          </div>
+                      </div>
+                  ) : (
+                      <p className="text-xl font-bold text-green-600">
+                          {selectedTier ? formatRupiah(currentPrice * quantity) : `${formatRupiah(minPrice)} - ${formatRupiah(maxPrice)}`}
+                      </p>
+                  )}
+              </div>
+              <DialogTitle className="font-headline text-base text-left leading-tight pt-1">{service.name}</DialogTitle>
+            </div>
+          </div>
+        </DialogHeader>
+
+        {/* === Desktop Header === */}
+        <DialogHeader className="hidden sm:block p-0">
+          {/* This is empty because on desktop, the content is in the two-column grid */}
+        </DialogHeader>
+        
+        <div className="flex-1 overflow-y-auto sm:grid sm:grid-cols-2 sm:gap-6 sm:items-start">
+
+          {/* === Desktop Image Column === */}
+          <div className="hidden sm:block sm:p-6">
+             <div className="relative aspect-square w-full overflow-hidden rounded-lg">
                 <Image 
                     key={selectedImage}
                     src={selectedImage} 
@@ -158,132 +203,134 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                     className="object-cover animate-in fade-in"
                 />
               </div>
-            </div>
-            
-            <div className="flex-1 space-y-2">
-              <DialogTitle className="font-headline text-2xl tracking-tight text-left">{service.name}</DialogTitle>
+          </div>
+
+          {/* === Right Column (Desktop) / Main Scroll Area (Mobile) === */}
+          <div className="px-4 py-4 sm:p-6 sm:pr-4 sm:overflow-y-auto sm:h-full">
+            <div className="space-y-5">
               
-              <div className="space-y-1">
-                  {promo.active && selectedTier ? (
-                      <div className="flex flex-col items-start">
-                          <div className="flex items-center gap-2">
-                            <p className="text-3xl font-bold text-green-600">{formatRupiah(currentPrice * quantity)}</p>
-                            <p className="text-lg font-medium text-muted-foreground line-through">{formatRupiah(promo.originalPrice * quantity)}</p>
-                          </div>
-                          <div className="mt-1 flex items-center gap-2 rounded-md border border-red-500/50 bg-red-500/10 px-2 py-1 text-sm text-red-600">
-                              <Ticket className="h-4 w-4"/>
-                              <span>Hemat {formatRupiah(promo.hemat * quantity)}!</span>
-                          </div>
-                      </div>
-                  ) : (
-                      <p className="text-3xl font-bold text-green-600">
-                          {selectedTier ? formatRupiah(currentPrice * quantity) : `${formatRupiah(minPrice)} - ${formatRupiah(maxPrice)}`}
-                      </p>
-                  )}
+              {/* Desktop Title/Price */}
+              <div className="hidden sm:block space-y-2">
+                 <DialogTitle className="font-headline text-2xl tracking-tight text-left">{service.name}</DialogTitle>
+                 <div className="space-y-1">
+                    {promo.active && selectedTier ? (
+                        <div className="flex flex-col items-start">
+                            <div className="flex items-center gap-2">
+                              <p className="text-3xl font-bold text-red-600">{formatRupiah(currentPrice * quantity)}</p>
+                              <p className="text-lg font-medium text-muted-foreground line-through">{formatRupiah(promo.originalPrice * quantity)}</p>
+                            </div>
+                            <div className="mt-1 flex items-center gap-2 rounded-md border border-red-500/50 bg-red-500/10 px-2 py-1 text-sm text-red-600">
+                                <Ticket className="h-4 w-4"/>
+                                <span>Hemat {formatRupiah(promo.hemat * quantity)}!</span>
+                            </div>
+                        </div>
+                    ) : (
+                        <p className="text-3xl font-bold text-green-600">
+                            {selectedTier ? formatRupiah(currentPrice * quantity) : `${formatRupiah(minPrice)} - ${formatRupiah(maxPrice)}`}
+                        </p>
+                    )}
+                </div>
               </div>
+              
+              <Separator className="hidden sm:block"/>
+
+              <div className="space-y-2">
+                <Label className="font-semibold text-sm">Variasi</Label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {budgetItems.map((budget) => (
+                      <button
+                        key={budget.id}
+                        onClick={() => setSelectedTier(budget.id)}
+                        className={cn(
+                            "w-full text-left p-2 border-2 rounded-lg transition-colors",
+                            "flex items-center gap-2",
+                            selectedTier === budget.id ? 'border-primary' : 'border-muted bg-popover hover:bg-accent/50'
+                        )}
+                      >
+                        <Image src={budget.image} alt={budget.title} width={32} height={32} className="rounded-md shrink-0" data-ai-hint="logo" />
+                        <div>
+                            <p className="font-semibold text-sm leading-tight">{budget.title}</p>
+                        </div>
+                      </button>
+                    ))}
+                </div>
+              </div>
+
+              <Separator />
+              
+              {fallbackBriefFields.map(field => (
+                <div key={field.name} className="w-full space-y-2">
+                  <Label htmlFor={`brief-${service.id}-${field.name}`} className="font-semibold text-sm">{field.name}</Label>
+                  {field.type === 'textarea' ? (
+                      <Textarea
+                          id={`brief-${service.id}-${field.name}`}
+                          placeholder={field.placeholder}
+                          maxLength={500}
+                          value={brief[field.name] ?? ''}
+                          onChange={(e) => handleBriefChange(field.name, e.target.value)}
+                          className="text-sm"
+                      />
+                  ) : (
+                      <Input
+                          id={`brief-${service.id}-${field.name}`}
+                          placeholder={field.placeholder}
+                          value={brief[field.name] ?? ''}
+                          onChange={(e) => handleBriefChange(field.name, e.target.value)}
+                          className="text-sm"
+                      />
+                  )}
+                </div>
+              ))}
+
+              <Separator />
+
+              <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                      <Label htmlFor="width" className="font-semibold text-sm">Ukuran</Label>
+                      <div className="flex items-center gap-1">
+                        <Input 
+                          id='width'
+                          placeholder="L" 
+                          className="w-14 text-center h-9" 
+                          value={size.width}
+                          onChange={(e) => setSize(s => ({...s, width: e.target.value}))}
+                        />
+                        <span className="text-muted-foreground">x</span>
+                        <Input 
+                          id='height'
+                          placeholder="T" 
+                          className="w-14 text-center h-9"
+                          value={size.height}
+                          onChange={(e) => setSize(s => ({...s, height: e.target.value}))}
+                        />
+                        <Select value={size.unit} onValueChange={(value) => setSize(s => ({...s, unit: value as 'px' | 'cm' | 'm'}))}>
+                          <SelectTrigger className="w-[70px] h-9">
+                              <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                              <SelectItem value="px">px</SelectItem>
+                              <SelectItem value="cm">cm</SelectItem>
+                              <SelectItem value="m">m</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                      <Label className="font-semibold text-sm">Jumlah</Label>
+                      <QuantityStepper quantity={quantity} onQuantityChange={setQuantity} />
+                  </div>
+              </div>
+
             </div>
           </div>
-        </DialogHeader>
-        
-        <div className="flex-1 overflow-y-auto -mx-6 px-6 pt-4 space-y-4">
-            <div className="space-y-2">
-              <Label className="font-semibold">Variasi</Label>
-              <div className="grid grid-cols-1 gap-2">
-                  {budgetItems.map((budget) => (
-                    <button
-                      key={budget.id}
-                      onClick={() => setSelectedTier(budget.id)}
-                      className={cn(
-                          "w-full text-left p-3 border-2 rounded-lg transition-colors",
-                          "flex items-center justify-between gap-3",
-                          selectedTier === budget.id ? 'border-primary bg-primary/5' : 'border-muted bg-popover hover:bg-accent/50'
-                      )}
-                    >
-                      <div className="flex items-center gap-3">
-                        <Image src={budget.image} alt={budget.title} width={40} height={40} className="rounded-md" data-ai-hint="logo" />
-                        <div>
-                          <p className="font-semibold">{budget.title}</p>
-                          <p className="text-xs text-muted-foreground">{budget.description}</p>
-                        </div>
-                      </div>
-                      {selectedTier === budget.id && (
-                          <div className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center flex-shrink-0">
-                            <Check className="h-4 w-4" />
-                          </div>
-                      )}
-                    </button>
-                  ))}
-              </div>
-            </div>
-            
-            {fallbackBriefFields.map(field => (
-              <div key={field.name} className="w-full space-y-2">
-                <Label htmlFor={`brief-${service.id}-${field.name}`}>{field.name}</Label>
-                {field.type === 'textarea' ? (
-                    <Textarea
-                        id={`brief-${service.id}-${field.name}`}
-                        placeholder={field.placeholder}
-                        maxLength={500}
-                        value={brief[field.name] ?? ''}
-                        onChange={(e) => handleBriefChange(field.name, e.target.value)}
-                    />
-                ) : (
-                    <Input
-                        id={`brief-${service.id}-${field.name}`}
-                        placeholder={field.placeholder}
-                        value={brief[field.name] ?? ''}
-                        onChange={(e) => handleBriefChange(field.name, e.target.value)}
-                    />
-                )}
-              </div>
-            ))}
 
-            <div className="space-y-2">
-                <Label className="font-semibold">Ukuran & Kuantitas</Label>
-                <div className="flex items-end justify-between gap-4">
-                  <div className="flex items-end gap-2">
-                    <div>
-                      <Label htmlFor='width' className='text-xs text-muted-foreground'>Lebar</Label>
-                      <Input 
-                        id='width'
-                        placeholder="L" 
-                        className="w-16 text-center" 
-                        value={size.width}
-                        onChange={(e) => setSize(s => ({...s, width: e.target.value}))}
-                      />
-                    </div>
-                    <span className="text-muted-foreground pb-2">x</span>
-                    <div>
-                        <Label htmlFor='height' className='text-xs text-muted-foreground'>Tinggi</Label>
-                      <Input 
-                        id='height'
-                        placeholder="T" 
-                        className="w-16 text-center"
-                        value={size.height}
-                        onChange={(e) => setSize(s => ({...s, height: e.target.value}))}
-                      />
-                    </div>
-                    <Select value={size.unit} onValueChange={(value) => setSize(s => ({...s, unit: value as 'px' | 'cm' | 'm'}))}>
-                      <SelectTrigger className="w-[80px]">
-                          <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                          <SelectItem value="px">px</SelectItem>
-                          <SelectItem value="cm">cm</SelectItem>
-                          <SelectItem value="m">m</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <QuantityStepper quantity={quantity} onQuantityChange={setQuantity} />
-                </div>
-            </div>
         </div>
 
-        <DialogFooter className="mt-auto pt-4 -mx-6 -mb-6 px-6 pb-6 border-t bg-background grid grid-cols-2 gap-4">
-            <Button type="button" onClick={handleSave} variant="outline" className="w-full">
-                {getCartItem(service.id) ? 'Simpan & Pesan Nanti' : 'Pesan Lagi'}
+        <DialogFooter className="mt-auto p-4 border-t bg-background grid grid-cols-2 gap-4 shrink-0 sm:flex sm:items-center sm:justify-end sm:gap-2">
+            <Button type="button" onClick={handleSave} variant="outline" className="w-full sm:w-auto">
+                {getCartItem(service.id) ? 'Simpan Perubahan' : 'Masukkan Keranjang'}
             </Button>
-            <Button type="button" onClick={handleCheckout} className="w-full">
+            <Button type="button" onClick={handleCheckout} className="w-full sm:w-auto">
                 Lanjut Bayar
             </Button>
         </DialogFooter>
