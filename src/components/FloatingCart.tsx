@@ -1,10 +1,9 @@
-
 "use client";
 
 import Link from 'next/link';
 import { motion } from "framer-motion";
 import { PackageSearch, ShoppingCart } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { OrderSummary } from "./OrderSummary";
@@ -53,6 +52,9 @@ export function FloatingCart() {
         </motion.div>
 
         <SheetContent side="bottom" className="rounded-t-2xl p-0 max-h-[90vh]">
+            <SheetHeader className="sr-only">
+              <SheetTitle>Rincian Pesanan</SheetTitle>
+            </SheetHeader>
             <div className="overflow-y-auto">
                 <OrderSummary />
             </div>
