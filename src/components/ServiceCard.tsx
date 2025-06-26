@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -30,7 +31,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
   const price = selectedBudget ? service.prices[selectedBudget.id] : 0;
 
   return (
-    <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg">
+    <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg h-full">
       <CardHeader className="p-0">
         <Image
           src={service.image}

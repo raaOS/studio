@@ -230,9 +230,11 @@ function OrderWorkflow() {
                     {Object.entries(serviceCategories).map(([category, servicesInCategory]) => (
                         <div key={category} className="mb-12">
                             <h3 className="text-2xl font-headline font-bold mb-6">{category}</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                            <div className="flex overflow-x-auto space-x-6 pb-4 snap-x snap-mandatory">
                                 {servicesInCategory.map((service) => (
-                                    <ServiceCard key={service.id} service={service} />
+                                    <div key={service.id} className="w-72 flex-shrink-0 snap-start">
+                                        <ServiceCard service={service} />
+                                    </div>
                                 ))}
                             </div>
                         </div>
