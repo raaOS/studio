@@ -5,7 +5,7 @@ import { useCart } from "@/contexts/CartContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ShoppingCart, Trash2 } from "lucide-react";
+import { ShoppingCart, Trash2, Percent, CheckCircle } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { sendTelegramUpdate } from '@/ai/flows/telegram-bot-integration';
@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 import type { Customer } from "@/lib/types";
 
 export function OrderSummary() {
-    const { cartItems, totalPrice, totalItems, paymentMethod, removeItem, clearCart } = useCart();
+    const { cartItems, totalPrice, totalItems, paymentMethod, setPaymentMethod, removeItem, clearCart } = useCart();
     const { toast } = useToast();
     const [customer, setCustomer] = useState<Customer | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -151,6 +151,30 @@ export function OrderSummary() {
                     <p className="text-muted-foreground text-center py-8">Keranjang Anda kosong.</p>
                 )}
                 
+                <Separator />
+                
+                <div className="space-y-2">
+                    <h4 className="text-sm font-medium text-foreground">Pilih Metode Pembayaran</h4>
+                     <div className="grid grid-cols-2 gap-4">
+                          <div
+                              onClick={() => setPaymentMethod('dp')}
+                              className={`flex h-full flex-col items-center justify-center rounded-lg border-2 p-4 cursor-pointer transition-all space-y-1 text-center ${paymentMethod === 'dp' ? 'border-primary bg-primary/5' : 'border-muted bg-popover hover:bg-accent/50'}`}
+                          >
+                              <Percent className="h-6 w-6 text-primary" />
+                              <h3 className="font-semibold text-base">DP 50%</h3>
+                              <p className="text-muted-foreground text-xs">Bayar setengahnya sekarang.</p>
+                          </div>
+                          <div
+                              onClick={() => setPaymentMethod('lunas')}
+                              className={`flex h-full flex-col items-center justify-center rounded-lg border-2 p-4 cursor-pointer transition-all space-y-1 text-center ${paymentMethod === 'lunas' ? 'border-primary bg-primary/5' : 'border-muted bg-popover hover:bg-accent/50'}`}
+                          >
+                              <CheckCircle className="h-6 w-6 text-primary" />
+                              <h3 className="font-semibold text-base">Lunas</h3>
+                              <p className="text-muted-foreground text-xs">Dapatkan prioritas pengerjaan.</p>
+                          </div>
+                      </div>
+                </div>
+
                 <Separator />
 
                 {paymentMethod ? (

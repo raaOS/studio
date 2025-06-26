@@ -38,7 +38,6 @@ type CustomerInfoFormValues = z.infer<typeof customerInfoFormSchema>;
 
 
 function OrderWorkflow() {
-  const { setPaymentMethod, paymentMethod } = useCart();
   const [modalImage, setModalImage] = useState<{src: string, alt: string} | null>(null);
 
   const form = useForm<CustomerInfoFormValues>({
@@ -61,10 +60,6 @@ function OrderWorkflow() {
       localStorage.setItem('customerData', JSON.stringify(customerData));
     }
   }, [watchedValues, formState.isValid]);
-  
-  const handlePaymentSelect = (method: 'dp' | 'lunas') => {
-    setPaymentMethod(method);
-  };
   
   const serviceCategories = useMemo(() => {
     return services.reduce((acc, service) => {
@@ -143,41 +138,11 @@ function OrderWorkflow() {
               </CardContent>
             </Card>
           </section>
-
-          {/* Payment Method */}
-          <section id="payment-section">
-              <Card>
-                  <CardHeader>
-                      <CardTitle className="font-headline text-xl">Langkah 2: Mau bayar pakai cara apa?</CardTitle>
-                      <CardDescription className="text-sm">Bisa bayar setengah dulu atau lunas sekalian, bebas!</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div
-                              onClick={() => handlePaymentSelect('dp')}
-                              className={`flex h-full flex-col items-center justify-center rounded-lg border-2 p-6 cursor-pointer transition-all space-y-2 text-center ${paymentMethod === 'dp' ? 'border-primary bg-primary/5' : 'border-muted bg-popover hover:bg-accent/50'}`}
-                          >
-                              <Percent className="h-8 w-8 text-primary" />
-                              <h3 className="font-semibold text-lg">DP 50%</h3>
-                              <p className="text-muted-foreground text-xs">Bayar setengahnya sekarang, sisanya setelah pratinjau.</p>
-                          </div>
-                          <div
-                              onClick={() => handlePaymentSelect('lunas')}
-                              className={`flex h-full flex-col items-center justify-center rounded-lg border-2 p-6 cursor-pointer transition-all space-y-2 text-center ${paymentMethod === 'lunas' ? 'border-primary bg-primary/5' : 'border-muted bg-popover hover:bg-accent/50'}`}
-                          >
-                              <CheckCircle className="h-8 w-8 text-primary" />
-                              <h3 className="font-semibold text-lg">Lunas</h3>
-                              <p className="text-muted-foreground text-xs">Bayar lunas sekarang dan dapatkan prioritas pengerjaan.</p>
-                          </div>
-                      </div>
-                  </CardContent>
-              </Card>
-          </section>
           
           {/* Catalog */}
           <section id="catalog-section" className="pt-8 flex-grow">
               <div className="text-center mb-10">
-                  <h2 className="text-2xl font-headline font-semibold text-foreground">Langkah 3: Terakhir, pilih layanannya!</h2>
+                  <h2 className="text-2xl font-headline font-semibold text-foreground">Langkah 2: Terakhir, pilih layanannya!</h2>
                   <p className="text-sm text-muted-foreground mt-2 max-w-2xl mx-auto">Scroll ke bawah dan masukkin semua yang kamu butuhin ke keranjang.</p>
               </div>
               <div className="space-y-8">
@@ -190,7 +155,7 @@ function OrderWorkflow() {
           {/* Order Summary */}
           <section id="summary-section" className="pt-16">
             <div className="text-center mb-10">
-              <h2 className="text-2xl font-headline font-semibold text-foreground">Langkah 4: Periksa Kembali Pesanan Anda</h2>
+              <h2 className="text-2xl font-headline font-semibold text-foreground">Langkah 3: Periksa & Kirim Pesanan Anda</h2>
               <p className="text-sm text-muted-foreground mt-2 max-w-2xl mx-auto">Pastikan semua sudah benar sebelum mengirim pesanan.</p>
             </div>
             <div className="max-w-3xl mx-auto">
