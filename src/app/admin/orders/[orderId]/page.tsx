@@ -9,14 +9,14 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { formatRupiah, cn } from '@/lib/utils';
-import type { OrderStatus } from '@/lib/types';
+import type { Order, OrderStatus } from '@/lib/types';
 import { MessageSquare, Send, Folder, Calendar, Video, History } from 'lucide-react';
 
 export default function OrderDetailPage() {
   const params = useParams();
   const orderId = params?.orderId as string;
   
-  const order = useMemo(() => {
+  const order: Order | null = useMemo(() => {
     if (!orderId) return null;
     return mockOrders.find(o => o.kode_order === orderId) || null;
   }, [orderId]);
@@ -177,11 +177,17 @@ export default function OrderDetailPage() {
                       <p className="text-sm text-muted-foreground">
                         {order.driveFolderUrl ? `Folder telah dibuat` : 'Belum dibuat'}
                       </p>
-                      <Button asChild variant="outline" size="sm" className="mt-2 w-full" disabled={!order.driveFolderUrl}>
-                        <a href={order.driveFolderUrl} target="_blank" rel="noopener noreferrer">
-                          Buka Folder
-                        </a>
-                      </Button>
+                      {order.driveFolderUrl ? (
+                        <Button asChild variant="outline" size="sm" className="mt-2 w-full">
+                          <a href={order.driveFolderUrl} target="_blank" rel="noopener noreferrer">
+                            Buka Folder
+                          </a>
+                        </Button>
+                      ) : (
+                        <Button variant="outline" size="sm" className="mt-2 w-full" disabled>
+                            Buka Folder
+                        </Button>
+                      )}
                     </div>
                     <Separator />
                     <div>
