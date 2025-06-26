@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Send, Folder, Video, Calendar, CheckCircle, XCircle } from 'lucide-react';
+import { Send, Folder, Video, Calendar, CheckCircle, XCircle, Flame, Database, Copy } from 'lucide-react';
 
 const integrations = [
   {
@@ -51,6 +51,61 @@ export default function AdminIntegrationsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="md:col-span-2">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><Flame className="h-6 w-6 text-orange-500" /> Panduan Mencari URL Firebase</CardTitle>
+                <CardDescription>Jika Anda tidak bisa menemukan URL Realtime Database, ikuti panduan visual ini.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <ol className="list-decimal list-inside space-y-4 text-sm">
+                    <li>
+                        Buka Firebase Console dan pilih proyek Anda. Di menu kiri, di bawah kategori <strong>Build</strong>, klik <strong>Realtime Database</strong>.
+                        <div className="mt-2 p-3 border rounded-md bg-muted/50 flex gap-4">
+                            <div className="w-1/3 border-r pr-3">
+                                <p className="text-xs font-semibold text-muted-foreground mb-2">MENU KIRI</p>
+                                <div className="space-y-1">
+                                    <p className="font-semibold text-foreground">Build</p>
+                                    <div className="pl-2 space-y-1">
+                                        <p>Authentication</p>
+                                        <p>App Check</p>
+                                        <p>Firestore Database</p>
+                                        <p className="p-1 rounded-md bg-primary/20 text-primary font-bold flex items-center gap-1">
+                                            <Database className="h-4 w-4" />
+                                            Realtime Database
+                                        </p>
+                                        <p>Storage</p>
+                                        <p>Hosting</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="w-2/3">
+                                 <p className="text-xs font-semibold text-muted-foreground mb-2">HALAMAN UTAMA</p>
+                                 <p>Anda akan diarahkan ke halaman utama Realtime Database.</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        URL database Anda akan terlihat di bagian atas halaman, tepat di bawah tab "Data".
+                         <div className="mt-2 p-3 border rounded-md bg-muted/50">
+                            <div className="flex items-center gap-2 bg-background p-2 rounded-md border">
+                                <Database className="h-4 w-4 text-muted-foreground" />
+                                <code className="text-sm text-foreground bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">
+                                    https://nama-proyek-anda-default-rtdb.region.firebasedatabase.app
+                                </code>
+                                <Button variant="ghost" size="icon" className="h-6 w-6"><Copy className="h-4 w-4" /></Button>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-2">Klik ikon salin di sebelahnya untuk menyalin URL.</p>
+                        </div>
+                    </li>
+                </ol>
+            </CardContent>
+            <CardFooter>
+                <Button asChild className="w-full">
+                    <a href="https://console.firebase.google.com/" target="_blank" rel="noopener noreferrer">Buka Firebase Console</a>
+                </Button>
+            </CardFooter>
+        </Card>
+
         {integrations.map((integration) => (
           <Card key={integration.id} className="flex flex-col">
             <CardHeader>
