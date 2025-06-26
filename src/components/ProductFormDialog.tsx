@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -60,14 +61,14 @@ interface ProductFormDialogProps {
   onOpenChange: (isOpen: boolean) => void
 }
 
+const defaultTierImages = {
+    'kaki-lima': "https://placehold.co/128x128/f8fafc/64748b.png",
+    'umkm': "https://placehold.co/128x128/f1f5f9/334155.png",
+    'e-comm': "https://placehold.co/128x128/e2e8f0/1e293b.png",
+};
+
 export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductFormDialogProps) {
   const { toast } = useToast()
-
-  const defaultTierImages = {
-      'kaki-lima': "https://placehold.co/128x128/f8fafc/64748b.png",
-      'umkm': "https://placehold.co/128x128/f1f5f9/334155.png",
-      'e-comm': "https://placehold.co/128x128/e2e8f0/1e293b.png",
-  };
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
@@ -102,7 +103,7 @@ export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductForm
         dataAiHint: product?.dataAiHint || "",
       })
     }
-  }, [isOpen, product, form, defaultTierImages])
+  }, [isOpen, product, form])
 
 
   function onSubmit(data: ProductFormValues) {
