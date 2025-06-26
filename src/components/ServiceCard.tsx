@@ -67,7 +67,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
 
   return (
     <Card className={cn(
-      "flex flex-col overflow-hidden h-full relative transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:z-10"
+      "flex flex-col h-full relative transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:z-10"
     )}>
       <CardHeader className="p-0">
         <Image
