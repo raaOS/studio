@@ -15,8 +15,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { mockDriveActivityLogs } from '@/lib/data';
-import { FolderSync, Save, TestTube2, Link as LinkIcon, FolderCog, KeyRound, FileJson, FolderInput, Lightbulb, UserPlus, Power } from 'lucide-react';
+import { FolderSync, Save, TestTube2, Link as LinkIcon, FolderCog, KeyRound, FileJson, FolderInput, Lightbulb, UserPlus, Power, Flame } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
 import type { DriveActivityLog } from '@/lib/types';
@@ -87,6 +88,23 @@ export default function DriveAutomationPage() {
         <h1 className="text-2xl md:text-3xl font-bold font-headline">Otomasi Google Drive</h1>
         <p className="text-muted-foreground">Ikuti langkah-langkah di bawah ini untuk menghubungkan aplikasi ke Google Drive Anda.</p>
       </div>
+
+      <Alert variant="destructive">
+        <Flame className="h-4 w-4" />
+        <AlertTitle>Penting: Persiapan untuk Go-Live (Deployment)</AlertTitle>
+        <AlertDescription>
+            <p>Pengaturan di file <code>.env</code> hanya untuk pengembangan lokal. Agar integrasi ini berfungsi saat aplikasi dipublikasikan, Anda **harus** menyimpan variabel ini di **Firebase Secret Manager**:</p>
+            <ul className="list-disc list-inside my-2">
+                <li><code>DRIVE_SERVICE_ACCOUNT_JSON</code></li>
+                <li><code>DRIVE_PARENT_FOLDER_ID</code></li>
+            </ul>
+            <Button asChild variant="secondary" size="sm" className="mt-2">
+              <a href="https://console.cloud.google.com/security/secret-manager" target="_blank" rel="noopener noreferrer">
+                Buka Secret Manager
+              </a>
+            </Button>
+        </AlertDescription>
+      </Alert>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-2 space-y-8">
@@ -301,4 +319,5 @@ export default function DriveAutomationPage() {
       </Card>
     </div>
   );
-}
+
+    
