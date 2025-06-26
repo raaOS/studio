@@ -40,9 +40,9 @@ export default function AdminCapacityPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl md:text-3xl font-bold font-headline">Pengaturan Kapasitas Order</h1>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-shrink-0">
             <Button variant="outline">Emergency Override</Button>
             <Button>Update Limits</Button>
         </div>

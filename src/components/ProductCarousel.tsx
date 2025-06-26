@@ -74,7 +74,7 @@ export function ProductCarousel({ title, services }: ProductCarouselProps) {
           {services.map((service) => (
             <div 
               key={service.id} 
-              className="carousel-item w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.75rem)] shrink-0"
+              className="carousel-item w-3/5 sm:w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.75rem)] shrink-0"
             >
               <ServiceCard service={service} />
             </div>
