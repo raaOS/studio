@@ -146,7 +146,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onOpenChange}>
-        <DialogContent className="p-0 sm:max-w-2xl max-h-[90vh] flex flex-col">
+        <DialogContent className="p-0 sm:max-w-4xl max-h-[90vh] flex flex-col">
           <div className="flex-1 flex flex-col sm:grid sm:grid-cols-2 sm:gap-6 sm:items-start overflow-y-auto">
             
             {/* Image Column */}
@@ -172,7 +172,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                             <div className="w-16 h-16 relative overflow-hidden rounded-md shrink-0">
                                 <Image src={selectedImage} alt={service.name} fill className="object-cover" />
                             </div>
-                            <div className="flex-1">
+                            <div>
                                 <DialogTitle asChild>
                                   <h2 className="font-semibold tracking-tight font-headline text-base text-left leading-tight">
                                     {service.name}
@@ -326,12 +326,12 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
       
       <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
         <DialogContent className="p-0 border-0 max-w-4xl bg-transparent shadow-none">
-            <DialogHeader className="sr-only">
+            <div className="sr-only">
               <DialogTitle>{service.name}</DialogTitle>
               <DialogDescription>
                 Gambar pratinjau untuk {service.name}
               </DialogDescription>
-            </DialogHeader>
+            </div>
             <Image 
                 src={selectedImage} 
                 alt={service.name} 
