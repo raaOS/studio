@@ -10,6 +10,7 @@ import type { Service } from '@/lib/types';
 import { useState } from 'react';
 import { ProductDetailDialog } from './ProductDetailDialog';
 import { PlusCircle } from 'lucide-react';
+import { formatRupiah } from '@/lib/utils';
 
 interface ServiceCardProps {
   service: Service;
@@ -21,6 +22,10 @@ export function ServiceCard({ service }: ServiceCardProps) {
   const quantity = cartItem?.quantity ?? 0;
   
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const prices = Object.values(service.prices);
+  const minPrice = Math.min(...prices);
+  const maxPrice = Math.max(...prices);
 
   return (
     <>
@@ -36,8 +41,11 @@ export function ServiceCard({ service }: ServiceCardProps) {
           />
         </CardHeader>
 
-        <CardContent className="p-4 flex-grow">
-          <CardTitle className="font-headline text-lg mb-2">{service.name}</CardTitle>
+        <CardContent className="p-4 flex-grow space-y-1">
+          <CardTitle className="font-headline text-lg">{service.name}</CardTitle>
+          <p className="font-semibold text-primary/80 text-sm">
+            {formatRupiah(minPrice)} - {formatRupiah(maxPrice)}
+          </p>
         </CardContent>
 
         <CardFooter className="p-4 pt-0">
