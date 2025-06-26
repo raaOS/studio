@@ -160,7 +160,17 @@ export default function DriveAutomationPage() {
                         <li>Buat sebuah folder baru di Google Drive Anda (misalnya: "Pesanan DesignFlow").</li>
                         <li>Klik kanan pada folder tersebut dan pilih <span className="font-semibold">Bagikan (Share)</span>.</li>
                         <li>
-                            Buka kembali file JSON Anda, cari alamat email di bawah kunci <code className="bg-muted px-1 py-0.5 rounded">client_email</code>.
+                            Buka kembali file JSON yang Anda unduh. Cari alamat email di bawah kunci <code className="bg-muted px-1 py-0.5 rounded">client_email</code>. Inilah "identitas" bot Anda.
+                            <div className="text-xs p-2 mt-2 rounded-md bg-blue-500/10 border border-blue-500/20">
+                                <p className="text-blue-800 dark:text-blue-200">Contoh di file JSON:</p>
+                                <code className="block text-blue-900 dark:text-blue-300">
+                                    ... <br/>
+                                    "private_key": "...", <br/>
+                                    <span className="bg-primary/20 p-0.5 rounded font-bold">"client_email": "nama-bot-anda@proyek-anda.iam.gserviceaccount.com",</span> <br/>
+                                    "client_id": "...", <br/>
+                                    ...
+                                </code>
+                            </div>
                         </li>
                         <li>
                             Di dialog "Bagikan", tempelkan alamat email tersebut, berikan peran sebagai <span className="font-semibold">Editor</span>, dan klik <span className="font-semibold">Kirim</span>.
