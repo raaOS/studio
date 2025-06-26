@@ -6,18 +6,20 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ShoppingCart, Trash2 } from "lucide-react";
-import { formatRupiah } from "@/lib/utils";
+import { formatRupiah, cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { sendTelegramUpdate } from '@/ai/flows/telegram-bot-integration';
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
 import { useState, useEffect } from "react";
 import type { Customer } from "@/lib/types";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export function OrderSummary() {
     const { cartItems, totalPrice, totalItems, paymentMethod, updateItemQuantity, clearCart } = useCart();
     const { toast } = useToast();
     const [customer, setCustomer] = useState<Customer | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const isMobile = useIsMobile();
 
     useEffect(() => {
         const savedCustomerData = localStorage.getItem('customerData');
@@ -123,7 +125,10 @@ export function OrderSummary() {
             </CardHeader>
             <CardContent className="space-y-4">
                 {cartItems.length > 0 ? (
-                    <div className="max-h-60 overflow-y-auto pr-2 space-y-3">
+                    <div className={cn(
+                        "overflow-y-auto pr-2 space-y-3",
+                        !isMobile && "max-h-60"
+                    )}>
                         {cartItems.map(item => (
                             <div key={item.id} className="flex justify-between items-start text-sm">
                                 <div>
