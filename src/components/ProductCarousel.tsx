@@ -27,14 +27,18 @@ export function ProductCarousel({ title, services }: ProductCarouselProps) {
         <h3 className="text-2xl font-headline font-bold mb-6">{title}</h3>
         
         <div 
-          ref={scrollContainerRef}
-          className="flex overflow-x-auto space-x-6 pb-4 snap-x snap-mandatory overscroll-behavior-x-contain no-scrollbar scroll-smooth -mx-4 px-4"
+          className="overflow-x-auto no-scrollbar"
         >
-          {services.map((service) => (
-            <div key={service.id} className="w-72 flex-shrink-0 snap-start">
-              <ServiceCard service={service} />
-            </div>
-          ))}
+          <div
+            ref={scrollContainerRef}
+            className="flex space-x-4 snap-x snap-mandatory scroll-smooth px-4 pb-4"
+          >
+            {services.map((service) => (
+              <div key={service.id} className="w-64 shrink-0 snap-start">
+                <ServiceCard service={service} />
+              </div>
+            ))}
+          </div>
         </div>
 
         <Button
