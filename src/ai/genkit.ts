@@ -8,6 +8,6 @@ export const ai = genkit({
     // 1. Get a Google AI API key from https://aistudio.google.com/app/apikey
     // 2. Add it to the .env file as: GEMINI_API_KEY="YOUR_API_KEY_HERE"
     // 3. Uncomment the `googleAI()` line below.
-    // googleAI(),
+    googleAI(),
   ],
 });
