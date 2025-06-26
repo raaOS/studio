@@ -328,7 +328,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
 
         <DialogFooter className="mt-auto p-4 border-t bg-background grid grid-cols-2 gap-4 shrink-0 sm:flex sm:items-center sm:justify-end sm:gap-2">
             <Button type="button" onClick={handleSave} variant="outline" className="w-full sm:w-auto">
-                {getCartItem(service.id) ? 'Simpan Perubahan' : 'Masukkan Keranjang'}
+                {getCartItem(service.id) ? 'Simpan Perubahan' : 'Tambah Desain'}
             </Button>
             <Button type="button" onClick={handleCheckout} className="w-full sm:w-auto">
                 Lanjut Bayar
