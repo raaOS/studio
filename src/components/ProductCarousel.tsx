@@ -22,13 +22,13 @@ export function ProductCarousel({ title, services }: ProductCarouselProps) {
   };
 
   return (
-    <div className="mb-12 overflow-hidden">
+    <div className="mb-12">
       <div className="relative group">
         <h3 className="text-2xl font-headline font-bold mb-6">{title}</h3>
         
         <div
           ref={scrollContainerRef}
-          className="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory -mx-4 px-4 pb-4"
+          className="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory pb-4"
         >
           {services.map((service) => (
             <div key={service.id} className="w-64 shrink-0 snap-start">
