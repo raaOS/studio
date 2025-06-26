@@ -155,7 +155,7 @@ function OrderWorkflow() {
                     <CardDescription className="text-sm">Bisa bayar setengah dulu atau lunas sekalian, bebas!</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div
                             onClick={() => handlePaymentSelect('dp')}
                             className={`flex h-full flex-col items-center justify-center rounded-lg border-2 p-6 cursor-pointer transition-all space-y-2 text-center ${paymentMethod === 'dp' ? 'border-primary bg-primary/5' : 'border-muted bg-popover hover:bg-accent/50'}`}
