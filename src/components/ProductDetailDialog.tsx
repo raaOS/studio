@@ -19,7 +19,7 @@ import { Separator } from '@/components/ui/separator';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { QuantityStepper } from '@/components/QuantityStepper';
 import { useCart } from '@/contexts/CartContext';
-import { generateDynamicBrief } from '@/ai/flows/generate-dynamic-brief';
+// import { generateDynamicBrief } from '@/ai/flows/generate-dynamic-brief'; // AI feature removed
 import type { Service, BudgetTier } from '@/lib/types';
 import { budgetItems } from '@/lib/data';
 import { formatRupiah } from '@/lib/utils';
@@ -46,7 +46,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
   const [quantity, setQuantity] = useState(1);
   const [brief, setBrief] = useState<Record<string, string>>({});
   const [briefFields, setBriefFields] = useState<{name: string, placeholder: string, type: 'textarea' | 'input'}[]>([]);
-  const [isGeneratingBrief, setIsGeneratingBrief] = useState(false);
+  // const [isGeneratingBrief, setIsGeneratingBrief] = useState(false); // AI feature removed
   const [selectedTier, setSelectedTier] = useState<BudgetTier | null>(null);
 
   useEffect(() => {
@@ -60,30 +60,15 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
       setBrief(initialBrief);
       setSelectedTier(initialTier);
 
+      // AI brief generation removed, using fallback only.
       if (briefFields.length === 0) {
-        setIsGeneratingBrief(true);
-        generateDynamicBrief({ serviceName: service.name })
-          .then(response => {
-            const dynamicFields = response.briefFields.map(field => ({ name: field, placeholder: '...', type: 'textarea' as const }));
-            const assetField = fallbackBriefFields.find(f => f.name.includes('Aset'));
-            const logoField = fallbackBriefFields.find(f => f.name.includes('Logo'));
-            
-            const finalFields = [...dynamicFields];
-            if (assetField) finalFields.push(assetField);
-            if (logoField) finalFields.push(logoField);
-
-            setBriefFields(finalFields);
-          })
-          .catch(error => {
-            console.error("[DynamicBrief Error]", error);
-            setBriefFields(fallbackBriefFields);
-          })
-          .finally(() => setIsGeneratingBrief(false));
+        setBriefFields(fallbackBriefFields);
       }
     } else {
+      // Reset fields when dialog closes
       setBriefFields([]);
     }
-  }, [isOpen, service.id, service.name, getCartItem, briefFields.length]);
+  }, [isOpen, service.id, getCartItem, briefFields.length]);
 
   const handleBriefChange = (field: string, value: string) => {
     setBrief(prev => ({ ...prev, [field]: value }));
@@ -146,15 +131,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
             
             <Separator />
             
-          {isGeneratingBrief ? (
-            <div className="space-y-4 pt-2">
-                <Skeleton className="h-6 w-1/3" />
-                <Skeleton className="h-20 w-full" />
-                <Skeleton className="h-6 w-1/3" />
-                <Skeleton className="h-20 w-full" />
-            </div>
-          ) : (
-            briefFields.map(field => (
+            {briefFields.map(field => (
               <div key={field.name} className="w-full space-y-2">
                 <Label htmlFor={`brief-${service.id}-${field.name}`}>{field.name}</Label>
                 {field.type === 'textarea' ? (
@@ -174,8 +151,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                     />
                 )}
               </div>
-            ))
-          )}
+            ))}
 
             <div className="space-y-2 pt-2">
                 <Label>Jumlah Pesanan</Label>
