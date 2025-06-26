@@ -87,7 +87,8 @@ export default function AdminPaymentsPage() {
               <TableRow>
                 <TableHead>Kode</TableHead>
                 <TableHead>Nama</TableHead>
-                <TableHead>Total</TableHead>
+                <TableHead>Dibayar</TableHead>
+                <TableHead>Total Order</TableHead>
                 <TableHead>Status Bayar</TableHead>
                 <TableHead>Tanggal</TableHead>
                 <TableHead className="text-right">Aksi</TableHead>
@@ -104,6 +105,7 @@ export default function AdminPaymentsPage() {
                     </TableCell>
                     <TableCell>{order.nama_klien}</TableCell>
                     <TableCell>{formatRupiah(order.jumlah_transfer)}</TableCell>
+                    <TableCell>{formatRupiah(order.total_harga)}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className={cn("capitalize", getStatusClass(order.paymentStatus))}>
                         {order.paymentStatus}
@@ -121,7 +123,7 @@ export default function AdminPaymentsPage() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center h-24">
+                  <TableCell colSpan={7} className="text-center h-24">
                     Tidak ada data pembayaran yang sesuai dengan filter.
                   </TableCell>
                 </TableRow>

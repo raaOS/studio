@@ -202,6 +202,7 @@ export const mockOrders: Order[] = [
       { name: 'Desain Kop Surat (Letterhead)', quantity: 1, price: 28000, brief: {'Nama & Jabatan': 'John Doe, Owner', 'Informasi Kontak': '0812345678, kopi.senja@email.com', 'Alamat': 'Jl. Kenangan No. 10, Jakarta'} },
     ],
     jumlah_transfer: 88000,
+    total_harga: 88000,
     tipe_pembayaran: 'LUNAS',
     paymentStatus: 'Lunas',
     status_pesanan: 'Masuk Antrian',
@@ -213,6 +214,10 @@ export const mockOrders: Order[] = [
     jenis_potongan: '',
     total_refund: 0,
     status_refund: '',
+    log_aktivitas: [
+        { aksi: "Pesanan dibuat oleh klien", oleh: 'klien', waktu: '2024-05-20 10:00' },
+        { aksi: "Pembayaran divalidasi", oleh: 'owner', waktu: '2024-05-20 11:30' }
+    ]
   },
   {
     kode_order: '#002',
@@ -221,7 +226,8 @@ export const mockOrders: Order[] = [
     items: [
       { name: 'Desain Konten Feed (Single Post)', quantity: 5, price: 15000, brief: {'Tema Konten': 'Promosi diskon 50% untuk produk fashion.', 'Platform': 'Instagram & Facebook', 'Call to Action': 'Belanja sekarang, klik link di bio!'} },
     ],
-    jumlah_transfer: 75000,
+    jumlah_transfer: 37500,
+    total_harga: 75000,
     tipe_pembayaran: 'DP',
     paymentStatus: 'DP',
     status_pesanan: 'Sedang Dikerjakan',
@@ -242,6 +248,7 @@ export const mockOrders: Order[] = [
       { name: 'Desain Visual Landing Page', quantity: 1, price: 950000, brief: {'Deskripsi Produk': 'Keripik singkong aneka rasa', 'Target Pasar': 'Anak muda, penyuka cemilan pedas', 'Pesan yang ingin disampaikan': 'Renyah, gurih, bikin nagih!'} },
     ],
     jumlah_transfer: 950000,
+    total_harga: 950000,
     tipe_pembayaran: 'LUNAS',
     paymentStatus: 'Lunas',
     status_pesanan: 'Menunggu Respon Klien',
@@ -262,7 +269,8 @@ export const mockOrders: Order[] = [
         { name: 'Desain Spanduk / Banner Outdoor', quantity: 1, price: 85000, brief: {'Ukuran Banner': '3x1 meter', 'Teks Utama': 'Grand Opening Toko "Maju Jaya"', 'Informasi Tambahan': 'Diskon 20% selama minggu pertama.'} },
     ],
     jumlah_transfer: 85000,
-    tipe_pembayaran: 'DP',
+    total_harga: 85000,
+    tipe_pembayaran: 'LUNAS',
     paymentStatus: 'Lunas',
     status_pesanan: 'Selesai',
     timestamp: '2024-05-24',
@@ -281,7 +289,8 @@ export const mockOrders: Order[] = [
     items: [
       { name: 'Desain Brosur / Pamflet Promosi', quantity: 1, price: 35000, brief: {'Judul': 'Promo Jasa Desain Grafis', 'Isi': 'Diskon 30% untuk semua layanan'} },
     ],
-    jumlah_transfer: 35000,
+    jumlah_transfer: 0,
+    total_harga: 35000,
     tipe_pembayaran: 'LUNAS',
     paymentStatus: 'Belum Lunas',
     status_pesanan: 'Menunggu Pembayaran',
@@ -301,7 +310,8 @@ export const mockOrders: Order[] = [
     items: [
       { name: 'Desain Lanyard / Tali ID Card', quantity: 10, price: 20000, brief: { 'Detail': 'Desain lanyard untuk acara kantor.' } },
     ],
-    jumlah_transfer: 200000,
+    jumlah_transfer: 100000,
+    total_harga: 200000,
     tipe_pembayaran: 'DP',
     paymentStatus: 'DP',
     status_pesanan: 'Eskalasi: Revisi di Luar Lingkup',
@@ -313,8 +323,13 @@ export const mockOrders: Order[] = [
     jenis_potongan: '',
     total_refund: 0,
     status_refund: '',
+    log_aktivitas: [
+        { aksi: "Pesanan dibuat oleh klien", oleh: 'klien', waktu: '2024-05-26 08:00' },
+        { aksi: "Pembayaran divalidasi", oleh: 'owner', waktu: '2024-05-26 09:00' },
+        { aksi: "Status diubah ke 'Sedang Dikerjakan'", oleh: 'desainer', waktu: '2024-05-27 14:00' },
+        { aksi: "Status diubah ke 'Eskalasi: Revisi di Luar Lingkup'", oleh: 'desainer', waktu: '2024-05-28 16:00' }
+    ]
   },
-  // New mock order for refund scenario
   {
     kode_order: '#007',
     nama_klien: 'Rina Wati',
@@ -322,7 +337,8 @@ export const mockOrders: Order[] = [
     items: [
       { name: 'Desain Buku Menu', quantity: 1, price: 60000, brief: { 'Detail': 'Menu untuk restoran seafood' } },
     ],
-    jumlah_transfer: 30000, // DP 50%
+    jumlah_transfer: 30000,
+    total_harga: 60000,
     tipe_pembayaran: 'DP',
     paymentStatus: 'DP',
     status_pesanan: 'Dibatalkan (Belum Dikerjakan)',
@@ -330,9 +346,9 @@ export const mockOrders: Order[] = [
     budget: 'UMKM',
     pekan: 'W3',
     driveFolderUrl: undefined,
-    potongan_refund: 6000, // 10% of total (60000)
+    potongan_refund: 6000,
     jenis_potongan: 'Biaya Admin & Slot Booking',
-    total_refund: 24000, // 30000 - 6000
+    total_refund: 24000,
     status_refund: 'Belum',
   },
   {
@@ -342,7 +358,8 @@ export const mockOrders: Order[] = [
     items: [
       { name: 'Desain Konten Carousel (3 Slide)', quantity: 1, price: 180000, brief: { 'Detail': 'Carousel untuk produk mobil baru' } },
     ],
-    jumlah_transfer: 180000, // Lunas
+    jumlah_transfer: 180000,
+    total_harga: 180000,
     tipe_pembayaran: 'LUNAS',
     paymentStatus: 'Lunas',
     status_pesanan: 'Dibatalkan (Sudah Dikerjakan)',
@@ -350,9 +367,9 @@ export const mockOrders: Order[] = [
     budget: 'E-Comm',
     pekan: 'W3',
     driveFolderUrl: '/uploads/orders/008',
-    potongan_refund: 45000, // 25% of total (180000)
+    potongan_refund: 45000,
     jenis_potongan: 'Biaya Produksi Awal',
-    total_refund: 135000, // 180000 - 45000
+    total_refund: 135000,
     status_refund: 'Sudah',
   }
 ];

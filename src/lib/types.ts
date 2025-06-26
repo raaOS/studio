@@ -32,7 +32,6 @@ export type Customer = {
   telegram: string;
 };
 
-// Sesuai dengan spesifikasi terbaru
 export type OrderStatus =
   // Otomatis (Sistem)
   | 'Menunggu Pembayaran'
@@ -41,10 +40,10 @@ export type OrderStatus =
   | 'Sedang Direvisi'
   | 'Menunggu Respon Klien'
   | 'Selesai'
-  | 'Dibatalkan (Belum Dikerjakan)'
-  | 'Dibatalkan (Sudah Dikerjakan)'
-  | 'Ditutup (Tanpa Refund)'
+  | 'Dibatalkan (Tidak Dibayar)'
+  | 'Dibatalkan (Refund 90%)'
   | 'Tidak Puas (Refund 50%)'
+  | 'Ditutup (Tanpa Refund)'
   // Intervensi Owner
   | 'Perlu Tinjauan Owner'
   // Manual (Desainer)
@@ -59,11 +58,16 @@ export type Order = {
   status_pesanan: OrderStatus;
   tipe_pembayaran: 'LUNAS' | 'DP';
   jumlah_transfer: number;
+  total_harga: number;
   potongan_refund: number;
   jenis_potongan: 'Biaya Admin & Slot Booking' | 'Biaya Produksi Awal' | '';
   total_refund: number;
   status_refund: 'Sudah' | 'Belum' | '';
-  log_aktivitas?: string[];
+  log_aktivitas?: {
+    aksi: string;
+    oleh: 'klien' | 'owner' | 'desainer' | 'sistem';
+    waktu: string;
+  }[];
   timestamp: string;
 
   // Fields tambahan yang diperlukan oleh UI

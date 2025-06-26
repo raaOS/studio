@@ -23,8 +23,8 @@ const allOrderStatuses: OrderStatus[] = [
   'Selesai',
   'Perlu Tinjauan Owner',
   'Eskalasi: Revisi di Luar Lingkup',
-  'Dibatalkan (Belum Dikerjakan)',
-  'Dibatalkan (Sudah Dikerjakan)',
+  'Dibatalkan (Tidak Dibayar)',
+  'Dibatalkan (Refund 90%)',
   'Tidak Puas (Refund 50%)',
   'Ditutup (Tanpa Refund)',
 ];
@@ -75,7 +75,8 @@ export default function OrderDetailPage() {
       case 'Eskalasi: Revisi di Luar Lingkup': return 'bg-orange-500 hover:bg-orange-500/90 text-orange-50 font-bold';
 
       // Negative/Cancellation statuses
-      case 'Dibatalkan (Belum Dikerjakan)': return 'bg-red-500 hover:bg-red-500/90 text-red-50';
+      case 'Dibatalkan (Tidak Dibayar)': return 'bg-red-500 hover:bg-red-500/90 text-red-50';
+      case 'Dibatalkan (Refund 90%)': return 'bg-red-500 hover:bg-red-500/90 text-red-50';
       case 'Dibatalkan (Sudah Dikerjakan)': return 'bg-red-600 hover:bg-red-600/90 text-red-50';
       case 'Tidak Puas (Refund 50%)': return 'bg-pink-500 hover:bg-pink-500/90 text-pink-50';
       case 'Ditutup (Tanpa Refund)': return 'bg-neutral-600 hover:bg-neutral-600/90 text-neutral-50';
@@ -92,7 +93,7 @@ export default function OrderDetailPage() {
                     <div>
                         <CardTitle className="font-headline text-2xl">Pesanan {order.kode_order} - {order.nama_klien}</CardTitle>
                         <CardDescription>
-                            Budget: {order.budget} | Total: {formatRupiah(order.jumlah_transfer)} | Pekan: {order.pekan}
+                            Budget: {order.budget} | Total: {formatRupiah(order.total_harga)} ({order.tipe_pembayaran}) | Pekan: {order.pekan}
                         </CardDescription>
                     </div>
                     <Badge className={cn("capitalize w-fit mt-2 md:mt-0", getStatusClass(currentStatus))}>{currentStatus}</Badge>
