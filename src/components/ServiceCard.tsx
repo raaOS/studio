@@ -33,8 +33,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
 
   return (
     <Card className={cn(
-        "flex flex-col overflow-hidden transition-all duration-300 h-full",
-        isBudgetSelected ? "hover:shadow-lg" : "opacity-60"
+        "flex flex-col overflow-hidden transition-all duration-300 h-full hover:shadow-lg"
     )}>
       <CardHeader className="p-0">
         <Image
