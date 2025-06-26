@@ -22,50 +22,52 @@ export function ServiceCard({ service }: ServiceCardProps) {
   const { getItemQuantity, updateItemQuantity, updateBrief, cartItems, selectedBudget } = useCart();
   const quantity = getItemQuantity(service.id);
   const brief = cartItems.find(item => item.id === service.id)?.brief ?? {};
-  
+
   const [briefFields, setBriefFields] = useState<string[]>([]);
   const [isGeneratingBrief, setIsGeneratingBrief] = useState(false);
+
+  const isBudgetSelected = !!selectedBudget;
+
+  // Pastikan aman dari error jika id tidak ditemukan di price map
+  const price =
+    isBudgetSelected && service.prices[selectedBudget.id] !== undefined
+      ? service.prices[selectedBudget.id]
+      : 0;
 
   const handleQuantityChange = (newQuantity: number) => {
     updateItemQuantity(service, newQuantity);
   };
-  
+
   const handleBriefChange = (field: string, value: string) => {
     updateBrief(service.id, field, value);
-  }
-
-  const isBudgetSelected = !!selectedBudget;
-  const price = isBudgetSelected ? service.prices[selectedBudget.id] : 0;
+  };
 
   useEffect(() => {
     const fetchBriefFields = async () => {
-      // Only fetch if we have a quantity, a budget, and no fields yet
+      // Hanya fetch jika memenuhi semua syarat
       if (quantity > 0 && isBudgetSelected && briefFields.length === 0 && !isGeneratingBrief) {
         setIsGeneratingBrief(true);
         try {
           const response = await generateDynamicBrief({ serviceName: service.name });
           setBriefFields(response.briefFields);
         } catch (error) {
-          console.error("Failed to generate dynamic brief:", error);
-          // Fallback to a default brief field in case of an error
+          console.error("[DynamicBrief Error]", error);
+          // Fallback default jika gagal
           setBriefFields(['Jelaskan detail yang Anda inginkan...']);
         } finally {
           setIsGeneratingBrief(false);
         }
       } else if (quantity === 0) {
-        // Clear fields when item is removed from cart
-        setBriefFields([]);
+        setBriefFields([]); // reset saat quantity 0
       }
     };
 
     fetchBriefFields();
-  // Using briefFields.length in dependency array to prevent re-fetching when brief content changes.
-  }, [quantity, isBudgetSelected, service.name, briefFields.length, isGeneratingBrief]);
-
+  }, [quantity, isBudgetSelected, service.name, isGeneratingBrief]);
 
   return (
     <Card className={cn(
-        "flex flex-col overflow-hidden transition-all duration-300 h-full hover:shadow-lg"
+      "flex flex-col overflow-hidden transition-all duration-300 h-full hover:shadow-lg"
     )}>
       <CardHeader className="p-0">
         <Image
@@ -77,21 +79,24 @@ export function ServiceCard({ service }: ServiceCardProps) {
           data-ai-hint={service.dataAiHint}
         />
       </CardHeader>
+
       <CardContent className="p-4 flex-grow">
         <CardTitle className="font-headline text-lg mb-2">{service.name}</CardTitle>
         <p className="text-primary font-semibold text-lg">
-            {isBudgetSelected ? formatRupiah(price) : 'Pilih budget dulu'}
+          {isBudgetSelected ? formatRupiah(price) : 'Pilih budget dulu'}
         </p>
       </CardContent>
+
       <CardFooter className="p-4 pt-0 flex flex-col items-start gap-4">
         <div className="flex justify-between items-center w-full">
-            <Label>Jumlah</Label>
-            <QuantityStepper 
-                quantity={quantity} 
-                onQuantityChange={handleQuantityChange} 
-                disabled={!isBudgetSelected}
-            />
+          <Label>Jumlah</Label>
+          <QuantityStepper
+            quantity={quantity}
+            onQuantityChange={handleQuantityChange}
+            disabled={!isBudgetSelected}
+          />
         </div>
+
         <AnimatePresence>
           {quantity > 0 && isBudgetSelected && (
             <motion.div
@@ -103,8 +108,10 @@ export function ServiceCard({ service }: ServiceCardProps) {
             >
               {isGeneratingBrief ? (
                 <div className="space-y-3 pt-2">
-                    <p className="text-sm text-muted-foreground animate-pulse">Membuat pertanyaan brief...</p>
-                    <Skeleton className="h-20 w-full" />
+                  <p className="text-sm text-muted-foreground animate-pulse">
+                    Membuat pertanyaan brief...
+                  </p>
+                  <Skeleton className="h-20 w-full" />
                 </div>
               ) : (
                 briefFields.map((field) => (
@@ -113,6 +120,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
                     <Textarea
                       id={`brief-${service.id}-${field}`}
                       placeholder="..."
+                      maxLength={500}
                       value={brief[field] ?? ''}
                       onChange={(e) => handleBriefChange(field, e.target.value)}
                     />
