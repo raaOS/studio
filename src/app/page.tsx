@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useMemo, useState, useEffect } from 'react';
@@ -15,10 +14,8 @@ import { FloatingCart } from '@/components/FloatingCart';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { User, Phone, Send, ArrowRight } from 'lucide-react';
+import { User, Phone, Send, Percent, CheckCircle } from 'lucide-react';
 
 // Hooks & Context
 import { CartProvider, useCart } from '@/contexts/CartContext';
@@ -84,14 +81,14 @@ function OrderWorkflow() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow container mx-auto px-4 pt-10 pb-16 space-y-8">
+      <main className="flex-grow container mx-auto px-4 pt-10 pb-16 space-y-6">
         
         {/* Customer Info */}
         <section id="info-section" className="max-w-2xl mx-auto">
           <Card>
             <CardHeader>
-              <CardTitle className="font-headline text-2xl">Langkah 1: Kita isi data diri dulu, yuk?</CardTitle>
-              <CardDescription>Cuma butuh nama, nomor telepon, sama username Telegram biar gampang dihubungin.</CardDescription>
+              <CardTitle className="font-headline text-xl">Langkah 1: Kita isi data diri dulu, yuk?</CardTitle>
+              <CardDescription className="text-sm">Cuma butuh nama, nomor telepon, sama username Telegram biar gampang dihubungin.</CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
@@ -154,24 +151,26 @@ function OrderWorkflow() {
         <section id="payment-section" className="max-w-2xl mx-auto">
             <Card>
                 <CardHeader>
-                    <CardTitle className="font-headline text-2xl">Langkah 2: Mau bayar pakai cara apa?</CardTitle>
-                    <CardDescription>Bisa bayar setengah dulu atau lunas sekalian, bebas!</CardDescription>
+                    <CardTitle className="font-headline text-xl">Langkah 2: Mau bayar pakai cara apa?</CardTitle>
+                    <CardDescription className="text-sm">Bisa bayar setengah dulu atau lunas sekalian, bebas!</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-4">
                         <div
                             onClick={() => handlePaymentSelect('dp')}
-                            className={`flex h-full flex-col items-center justify-center rounded-md border-2 p-4 cursor-pointer transition-all ${paymentMethod === 'dp' ? 'border-primary bg-accent' : 'border-muted bg-popover hover:bg-accent/50'}`}
+                            className={`flex h-full flex-col items-center justify-center rounded-lg border-2 p-6 cursor-pointer transition-all space-y-2 text-center ${paymentMethod === 'dp' ? 'border-primary bg-primary/5' : 'border-muted bg-popover hover:bg-accent/50'}`}
                         >
+                            <Percent className="h-8 w-8 text-primary" />
                             <h3 className="font-semibold text-lg">DP 50%</h3>
-                            <p className="text-muted-foreground text-sm text-center">Bayar setengahnya sekarang, sisanya setelah pratinjau.</p>
+                            <p className="text-muted-foreground text-xs">Bayar setengahnya sekarang, sisanya setelah pratinjau.</p>
                         </div>
                         <div
                             onClick={() => handlePaymentSelect('lunas')}
-                            className={`flex h-full flex-col items-center justify-center rounded-md border-2 p-4 cursor-pointer transition-all ${paymentMethod === 'lunas' ? 'border-primary bg-accent' : 'border-muted bg-popover hover:bg-accent/50'}`}
+                            className={`flex h-full flex-col items-center justify-center rounded-lg border-2 p-6 cursor-pointer transition-all space-y-2 text-center ${paymentMethod === 'lunas' ? 'border-primary bg-primary/5' : 'border-muted bg-popover hover:bg-accent/50'}`}
                         >
+                            <CheckCircle className="h-8 w-8 text-primary" />
                             <h3 className="font-semibold text-lg">Lunas</h3>
-                            <p className="text-muted-foreground text-sm text-center">Bayar lunas sekarang dan dapatkan prioritas pengerjaan.</p>
+                            <p className="text-muted-foreground text-xs">Bayar lunas sekarang dan dapatkan prioritas pengerjaan.</p>
                         </div>
                     </div>
                 </CardContent>
