@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { mockDriveActivityLogs } from '@/lib/data';
-import { FolderSync, Save, TestTube2, Link as LinkIcon, FolderCog, KeyRound, FileJson, FolderInput, Lightbulb, UserPlus } from 'lucide-react';
+import { FolderSync, Save, TestTube2, Link as LinkIcon, FolderCog, KeyRound, FileJson, FolderInput, Lightbulb, UserPlus, Power } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
 import type { DriveActivityLog } from '@/lib/types';
@@ -43,7 +43,7 @@ export default function DriveAutomationPage() {
     if (!parentFolderId) {
        toast({
         title: 'Parent Folder ID Diperlukan',
-        description: 'Mohon masukkan ID folder utama di Google Drive dari Langkah 3.',
+        description: 'Mohon masukkan ID folder utama di Google Drive dari Langkah 4.',
         variant: 'destructive',
       });
       return;
@@ -79,7 +79,7 @@ export default function DriveAutomationPage() {
         setActivityLogs(prevLogs => [newLog, ...prevLogs]);
 
       } else {
-        throw new Error(result.error || 'Gagal membuat folder. Pastikan kredensial JSON di file .env sudah benar.');
+        throw new Error(result.error || 'Gagal membuat folder. Pastikan kredensial JSON dan API sudah benar.');
       }
     } catch (error: any) {
       toast({
@@ -102,12 +102,31 @@ export default function DriveAutomationPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-2 space-y-8">
           
-          {/* Step-by-step setup cards */}
           <div className="space-y-6">
             <Card className="border-primary">
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-3"><KeyRound className="h-6 w-6"/> Langkah 1: Dapatkan Kunci API (Service Account)</CardTitle>
-                    <CardDescription>Agar aplikasi ini bisa membuat folder, kita butuh "kunci" khusus dari Google. Kunci ini seperti kata sandi super untuk bot kita.</CardDescription>
+                    <CardTitle className="flex items-center gap-3"><Power className="h-6 w-6"/> Langkah 1: Aktifkan Google Drive API</CardTitle>
+                    <CardDescription>Sebelum bot bisa bekerja, kita harus "menyalakan" fitur Google Drive di proyek Google Cloud Anda. Anggap ini seperti membuka gerbang utama.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <ol className="list-decimal list-inside space-y-2 text-sm">
+                        <li>Buka halaman Google Drive API di Google Cloud Console menggunakan tombol di bawah.</li>
+                        <li>Pastikan proyek yang terpilih di bagian atas adalah proyek yang benar (`urgent-studio`).</li>
+                        <li>Jika API belum aktif, Anda akan melihat tombol biru besar bertuliskan <strong>"ENABLE"</strong>. Klik tombol tersebut.</li>
+                        <li>Tunggu beberapa saat hingga proses selesai. Halaman akan memuat ulang dan menampilkan grafik penggunaan. Jika sudah aktif, Anda tidak perlu melakukan apa-apa.</li>
+                    </ol>
+                </CardContent>
+                <CardFooter>
+                    <Button asChild>
+                        <a href="https://console.cloud.google.com/apis/library/drive.googleapis.com" target="_blank" rel="noopener noreferrer">Buka Halaman Google Drive API</a>
+                    </Button>
+                </CardFooter>
+            </Card>
+            
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-3"><KeyRound className="h-6 w-6"/> Langkah 2: Dapatkan Kunci API (Service Account)</CardTitle>
+                    <CardDescription>Jika Anda sudah punya kunci dari proses sebelumnya, Anda bisa melewati ini. Jika belum, ikuti langkah ini untuk membuat "kunci" khusus untuk bot kita.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <ol className="list-decimal list-inside space-y-2 text-sm">
@@ -121,14 +140,14 @@ export default function DriveAutomationPage() {
                 </CardContent>
                 <CardFooter>
                     <Button asChild>
-                        <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer">Buka Google Cloud Console</a>
+                        <a href="https://console.cloud.google.com/iam-admin/serviceaccounts" target="_blank" rel="noopener noreferrer">Buka Halaman Service Accounts</a>
                     </Button>
                 </CardFooter>
             </Card>
 
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-3"><FileJson className="h-6 w-6"/> Langkah 2: Simpan Kunci di File .env</CardTitle>
+                    <CardTitle className="flex items-center gap-3"><FileJson className="h-6 w-6"/> Langkah 3: Simpan Kunci di File .env</CardTitle>
                     <CardDescription>Salin isi file JSON yang Anda unduh tadi ke dalam file <code>.env</code> di proyek ini.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -152,7 +171,7 @@ export default function DriveAutomationPage() {
 
              <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-3"><FolderInput className="h-6 w-6"/> Langkah 3: Tentukan & Bagikan Folder Utama</CardTitle>
+                    <CardTitle className="flex items-center gap-3"><FolderInput className="h-6 w-6"/> Langkah 4: Tentukan & Bagikan Folder Utama</CardTitle>
                     <CardDescription>Pilih folder di Drive Anda & izinkan bot kita untuk menulis di dalamnya.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -228,7 +247,7 @@ export default function DriveAutomationPage() {
           <Card className="sticky top-24">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2"><TestTube2 /> Uji Integrasi</CardTitle>
-                <CardDescription>Setelah menyelesaikan langkah 1-3, uji koneksi Anda dengan membuat folder tes.</CardDescription>
+                <CardDescription>Setelah menyelesaikan langkah 1-4, uji koneksi Anda dengan membuat folder tes.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="space-y-2">
