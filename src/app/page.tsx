@@ -10,7 +10,6 @@ import Image from 'next/image';
 // Components
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { ServiceCard } from '@/components/ServiceCard';
 import { OrderSummary } from '@/components/OrderSummary';
 import { FloatingCart } from '@/components/FloatingCart';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,6 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { User, Phone, Send, Percent, CheckCircle } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ProductCarousel } from '@/components/ProductCarousel';
 
 // Hooks & Context
 import { CartProvider, useCart } from '@/contexts/CartContext';
@@ -226,20 +226,9 @@ function OrderWorkflow() {
                 <p className="text-sm text-muted-foreground mt-2 max-w-2xl mx-auto">Scroll ke bawah dan masukkin semua yang kamu butuhin ke keranjang.</p>
             </div>
             <div>
-                <div>
-                    {Object.entries(serviceCategories).map(([category, servicesInCategory]) => (
-                        <div key={category} className="mb-12">
-                            <h3 className="text-2xl font-headline font-bold mb-6">{category}</h3>
-                            <div className="flex overflow-x-auto space-x-6 pb-4 snap-x snap-mandatory overscroll-behavior-x-contain no-scrollbar">
-                                {servicesInCategory.map((service) => (
-                                    <div key={service.id} className="w-72 flex-shrink-0 snap-start">
-                                        <ServiceCard service={service} />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                {Object.entries(serviceCategories).map(([category, servicesInCategory]) => (
+                    <ProductCarousel key={category} title={category} services={servicesInCategory} />
+                ))}
                 
                 {/* Order Summary for Desktop */}
                 <div className="hidden lg:block max-w-4xl mx-auto mt-16">
