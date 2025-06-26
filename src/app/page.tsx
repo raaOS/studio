@@ -108,7 +108,7 @@ function OrderWorkflow() {
                       name="name"
                       render={({ field }) => (
                       <FormItem>
-                          <FormLabel>Nama Lengkap</FormLabel>
+                          <FormLabel>Nama Lengkap <span className="text-destructive">*</span></FormLabel>
                           <FormControl>
                           <div className="relative">
                               <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -124,7 +124,7 @@ function OrderWorkflow() {
                       name="phone"
                       render={({ field }) => (
                       <FormItem>
-                          <FormLabel>Nomor Telepon (Aktif)</FormLabel>
+                          <FormLabel>Nomor Telepon (Aktif) <span className="text-destructive">*</span></FormLabel>
                           <FormControl>
                           <div className="relative">
                               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -140,7 +140,7 @@ function OrderWorkflow() {
                       name="telegram"
                       render={({ field }) => (
                       <FormItem>
-                          <FormLabel>Username Telegram</FormLabel>
+                          <FormLabel>Username Telegram <span className="text-destructive">*</span></FormLabel>
                           <FormControl>
                           <div className="relative">
                               <Send className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
