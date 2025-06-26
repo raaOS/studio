@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { mockOrders, allOrderStatusesCategorized } from '@/lib/data';
+import { mockOrders, allOrderStatusesCategorized, mockCustomers } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import type { OrderStatus } from '@/lib/types';
 import { Folder } from 'lucide-react';
