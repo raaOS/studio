@@ -71,7 +71,12 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
       setQuantity(initialQuantity);
       setBrief(initialBrief);
       setSelectedTier(initialTier);
-      setSelectedImage(initialTier ? service.tierImages[initialTier] : service.image);
+      
+      if (initialTier) {
+        setSelectedImage(service.tierImages[initialTier]);
+      } else {
+        setSelectedImage(service.image);
+      }
       
       const savedSize = initialBrief['Ukuran'] ? initialBrief['Ukuran'].match(/(\d+)\s*x\s*(\d+)\s*(\w+)/) : null;
       if (savedSize) {
@@ -94,10 +99,8 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
   useEffect(() => {
       if (selectedTier) {
           setSelectedImage(service.tierImages[selectedTier]);
-      } else {
-          setSelectedImage(service.image);
       }
-  }, [selectedTier, service]);
+  }, [selectedTier, service.tierImages]);
 
   const handleBriefChange = (field: string, value: string) => {
     setBrief(prev => ({ ...prev, [field]: value }));
@@ -130,6 +133,11 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
     }
   }
 
+  const currentPrice = useMemo(() => {
+    if (!selectedTier) return 0;
+    return promo.active ? promo.discountPrice : service.prices[selectedTier];
+  }, [selectedTier, promo, service.prices]);
+
   const minPrice = Math.min(...Object.values(service.prices));
   const maxPrice = Math.max(...Object.values(service.prices));
 
@@ -138,8 +146,9 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
       <DialogContent className="sm:max-w-4xl max-h-[95vh] flex flex-col p-0">
         <div className="md:grid md:grid-cols-2 md:gap-6 h-full min-h-0">
           
-          <div className="p-4 md:p-6 flex flex-col order-first md:order-last">
-              <div className="relative aspect-square w-full overflow-hidden rounded-lg">
+          {/* Image Column */}
+          <div className="p-4 md:p-6 flex flex-col order-first">
+              <div className="relative aspect-[4/3] md:aspect-square w-full overflow-hidden rounded-lg">
                   <Image 
                       key={selectedImage}
                       src={selectedImage} 
@@ -150,17 +159,19 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
               </div>
           </div>
           
+          {/* Details Column */}
           <div className="flex flex-col h-full min-h-0">
               <div className="flex-grow overflow-y-auto p-6 space-y-4 no-scrollbar">
                   <DialogHeader className="text-left">
                     <DialogTitle className="font-headline text-2xl tracking-tight">{service.name}</DialogTitle>
                   </DialogHeader>
 
+                  {/* Price Section */}
                   <div className="space-y-1">
-                      {promo.active ? (
+                      {promo.active && selectedTier ? (
                           <div className="flex flex-col items-start">
                               <div className="flex items-center gap-2">
-                                <p className="text-3xl font-bold text-green-600">{formatRupiah(promo.discountPrice * quantity)}</p>
+                                <p className="text-3xl font-bold text-green-600">{formatRupiah(currentPrice * quantity)}</p>
                                 <p className="text-lg font-medium text-muted-foreground line-through">{formatRupiah(promo.originalPrice * quantity)}</p>
                               </div>
                               <div className="mt-1 flex items-center gap-2 rounded-md border border-red-500/50 bg-red-500/10 px-2 py-1 text-sm text-red-600">
@@ -170,11 +181,12 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                           </div>
                       ) : (
                           <p className="text-3xl font-bold text-green-600">
-                              {selectedTier ? formatRupiah(service.prices[selectedTier] * quantity) : `${formatRupiah(minPrice)} - ${formatRupiah(maxPrice)}`}
+                              {selectedTier ? formatRupiah(currentPrice * quantity) : `${formatRupiah(minPrice)} - ${formatRupiah(maxPrice)}`}
                           </p>
                       )}
                   </div>
 
+                  {/* Variant Selection */}
                   <div className="space-y-2">
                     <Label className="font-semibold">Variasi</Label>
                     <div className="grid grid-cols-1 gap-2">
@@ -189,9 +201,9 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                             )}
                           >
                             <div className="flex items-center gap-3">
-                              <Image src={budget.image} alt={budget.title} width={32} height={32} className="rounded-md" data-ai-hint="logo" />
+                              <Image src={budget.image} alt={budget.title} width={40} height={40} className="rounded-md" data-ai-hint="logo" />
                               <div>
-                                <p className="font-semibold text-sm">{budget.title}</p>
+                                <p className="font-semibold">{budget.title}</p>
                                 <p className="text-xs text-muted-foreground">{budget.description}</p>
                               </div>
                             </div>
@@ -205,6 +217,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                     </div>
                   </div>
                   
+                  {/* Brief Fields */}
                   {fallbackBriefFields.map(field => (
                     <div key={field.name} className="w-full space-y-2">
                       <Label htmlFor={`brief-${service.id}-${field.name}`}>{field.name}</Label>
@@ -227,25 +240,34 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                     </div>
                   ))}
 
+                  {/* Size and Quantity */}
                   <div className="space-y-2">
                       <Label className="font-semibold">Ukuran & Kuantitas</Label>
-                      <div className="flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-2">
-                          <Input 
-                            placeholder="L" 
-                            className="w-16 text-center" 
-                            value={size.width}
-                            onChange={(e) => setSize(s => ({...s, width: e.target.value}))}
-                          />
-                          <span className="text-muted-foreground">x</span>
-                          <Input 
-                            placeholder="T" 
-                            className="w-16 text-center"
-                            value={size.height}
-                            onChange={(e) => setSize(s => ({...s, height: e.target.value}))}
-                          />
+                      <div className="flex items-end justify-between gap-4">
+                        <div className="flex items-end gap-2">
+                          <div>
+                            <Label htmlFor='width' className='text-xs text-muted-foreground'>Lebar</Label>
+                            <Input 
+                              id='width'
+                              placeholder="L" 
+                              className="w-16 text-center" 
+                              value={size.width}
+                              onChange={(e) => setSize(s => ({...s, width: e.target.value}))}
+                            />
+                          </div>
+                          <span className="text-muted-foreground pb-2">x</span>
+                          <div>
+                             <Label htmlFor='height' className='text-xs text-muted-foreground'>Tinggi</Label>
+                            <Input 
+                              id='height'
+                              placeholder="T" 
+                              className="w-16 text-center"
+                              value={size.height}
+                              onChange={(e) => setSize(s => ({...s, height: e.target.value}))}
+                            />
+                          </div>
                           <Select value={size.unit} onValueChange={(value) => setSize(s => ({...s, unit: value as 'px' | 'cm' | 'm'}))}>
-                            <SelectTrigger className="w-[70px]">
+                            <SelectTrigger className="w-[80px]">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -260,6 +282,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                   </div>
               </div>
 
+              {/* Footer Buttons */}
               <DialogFooter className="p-6 border-t bg-background sticky bottom-0 grid grid-cols-2 gap-4">
                   <Button type="button" onClick={handleSave} variant="outline" className="w-full">
                       {getCartItem(service.id) ? 'Simpan & Pesan Nanti' : 'Pesan Lagi'}
