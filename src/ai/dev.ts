@@ -8,4 +8,3 @@ import '@/ai/flows/telegram-bot-responder.ts';
 // import '@/ai/flows/generate-dynamic-brief.ts';
 import '@/ai/flows/create-drive-folder.ts';
 import '@/ai/flows/verify-telegram-bot.ts';
-import '@/ai/flows/sync-from-sheet.ts';
