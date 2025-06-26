@@ -5,15 +5,13 @@ export type BudgetItem = {
   id: BudgetTier;
   title: string;
   description: string;
-  priceRange: string;
-  image: string;
-  dataAiHint: string;
 };
 
 export type Service = {
   id: string;
   name: string;
   prices: { [key in BudgetTier]: number };
+  tierImages: { [key in BudgetTier]: string };
   image: string;
   category: string;
   dataAiHint: string;

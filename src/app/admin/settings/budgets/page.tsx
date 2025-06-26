@@ -2,12 +2,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { budgetItems } from '@/lib/data';
 import type { BudgetItem } from '@/lib/types';
-import { motion } from 'framer-motion';
 import { Edit } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -40,7 +38,7 @@ export default function AdminBudgetsPage() {
         setSelectedBudget(null);
     };
     
-    const handleFieldChange = (field: keyof Omit<BudgetItem, 'id' | 'priceRange' | 'dataAiHint'>, value: string) => {
+    const handleFieldChange = (field: keyof Omit<BudgetItem, 'id'>, value: string) => {
         if(editableBudget) {
             setEditableBudget({ ...editableBudget, [field]: value });
         }
@@ -51,7 +49,7 @@ export default function AdminBudgetsPage() {
         <div className="space-y-6">
             <div>
             <h1 className="text-2xl md:text-3xl font-bold font-headline">Tampilan & Budget</h1>
-            <p className="text-muted-foreground">Kelola gambar, judul, dan deskripsi untuk setiap tingkatan budget.</p>
+            <p className="text-muted-foreground">Kelola judul dan deskripsi global untuk setiap tingkatan budget.</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -61,22 +59,6 @@ export default function AdminBudgetsPage() {
                         <CardTitle>{budget.title}</CardTitle>
                         <CardDescription>{budget.description}</CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <motion.div
-                             whileTap={{ scale: 0.95 }}
-                             transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-                             className="cursor-pointer"
-                        >
-                            <Image
-                                src={budget.image}
-                                alt={budget.title}
-                                width={128}
-                                height={128}
-                                className="object-cover w-full aspect-square rounded-md border"
-                                data-ai-hint={budget.dataAiHint}
-                            />
-                        </motion.div>
-                    </CardContent>
                     <CardFooter>
                          <Button variant="outline" className="w-full" onClick={() => handleEditClick(budget)}>
                             <Edit className="mr-2 h-4 w-4" /> Edit
@@ -104,10 +86,6 @@ export default function AdminBudgetsPage() {
                         <div className="space-y-2">
                             <Label htmlFor="description">Deskripsi</Label>
                             <Textarea id="description" value={editableBudget.description} onChange={(e) => handleFieldChange('description', e.target.value)} />
-                        </div>
-                         <div className="space-y-2">
-                            <Label htmlFor="image">URL Gambar (1:1)</Label>
-                            <Input id="image" value={editableBudget.image} onChange={(e) => handleFieldChange('image', e.target.value)} />
                         </div>
                     </div>
                 )}

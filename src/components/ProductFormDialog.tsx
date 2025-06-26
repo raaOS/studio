@@ -32,6 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { mockCategories } from "@/lib/data";
+import { Separator } from "./ui/separator";
 
 const productFormSchema = z.object({
   id: z.string(),
@@ -43,6 +44,11 @@ const productFormSchema = z.object({
     'e-comm': z.coerce.number().min(0, { message: "Harga harus angka positif." }),
   }),
   image: z.string().url({ message: "URL gambar tidak valid." }),
+  tierImages: z.object({
+    'kaki-lima': z.string().url({ message: "URL gambar tidak valid." }),
+    'umkm': z.string().url({ message: "URL gambar tidak valid." }),
+    'e-comm': z.string().url({ message: "URL gambar tidak valid." }),
+  }),
   dataAiHint: z.string().min(2, { message: "Petunjuk AI minimal 2 karakter." }),
 })
 
@@ -57,6 +63,12 @@ interface ProductFormDialogProps {
 export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductFormDialogProps) {
   const { toast } = useToast()
 
+  const defaultTierImages = {
+      'kaki-lima': "https://placehold.co/128x128/f8fafc/64748b.png",
+      'umkm': "https://placehold.co/128x128/f1f5f9/334155.png",
+      'e-comm': "https://placehold.co/128x128/e2e8f0/1e293b.png",
+  };
+
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
@@ -68,7 +80,8 @@ export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductForm
         'umkm': product?.prices['umkm'] || 0,
         'e-comm': product?.prices['e-comm'] || 0,
       },
-      image: product?.image || "https://placehold.co/400x300/cccccc/ffffff",
+      image: product?.image || "https://placehold.co/400x300.png",
+      tierImages: product?.tierImages || defaultTierImages,
       dataAiHint: product?.dataAiHint || "",
     },
   })
@@ -84,11 +97,12 @@ export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductForm
           'umkm': product?.prices['umkm'] || 0,
           'e-comm': product?.prices['e-comm'] || 0,
         },
-        image: product?.image || "https://placehold.co/400x300/cccccc/ffffff",
+        image: product?.image || "https://placehold.co/400x300.png",
+        tierImages: product?.tierImages || defaultTierImages,
         dataAiHint: product?.dataAiHint || "",
       })
     }
-  }, [isOpen, product, form])
+  }, [isOpen, product, form, defaultTierImages])
 
 
   function onSubmit(data: ProductFormValues) {
@@ -192,12 +206,16 @@ export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductForm
                 )}
                 />
             </div>
+            
+            <Separator />
+            <p className="text-sm font-medium">Gambar</p>
+
             <FormField
               control={form.control}
               name="image"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>URL Gambar</FormLabel>
+                  <FormLabel>URL Gambar Utama (di kartu produk)</FormLabel>
                   <FormControl>
                     <Input placeholder="https://placehold.co/400x300" {...field} />
                   </FormControl>
@@ -205,7 +223,7 @@ export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductForm
                 </FormItem>
               )}
             />
-            <FormField
+             <FormField
               control={form.control}
               name="dataAiHint"
               render={({ field }) => (
@@ -218,6 +236,52 @@ export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductForm
                 </FormItem>
               )}
             />
+
+            <Separator />
+            <p className="text-sm font-medium">Gambar Tier (di popup)</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                 <FormField
+                    control={form.control}
+                    name="tierImages.kaki-lima"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Tier Kaki Lima</FormLabel>
+                        <FormControl>
+                            <Input placeholder="https://..." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="tierImages.umkm"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Tier UMKM</FormLabel>
+                        <FormControl>
+                            <Input placeholder="https://..." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="tierImages.e-comm"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Tier E-Comm</FormLabel>
+                        <FormControl>
+                            <Input placeholder="https://..." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            </div>
+
             <DialogFooter className="pt-4 sticky bottom-0 bg-background py-4">
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Batal

@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import {
   Dialog,
   DialogContent,
@@ -14,12 +15,10 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { QuantityStepper } from '@/components/QuantityStepper';
 import { useCart } from '@/contexts/CartContext';
-// import { generateDynamicBrief } from '@/ai/flows/generate-dynamic-brief'; // AI feature removed
 import type { Service, BudgetTier } from '@/lib/types';
 import { budgetItems } from '@/lib/data';
 import { formatRupiah } from '@/lib/utils';
@@ -46,7 +45,6 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
   const [quantity, setQuantity] = useState(1);
   const [brief, setBrief] = useState<Record<string, string>>({});
   const [briefFields, setBriefFields] = useState<{name: string, placeholder: string, type: 'textarea' | 'input'}[]>([]);
-  // const [isGeneratingBrief, setIsGeneratingBrief] = useState(false); // AI feature removed
   const [selectedTier, setSelectedTier] = useState<BudgetTier | null>(null);
 
   useEffect(() => {
@@ -60,12 +58,10 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
       setBrief(initialBrief);
       setSelectedTier(initialTier);
 
-      // AI brief generation removed, using fallback only.
       if (briefFields.length === 0) {
         setBriefFields(fallbackBriefFields);
       }
     } else {
-      // Reset fields when dialog closes
       setBriefFields([]);
     }
   }, [isOpen, service.id, getCartItem, briefFields.length]);
@@ -115,11 +111,21 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                             htmlFor={`${service.id}-${budget.id}`}
                             className={`flex items-start justify-between rounded-md border-2 p-3 cursor-pointer transition-colors ${selectedTier === budget.id ? 'border-primary bg-primary/5' : 'border-muted hover:bg-accent/50'}`}
                         >
-                            <div className="flex-1">
-                                <p className="font-semibold">{budget.title}</p>
-                                <p className="text-sm text-muted-foreground">{budget.description}</p>
+                            <div className="flex items-center gap-4">
+                               <Image 
+                                 src={service.tierImages[budget.id]} 
+                                 alt={budget.title}
+                                 width={64}
+                                 height={64}
+                                 className="rounded-md aspect-square object-cover"
+                                 data-ai-hint="tier option"
+                               />
+                                <div className="flex-1">
+                                    <p className="font-semibold">{budget.title}</p>
+                                    <p className="text-sm text-muted-foreground">{budget.description}</p>
+                                </div>
                             </div>
-                            <div className="text-right ml-4 flex-shrink-0">
+                            <div className="text-right ml-4 flex-shrink-0 flex flex-col items-end">
                                 <p className="font-bold text-lg">{formatRupiah(service.prices[budget.id])}</p>
                                 <RadioGroupItem value={budget.id} id={`${service.id}-${budget.id}`} className="mt-2 ml-auto" />
                             </div>
@@ -141,6 +147,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                         maxLength={500}
                         value={brief[field.name] ?? ''}
                         onChange={(e) => handleBriefChange(field.name, e.target.value)}
+                        className="focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                 ) : (
                     <Input
@@ -148,6 +155,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                         placeholder={field.placeholder}
                         value={brief[field.name] ?? ''}
                         onChange={(e) => handleBriefChange(field.name, e.target.value)}
+                        className="focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                 )}
               </div>
