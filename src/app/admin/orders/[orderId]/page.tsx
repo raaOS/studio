@@ -58,11 +58,6 @@ export default function OrderDetailPage() {
           title: 'Folder Berhasil Dibuat!',
           description: `Folder untuk pesanan ${order.kode_order} telah dibuat.`,
         });
-        // Note: In a real app, you'd update this in your database.
-        // For this mock setup, we just update the local state.
-        const orderInMock = mockOrders.find(o => o.kode_order === orderId);
-        if(orderInMock) orderInMock.driveFolderUrl = result.folderUrl;
-
       } else {
         throw new Error(result.error || 'Gagal membuat folder.');
       }
