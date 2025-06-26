@@ -10,8 +10,9 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Separator } from '@/components/ui/separator';
 import { formatRupiah, cn } from '@/lib/utils';
 import type { Order, OrderStatus } from '@/lib/types';
-import { MessageSquare, Send, Folder, Calendar, Video, History, FolderSync } from 'lucide-react';
+import { MessageSquare, Send, Folder, Calendar, Video, History, FolderSync, Loader2 } from 'lucide-react';
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
+import { sendTelegramUpdate } from '@/ai/flows/telegram-bot-integration';
 import { useToast } from '@/hooks/use-toast';
 
 export default function OrderDetailPage() {
@@ -27,6 +28,7 @@ export default function OrderDetailPage() {
   const [currentStatus, setCurrentStatus] = useState<OrderStatus>('Masuk Antrian');
   const [driveUrl, setDriveUrl] = useState(order?.driveFolderUrl);
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
+  const [isSubmittingUpdate, setIsSubmittingUpdate] = useState(false);
 
   useEffect(() => {
     if (order) {
@@ -49,7 +51,6 @@ export default function OrderDetailPage() {
       const result = await createOrderFolder({
         orderId: order.kode_order,
         customerName: order.nama_klien,
-        folderTemplate: '[OrderID] - [CustomerName]',
       });
 
       if (result.success && result.folderUrl) {
@@ -58,6 +59,8 @@ export default function OrderDetailPage() {
           title: 'Folder Berhasil Dibuat!',
           description: `Folder untuk pesanan ${order.kode_order} telah dibuat.`,
         });
+        // Note: In a real app, you'd want to persist this URL to your database
+        // and update the local mockOrder data or refetch.
       } else {
         throw new Error(result.error || 'Gagal membuat folder.');
       }
@@ -71,6 +74,39 @@ export default function OrderDetailPage() {
       setIsCreatingFolder(false);
     }
   };
+
+  const handleStatusUpdate = async () => {
+    if (!order) return;
+
+    setIsSubmittingUpdate(true);
+    try {
+        const message = `🔔 *Update Pesanan Anda* 🔔\n\nHalo ${order.nama_klien},\nStatus pesanan Anda dengan ID \`${order.kode_order}\` telah diperbarui menjadi:\n\n*${currentStatus}*\n\nJika ada pertanyaan, jangan ragu untuk membalas pesan ini. Terima kasih!`;
+        
+        const result = await sendTelegramUpdate({
+            telegramId: order.customerTelegram,
+            message: message,
+        });
+
+        if (result.success) {
+            toast({
+                title: 'Update Terkirim!',
+                description: `Notifikasi perubahan status ke "${currentStatus}" telah dikirim ke klien.`,
+            });
+            // In a real app, you would also update the order in your database.
+        } else {
+            throw new Error(result.error || 'Gagal mengirim notifikasi Telegram.');
+        }
+
+    } catch (error: any) {
+        toast({
+            title: 'Gagal Mengirim Update',
+            description: error.message,
+            variant: 'destructive',
+        });
+    } finally {
+        setIsSubmittingUpdate(false);
+    }
+};
 
   const getStatusClass = (status: OrderStatus) => {
     switch (status) {
@@ -169,9 +205,12 @@ export default function OrderDetailPage() {
                             </SelectContent>
                         </Select>
                     </div>
-                    <Button className="w-full mt-2">
-                        <Send className="mr-2 h-4 w-4" />
-                        Simpan & Kirim Update ke Klien
+                    <Button className="w-full mt-2" onClick={handleStatusUpdate} disabled={isSubmittingUpdate}>
+                       {isSubmittingUpdate ? (
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Mengirim...</>
+                        ) : (
+                            <><Send className="mr-2 h-4 w-4" /> Simpan & Kirim Update ke Klien</>
+                        )}
                     </Button>
                     <Button variant="secondary" className="w-full">
                         <Video className="mr-2 h-4 w-4" />
