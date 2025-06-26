@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -86,6 +87,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
       }
 
     } else {
+      // Short delay to prevent content from disappearing before dialog closes
       setTimeout(() => {
         setQuantity(1);
         setBrief({});
@@ -97,7 +99,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
   }, [isOpen, service, getCartItem]);
   
   useEffect(() => {
-      if (selectedTier) {
+      if (selectedTier && service.tierImages[selectedTier]) {
           setSelectedImage(service.tierImages[selectedTier]);
       }
   }, [selectedTier, service.tierImages]);
@@ -144,10 +146,10 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-4xl max-h-[95vh] flex flex-col p-0">
-        <div className="md:grid md:grid-cols-2 md:gap-6 h-full min-h-0">
+        <div className="flex flex-col md:grid md:grid-cols-2 md:gap-6 h-full">
           
           {/* Image Column */}
-          <div className="p-4 md:p-6 flex flex-col order-first">
+          <div className="p-4 md:p-6 order-first flex-shrink-0">
               <div className="relative aspect-[4/3] md:aspect-square w-full overflow-hidden rounded-lg">
                   <Image 
                       key={selectedImage}
@@ -160,8 +162,8 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
           </div>
           
           {/* Details Column */}
-          <div className="flex flex-col h-full min-h-0">
-              <div className="flex-grow overflow-y-auto p-6 space-y-4 no-scrollbar">
+          <div className="flex flex-col flex-1 min-h-0">
+              <div className="flex-1 overflow-y-auto p-6 pt-0 md:pt-6 space-y-4 no-scrollbar">
                   <DialogHeader className="text-left">
                     <DialogTitle className="font-headline text-2xl tracking-tight">{service.name}</DialogTitle>
                   </DialogHeader>
@@ -283,7 +285,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
               </div>
 
               {/* Footer Buttons */}
-              <DialogFooter className="p-6 border-t bg-background sticky bottom-0 grid grid-cols-2 gap-4">
+              <DialogFooter className="p-6 border-t bg-background grid grid-cols-2 gap-4 flex-shrink-0">
                   <Button type="button" onClick={handleSave} variant="outline" className="w-full">
                       {getCartItem(service.id) ? 'Simpan & Pesan Nanti' : 'Pesan Lagi'}
                   </Button>
