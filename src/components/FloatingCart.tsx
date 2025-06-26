@@ -1,13 +1,14 @@
+
 "use client";
 
 import { motion, useAnimationControls } from "framer-motion";
-import { ShoppingCart } from 'lucide-react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
+import { ShoppingCart, PackageSearch } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCart } from "@/contexts/CartContext";
 import { OrderSummary } from "./OrderSummary";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useEffect } from "react";
+import Link from "next/link";
 
 export function FloatingCart() {
   const isMobile = useIsMobile();
@@ -39,27 +40,31 @@ export function FloatingCart() {
           animate={{ y: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
-          <div className="container mx-auto grid h-16 grid-cols-1 items-stretch">
+          <div className="container mx-auto grid h-16 grid-cols-2 items-stretch divide-x divide-border">
+              <Link href="/track" passHref legacyBehavior>
+                <a className="flex flex-col items-center justify-center gap-1 text-xs font-medium text-muted-foreground hover:text-primary transition-colors">
+                    <PackageSearch className="h-6 w-6" />
+                    <span>Lacak Pesanan</span>
+                </a>
+              </Link>
               
               {/* Sheet for Order Summary */}
               <Sheet>
                 <SheetTrigger asChild>
-                    <Button variant="ghost" className="relative h-full flex-col gap-1 rounded-none">
+                    <button className="relative h-full flex flex-col items-center justify-center gap-1 text-xs font-medium rounded-none text-muted-foreground hover:text-primary transition-colors">
                         {totalItems > 0 && (
-                            <span className="absolute left-[calc(50%+1rem)] top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                            <span className="absolute left-[calc(50%+1.25rem)] top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
                                 {totalItems}
                             </span>
                         )}
                         <motion.div animate={controls}>
                           <ShoppingCart className="h-6 w-6" />
                         </motion.div>
-                        <span className="text-xs font-medium">Rincian Pesanan</span>
-                    </Button>
+                        <span >Rincian Pesanan</span>
+                    </button>
                 </SheetTrigger>
                 <SheetContent side="bottom" className="rounded-t-2xl p-0 max-h-[90vh] flex flex-col">
-                  <div className="flex-1 overflow-y-auto">
-                      <OrderSummary />
-                  </div>
+                  <OrderSummary />
                 </SheetContent>
               </Sheet>
           </div>

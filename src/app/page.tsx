@@ -9,8 +9,12 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { OrderSummary } from '@/components/OrderSummary';
 import { FloatingCart } from '@/components/FloatingCart';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ProductCarousel } from '@/components/ProductCarousel';
+import { PromotionalBannerCarousel } from '@/components/PromotionalBannerCarousel';
+import { PortfolioSection } from '@/components/PortfolioSection';
+import { CouponInfoSection } from '@/components/CouponInfoSection';
+import { TrackOrderForm } from '@/components/TrackOrderForm';
 
 // Context
 import { CartProvider } from '@/contexts/CartContext';
@@ -31,45 +35,59 @@ function OrderWorkflow() {
     }, {} as Record<string, Service[]>);
   }, []);
 
+  const categoryOrder = [
+    'Konten Media Sosial',
+    'Branding & Kantor',
+    'Materi Promosi',
+    'Desain Digital & Event',
+  ];
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <div className="container mx-auto px-4 flex-grow">
-        <main className="space-y-8 pt-10 pb-16">
-          
-          {/* Catalog */}
-          <section id="catalog-section" className="pt-8 flex-grow">
-              <div className="text-center mb-10">
-                  <h2 className="text-2xl font-headline font-semibold text-foreground">Langkah 1: Pilih layanan yang Anda butuhkan</h2>
-                  <p className="text-sm text-muted-foreground mt-2 max-w-2xl mx-auto">Scroll ke bawah dan masukkin semua yang kamu butuhin ke keranjang.</p>
-              </div>
-              <div className="space-y-8">
-                  {Object.entries(serviceCategories).map(([category, servicesInCategory]) => (
-                      <ProductCarousel key={category} title={category} services={servicesInCategory} />
-                  ))}
-              </div>
-          </section>
+      
+      <main className="flex-grow">
+        <PortfolioSection />
+        <PromotionalBannerCarousel />
 
-          {/* Order Summary */}
-          <section id="summary-section" className="pt-16 hidden md:block">
-            <div className="text-center mb-10">
-              <h2 className="text-2xl font-headline font-semibold text-foreground">Langkah 2: Periksa & Kirim Pesanan Anda</h2>
-              <p className="text-sm text-muted-foreground mt-2 max-w-2xl mx-auto">Pastikan semua sudah benar sebelum mengisi data diri dan mengirim pesanan.</p>
-            </div>
-            <div className="max-w-3xl mx-auto">
-              <OrderSummary />
-            </div>
-          </section>
-        </main>
-      </div>
+        {/* Catalog */}
+        <section id="catalog-section" className="pt-10 pb-16">
+            <div className="container mx-auto px-4 space-y-8">
+                {categoryOrder.map((category) => {
+                  const servicesInCategory = serviceCategories[category];
+                  if (!servicesInCategory) return null;
 
+                  return (
+                    <div key={category}>
+                      <ProductCarousel title={category} services={servicesInCategory} />
+                      {category === 'Branding & Kantor' && <CouponInfoSection />}
+                    </div>
+                  );
+                })}
+            </div>
+        </section>
+
+        {/* Desktop-only Track Order & Order Summary */}
+        <section id="summary-section" className="hidden md:block container mx-auto px-4 pb-16">
+            <div className="grid lg:grid-cols-2 gap-12 items-start">
+                <div>
+                     <h2 className="text-2xl font-headline font-semibold text-foreground text-center mb-10">Lacak Status Pesanan Anda</h2>
+                     <TrackOrderForm />
+                </div>
+                 <div>
+                    <h2 className="text-2xl font-headline font-semibold text-foreground text-center mb-10">Periksa & Kirim Pesanan Anda</h2>
+                    <OrderSummary />
+                </div>
+            </div>
+        </section>
+      </main>
 
       <Dialog open={!!modalImage} onOpenChange={(isOpen) => !isOpen && setModalImage(null)}>
         <DialogContent className="p-0 border-0 max-w-4xl bg-transparent shadow-none">
-            <DialogTitle className="sr-only">{modalImage?.alt}</DialogTitle>
-            <DialogDescription className="sr-only">
-                Gambar pratinjau untuk {modalImage?.alt}
-            </DialogDescription>
+          <div className="sr-only">
+            <DialogTitle>{modalImage?.alt}</DialogTitle>
+            <DialogDescription>Gambar pratinjau untuk {modalImage?.alt}</DialogDescription>
+          </div>
             {modalImage && (
                 <Image 
                     src={modalImage.src} 

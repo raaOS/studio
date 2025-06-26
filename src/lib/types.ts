@@ -109,8 +109,10 @@ export type Banner = {
   period: string;
   status: 'Aktif' | 'Draft' | 'Selesai';
   image?: string;
+  dataAiHint?: string;
   content: string;
   type: 'Image' | 'Text';
+  href?: string;
 };
 
 export type AdminUser = {
