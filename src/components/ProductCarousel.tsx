@@ -28,7 +28,7 @@ export function ProductCarousel({ title, services }: ProductCarouselProps) {
         
         <div 
           ref={scrollContainerRef}
-          className="flex overflow-x-auto space-x-6 pb-4 snap-x snap-mandatory overscroll-behavior-x-contain no-scrollbar scroll-smooth"
+          className="flex overflow-x-auto space-x-6 pb-4 snap-x snap-mandatory overscroll-behavior-x-contain no-scrollbar scroll-smooth -mx-4 px-4"
         >
           {services.map((service) => (
             <div key={service.id} className="w-72 flex-shrink-0 snap-start">
@@ -41,19 +41,19 @@ export function ProductCarousel({ title, services }: ProductCarouselProps) {
           variant="outline"
           size="icon"
           className="absolute top-1/2 -translate-y-1/2 left-0 -translate-x-1/2 rounded-full h-10 w-10 z-10 hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 hover:bg-background"
-          onClick={() => scroll('right')}
+          onClick={() => scroll('left')}
         >
           <ChevronLeft className="h-6 w-6" />
-          <span className="sr-only">Scroll Right</span>
+          <span className="sr-only">Scroll Left</span>
         </Button>
         <Button
           variant="outline"
           size="icon"
           className="absolute top-1/2 -translate-y-1/2 right-0 translate-x-1/2 rounded-full h-10 w-10 z-10 hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 hover:bg-background"
-          onClick={() => scroll('left')}
+          onClick={() => scroll('right')}
         >
           <ChevronRight className="h-6 w-6" />
-          <span className="sr-only">Scroll Left</span>
+          <span className="sr-only">Scroll Right</span>
         </Button>
       </div>
     </div>
