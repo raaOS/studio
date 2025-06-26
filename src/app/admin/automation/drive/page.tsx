@@ -137,7 +137,7 @@ export default function DriveAutomationPage() {
                 </CardHeader>
                 <CardContent>
                     <ol className="list-decimal list-inside space-y-2 text-sm">
-                        <li>Buka Google Cloud Console dan pastikan Anda memilih proyek yang benar.</li>
+                        <li>Buka Google Cloud Console dan pastikan Anda memilih proyek yang benar (`urgent-studio`).</li>
                         <li>Di menu pencarian, ketik "Service Accounts" dan buka halamannya.</li>
                         <li>Klik "+ CREATE SERVICE ACCOUNT", beri nama (misal: "designflow-bot"), lalu klik "CREATE AND CONTINUE".</li>
                         <li>Pada bagian "Role", cari kategori <strong>Basic</strong>, lalu pilih <strong>Editor</strong>. Klik "CONTINUE" dan "DONE".</li>
@@ -319,5 +319,3 @@ export default function DriveAutomationPage() {
       </Card>
     </div>
   );
-
-    

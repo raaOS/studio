@@ -63,7 +63,7 @@ export default function AdminIntegrationsPage() {
             <CardContent className="space-y-4">
                 <ol className="list-decimal list-inside space-y-4 text-sm">
                     <li>
-                        Buka halaman <strong>Secret Manager</strong> di Google Cloud Console menggunakan tombol di bawah. Pastikan proyek yang terpilih sudah benar.
+                        Buka halaman <strong>Secret Manager</strong> di Google Cloud Console menggunakan tombol di bawah. Pastikan proyek yang terpilih sudah benar (`urgent-studio`).
                     </li>
                     <li>
                         Klik <strong>+ CREATE SECRET</strong> di bagian atas.
