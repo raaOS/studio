@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -224,7 +224,7 @@ function OrderWorkflow() {
                   <p className="text-sm text-muted-foreground mt-2 max-w-2xl mx-auto">Scroll ke bawah dan masukkin semua yang kamu butuhin ke keranjang.</p>
               </div>
               <div className="space-y-8">
-                  {Object.entries(serviceCategories).slice(0, 1).map(([category, servicesInCategory]) => (
+                  {Object.entries(serviceCategories).map(([category, servicesInCategory]) => (
                       <ProductCarousel key={category} title={category} services={servicesInCategory} />
                   ))}
               </div>
