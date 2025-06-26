@@ -198,18 +198,16 @@ function OrderWorkflow() {
                 {budgetItems.map((item) => (
                 <Card 
                     key={item.id}
-                    className={`text-center h-full flex flex-col hover:shadow-lg transition-all duration-300 ${selectedBudget?.id === item.id ? 'border-primary ring-2 ring-primary' : 'hover:border-primary'}`}
+                    onClick={() => handleBudgetSelect(item)}
+                    className={`cursor-pointer text-center h-full flex flex-col hover:shadow-lg transition-all duration-300 ${selectedBudget?.id === item.id ? 'border-primary ring-2 ring-primary' : 'hover:border-primary'}`}
                 >
                     <CardHeader>
-                    <item.icon className="mx-auto h-12 w-12 text-primary mb-4" />
-                    <CardTitle className="font-headline">{item.title}</CardTitle>
-                    <CardDescription>{item.priceRange}</CardDescription>
+                        <item.icon className="mx-auto h-12 w-12 text-primary mb-4" />
+                        <CardTitle className="font-headline">{item.title}</CardTitle>
+                        <CardDescription>{item.priceRange}</CardDescription>
                     </CardHeader>
-                    <CardContent className="flex-grow flex flex-col justify-between">
-                    <p className="text-muted-foreground mb-6">{item.description}</p>
-                    <Button onClick={() => handleBudgetSelect(item)} className="w-full">
-                        Pilih Paket Ini <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                    <CardContent className="flex-grow flex items-center justify-center">
+                        <p className="text-muted-foreground px-4">{item.description}</p>
                     </CardContent>
                 </Card>
                 ))}
