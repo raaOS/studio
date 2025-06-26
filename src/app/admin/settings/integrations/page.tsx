@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Send, Folder, Video, Calendar, CheckCircle, XCircle, KeyRound } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Send, Folder, Video, Calendar, CheckCircle, XCircle, KeyRound, Info } from 'lucide-react';
 
 const integrations = [
   {
@@ -57,11 +58,20 @@ export default function AdminIntegrationsPage() {
                     <KeyRound className="h-6 w-6 text-primary" /> Panduan Deployment: Menyimpan Kunci Rahasia (Secret)
                 </CardTitle>
                 <CardDescription>
-                    Agar integrasi Google Drive & Telegram berfungsi saat aplikasi dipublikasikan, simpan variabel dari file <code>.env</code> Anda di Firebase Secret Manager.
+                    Langkah-langkah ini **hanya diperlukan saat Anda siap mempublikasikan aplikasi ke internet**.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                <ol className="list-decimal list-inside space-y-4 text-sm">
+                <Alert>
+                    <Info className="h-4 w-4" />
+                    <AlertTitle>Informasi Penagihan (Billing)</AlertTitle>
+                    <AlertDescription>
+                        Google Cloud mungkin akan meminta Anda untuk mengaktifkan akun penagihan. Ini adalah syarat standar, bahkan untuk layanan gratis.
+                        <strong className="block mt-2">Anda TIDAK PERLU melakukan ini sekarang.</strong> 
+                        Semua fitur yang kita bangun berfungsi penuh di lingkungan pengembangan ini hanya dengan menggunakan file <code>.env</code>.
+                    </AlertDescription>
+                </Alert>
+                <ol className="list-decimal list-inside space-y-4 text-sm pt-4">
                     <li>
                         Buka halaman <strong>Secret Manager</strong> di Google Cloud Console menggunakan tombol di bawah. Pastikan proyek yang terpilih sudah benar (`urgent-studio`).
                     </li>
@@ -92,7 +102,7 @@ export default function AdminIntegrationsPage() {
             <CardFooter>
                 <Button asChild className="w-full">
                     <a href="https://console.cloud.google.com/security/secret-manager" target="_blank" rel="noopener noreferrer">
-                        Buka Firebase Secret Manager
+                        Buka Firebase Secret Manager (untuk nanti)
                     </a>
                 </Button>
             </CardFooter>
