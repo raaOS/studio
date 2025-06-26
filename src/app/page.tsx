@@ -90,7 +90,7 @@ function OrderWorkflow() {
       <main className="flex-grow container mx-auto px-4 py-16">
         
         <AnimatePresence mode="wait">
-          {!infoSubmitted && (
+          {!infoSubmitted ? (
             <motion.div
               key="info-form"
               initial={{ opacity: 0, y: 20 }}
@@ -224,11 +224,7 @@ function OrderWorkflow() {
                   </Form>
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence>
-        {infoSubmitted && (
+          ) : (
             <motion.div
               key="budget-catalog"
               initial={{ opacity: 0, y: 20 }}
@@ -315,7 +311,7 @@ function OrderWorkflow() {
               )}
               </AnimatePresence>
             </motion.div>
-        )}
+          )}
         </AnimatePresence>
       </main>
       {isMobile && <FloatingCart />}
