@@ -1,9 +1,11 @@
+
 "use client";
 
 import { useMemo, useState, useEffect } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Image from 'next/image';
 
 // Components
 import { Header } from '@/components/Header';
@@ -16,6 +18,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { User, Phone, Send, Percent, CheckCircle } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 // Hooks & Context
 import { CartProvider, useCart } from '@/contexts/CartContext';
@@ -24,6 +27,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 // Data & Types
 import { budgetItems, services, mockCategories } from '@/lib/data';
 import type { BudgetItem, Service, Customer } from '@/lib/types';
+import { Label } from '@/components/ui/label';
 
 // Form Schema
 const customerInfoFormSchema = z.object({
@@ -37,6 +41,7 @@ type CustomerInfoFormValues = z.infer<typeof customerInfoFormSchema>;
 function OrderWorkflow() {
   const { selectedBudget, setSelectedBudget, clearCart, setPaymentMethod, paymentMethod } = useCart();
   const isMobile = useIsMobile();
+  const [modalImage, setModalImage] = useState<{src: string, alt: string} | null>(null);
 
   const form = useForm<CustomerInfoFormValues>({
     resolver: zodResolver(customerInfoFormSchema),
@@ -68,6 +73,11 @@ function OrderWorkflow() {
         clearCart();
     }
     setSelectedBudget(budget);
+  };
+
+  const handleImageClick = (e: React.MouseEvent, item: BudgetItem) => {
+    e.stopPropagation(); // Prevent the card's onClick from firing
+    setModalImage({ src: item.icon, alt: item.title });
   };
   
   const serviceCategories = useMemo(() => {
@@ -191,7 +201,15 @@ function OrderWorkflow() {
                     className={`cursor-pointer text-center h-full flex flex-col hover:shadow-lg transition-all duration-300 ${selectedBudget?.id === item.id ? 'border-primary ring-2 ring-primary shadow-lg' : 'hover:border-primary/50'}`}
                 >
                     <CardHeader className="pt-8">
-                        <item.icon className="mx-auto h-12 w-12 text-primary mb-4" />
+                        <div onClick={(e) => handleImageClick(e, item)} className="relative mx-auto h-24 w-24 mb-4 cursor-pointer hover:scale-105 transition-transform">
+                          <Image
+                            src={item.icon}
+                            alt={item.title}
+                            fill
+                            className="object-cover rounded-full"
+                            data-ai-hint={item.dataAiHint}
+                          />
+                        </div>
                         <CardTitle className="font-headline text-xl">{item.title}</CardTitle>
                         <CardDescription>{item.priceRange}</CardDescription>
                     </CardHeader>
@@ -230,6 +248,22 @@ function OrderWorkflow() {
             </div>
         </section>
       </main>
+
+      <Dialog open={!!modalImage} onOpenChange={(isOpen) => !isOpen && setModalImage(null)}>
+        <DialogContent className="sm:max-w-[500px] p-2">
+            {modalImage && (
+                <>
+                <DialogHeader className="p-4 pb-0">
+                    <DialogTitle>{modalImage.alt}</DialogTitle>
+                </DialogHeader>
+                <div className="relative aspect-square w-full">
+                    <Image src={modalImage.src} alt={modalImage.alt} fill className="object-contain" />
+                </div>
+                </>
+            )}
+        </DialogContent>
+      </Dialog>
+      
       {isMobile && <FloatingCart />}
       <Footer />
     </div>

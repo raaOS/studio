@@ -1,5 +1,4 @@
 import type { BudgetItem, Service, Order, Promo, Coupon, Banner, AdminUser, DriveActivityLog, CalendarActivityLog, MeetActivityLog, Category, CustomerProfile, OrderStatus } from '@/lib/types';
-import { Briefcase, ShoppingCart, Store } from 'lucide-react';
 
 export const budgetItems: BudgetItem[] = [
   {
@@ -7,21 +6,24 @@ export const budgetItems: BudgetItem[] = [
     title: 'Budget Kaki Lima',
     description: 'Buat yang baru mulai atau iseng-iseng. Sat-set, harga bestie.',
     priceRange: 'Mulai dari Rp 15K',
-    icon: Store,
+    icon: 'https://placehold.co/128x128.png',
+    dataAiHint: 'street stall'
   },
   {
     id: 'umkm',
     title: 'Budget UMKM',
     description: 'Level up-in brand kamu. Biar makin pro dan dikenal luas.',
     priceRange: 'Mulai dari Rp 25K',
-    icon: Briefcase,
+    icon: 'https://placehold.co/128x128.png',
+    dataAiHint: 'small business'
   },
   {
     id: 'e-comm',
     title: 'Budget E-Commerce',
     description: 'Paket all-in buat para suhu e-comm. Visual auto-gacor.',
     priceRange: 'Mulai dari Rp 65K',
-    icon: ShoppingCart,
+    icon: 'https://placehold.co/128x128.png',
+    dataAiHint: 'online shopping'
   },
 ];
 

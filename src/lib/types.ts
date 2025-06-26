@@ -1,3 +1,4 @@
+
 export type BudgetTier = 'kaki-lima' | 'umkm' | 'e-comm';
 
 export type BudgetItem = {
@@ -5,7 +6,8 @@ export type BudgetItem = {
   title: string;
   description: string;
   priceRange: string;
-  icon: React.ElementType;
+  icon: string; // Changed from React.ElementType to string
+  dataAiHint: string;
 };
 
 export type Service = {
