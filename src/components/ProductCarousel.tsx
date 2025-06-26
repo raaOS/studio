@@ -43,8 +43,17 @@ export function ProductCarousel({ title, services }: ProductCarouselProps) {
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
-      const scrollAmount = direction === 'left' ? -300 : 300;
-      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      const container = scrollContainerRef.current;
+      const item = container.querySelector('.carousel-item');
+      if (!item) return;
+      const itemWidth = item.clientWidth;
+      const gap = 16; // Corresponds to gap-4 in Tailwind
+      const scrollAmount = (itemWidth + gap) * (direction === 'left' ? -1 : 1);
+      
+      container.scrollBy({ 
+        left: scrollAmount, 
+        behavior: 'smooth' 
+      });
     }
   };
 
@@ -55,16 +64,18 @@ export function ProductCarousel({ title, services }: ProductCarouselProps) {
         
         <div
           ref={scrollContainerRef}
-          className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory pb-4 px-4 md:px-14"
+          className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-4 px-4 md:px-0"
         >
           {services.map((service) => (
-            <div key={service.id} className="w-4/5 sm:w-[calc(50%-0.5rem)] md:w-64 shrink-0 snap-start">
+            <div 
+              key={service.id} 
+              className="carousel-item w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.666rem)] shrink-0"
+            >
               <ServiceCard service={service} />
             </div>
           ))}
         </div>
 
-        {/* Left Button - Shown on desktop when scrollable */}
         {showLeftArrow && (
           <Button
             variant="outline"
@@ -77,7 +88,6 @@ export function ProductCarousel({ title, services }: ProductCarouselProps) {
           </Button>
         )}
 
-        {/* Right Button - Shown on desktop when scrollable */}
         {showRightArrow && (
           <Button
             variant="outline"
