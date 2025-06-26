@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -114,12 +113,12 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
           </div>
           
           {/* Right Column: Details & Actions */}
-          <div className="p-4 md:p-6 flex flex-col bg-muted/30">
+          <div className="p-4 md:p-6 flex flex-col bg-muted/30 overflow-y-auto">
             <DialogHeader className="mb-4">
               <DialogTitle className="font-headline text-2xl">{service.name}</DialogTitle>
             </DialogHeader>
 
-            <div className="flex-grow space-y-4 overflow-y-auto pr-2">
+            <div className="flex-grow space-y-4 pr-2">
               <div className="text-3xl font-bold text-primary">
                 {selectedTier ? formatRupiah(service.prices[selectedTier]) : "Pilih varian harga"}
               </div>
