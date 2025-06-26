@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from 'next/image';
@@ -66,9 +65,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
   }, [quantity, isBudgetSelected, service.name, isGeneratingBrief, briefFields.length]);
 
   return (
-    <Card className={cn(
-      "flex flex-col h-full relative transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:z-10"
-    )}>
+    <Card className={cn("flex flex-col h-full relative")}>
       <CardHeader className="p-0">
         <Image
           src={service.image}
