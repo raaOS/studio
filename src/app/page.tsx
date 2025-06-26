@@ -159,20 +159,28 @@ function OrderWorkflow() {
                 </CardHeader>
                 <CardContent>
                     <RadioGroup 
-                        className="flex pt-2 gap-6"
+                        className="grid grid-cols-2 gap-4"
                         onValueChange={(value) => handlePaymentSelect(value as 'dp' | 'lunas')}
                         value={paymentMethod || ''}
                     >
-                        <div className="flex items-center space-x-3">
-                            <RadioGroupItem value="dp" id="payment-dp" />
-                            <Label htmlFor="payment-dp" className="font-normal cursor-pointer">
-                                DP 50%
+                        <div>
+                            <RadioGroupItem value="dp" id="payment-dp" className="peer sr-only" />
+                            <Label
+                                htmlFor="payment-dp"
+                                className="flex h-full flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                            >
+                                <h3 className="font-semibold text-lg">DP 50%</h3>
+                                <p className="text-muted-foreground text-sm text-center">Bayar setengahnya sekarang, sisanya setelah pratinjau.</p>
                             </Label>
                         </div>
-                        <div className="flex items-center space-x-3">
-                            <RadioGroupItem value="lunas" id="payment-lunas" />
-                            <Label htmlFor="payment-lunas" className="font-normal cursor-pointer">
-                                Lunas
+                        <div>
+                            <RadioGroupItem value="lunas" id="payment-lunas" className="peer sr-only" />
+                            <Label
+                                htmlFor="payment-lunas"
+                                className="flex h-full flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                            >
+                                <h3 className="font-semibold text-lg">Lunas</h3>
+                                <p className="text-muted-foreground text-sm text-center">Bayar lunas sekarang dan dapatkan prioritas pengerjaan.</p>
                             </Label>
                         </div>
                     </RadioGroup>
