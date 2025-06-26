@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -15,8 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { mockDriveActivityLogs } from '@/lib/data';
-import { FolderSync, Save, TestTube2, AlertCircle, Link as LinkIcon, FolderCog } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { FolderSync, Save, TestTube2, Link as LinkIcon, FolderCog, KeyRound, FileJson, FolderInput } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
 import type { DriveActivityLog } from '@/lib/types';
@@ -29,16 +29,6 @@ export default function DriveAutomationPage() {
   const [folderTemplate, setFolderTemplate] = useState('[OrderID] - [CustomerName]');
   const [parentFolderId, setParentFolderId] = useState('');
   const [activityLogs, setActivityLogs] = useState<DriveActivityLog[]>(mockDriveActivityLogs);
-
-  // Effect to load parent folder ID from env var placeholder on client-side
-  // In a real app, this might be fetched from a secure config endpoint
-  useEffect(() => {
-    // This is a placeholder for demonstrating where the env var would be used.
-    // In Next.js, `process.env` is not directly available in the client like this
-    // without being prefixed with NEXT_PUBLIC_. For server-side values, we
-    // would fetch them from an API route. Here we'll just leave it blank
-    // and let the user input it.
-  }, []);
 
   const handleTestDrive = async () => {
     if (!testOrderId || !testCustomerName) {
@@ -53,7 +43,7 @@ export default function DriveAutomationPage() {
     if (!parentFolderId) {
        toast({
         title: 'Parent Folder ID Diperlukan',
-        description: 'Mohon masukkan ID folder utama di Google Drive tempat folder baru akan dibuat.',
+        description: 'Mohon masukkan ID folder utama di Google Drive dari Langkah 3.',
         variant: 'destructive',
       });
       return;
@@ -89,7 +79,7 @@ export default function DriveAutomationPage() {
         setActivityLogs(prevLogs => [newLog, ...prevLogs]);
 
       } else {
-        throw new Error(result.error || 'Terjadi kesalahan tidak diketahui.');
+        throw new Error(result.error || 'Gagal membuat folder. Pastikan kredensial JSON di file .env sudah benar.');
       }
     } catch (error: any) {
       toast({
@@ -106,108 +96,112 @@ export default function DriveAutomationPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl md:text-3xl font-bold font-headline">Otomasi Google Drive</h1>
-        <p className="text-muted-foreground">Kelola folder proyek otomatis untuk setiap pesanan langsung di Google Drive.</p>
+        <p className="text-muted-foreground">Ikuti langkah-langkah di bawah ini untuk menghubungkan aplikasi ke Google Drive Anda.</p>
       </div>
-
-       <Alert variant="destructive" className="bg-yellow-50 border-yellow-300 dark:bg-yellow-950 dark:border-yellow-800">
-          <AlertCircle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-          <AlertTitle className="text-yellow-800 dark:text-yellow-300 font-bold">Konfigurasi Diperlukan</AlertTitle>
-          <AlertDescription className="text-yellow-700 dark:text-yellow-400">
-            Integrasi ini sekarang **nyata**. Untuk bekerja, Anda harus:
-            <ol className="list-decimal list-inside mt-2 space-y-1">
-                <li>Membuat **Service Account** di Google Cloud Console dan mengunduh file kredensial JSON-nya.</li>
-                <li>Menambahkan isi file JSON tersebut ke variabel <code>DRIVE_SERVICE_ACCOUNT_JSON</code> di file <code>.env</code> Anda.</li>
-                <li>Mendapatkan **ID Folder Induk** dari URL Google Drive dan memasukkannya di bawah atau di variabel <code>DRIVE_PARENT_FOLDER_ID</code>.</li>
-            </ol>
-          </AlertDescription>
-        </Alert>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-2 space-y-8">
+          
+          {/* Step-by-step setup cards */}
+          <div className="space-y-6">
+            <Card className="border-primary">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-3"><KeyRound className="h-6 w-6"/> Langkah 1: Dapatkan Kunci API (Service Account)</CardTitle>
+                    <CardDescription>Agar aplikasi ini bisa membuat folder, kita butuh "kunci" khusus dari Google. Kunci ini seperti kata sandi super untuk bot kita.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <ol className="list-decimal list-inside space-y-2 text-sm">
+                        <li>Buka Google Cloud Console dan pastikan Anda memilih proyek yang benar.</li>
+                        <li>Di menu pencarian, ketik "Service Accounts" dan buka halamannya.</li>
+                        <li>Klik "+ CREATE SERVICE ACCOUNT", beri nama (misal: "designflow-bot"), lalu klik "CREATE AND CONTINUE".</li>
+                        <li>Pada bagian "Role", pilih "Editor", lalu klik "CONTINUE" dan "DONE".</li>
+                        <li>Temukan service account yang baru dibuat di daftar, klik ikon tiga titik di kolom "Actions", dan pilih "Manage keys".</li>
+                        <li>Klik "ADD KEY" > "Create new key". Pilih "JSON" sebagai tipe, lalu klik "CREATE". Sebuah file JSON akan terunduh.</li>
+                    </ol>
+                </CardContent>
+                <CardFooter>
+                    <Button asChild>
+                        <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer">Buka Google Cloud Console</a>
+                    </Button>
+                </CardFooter>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-3"><FileJson className="h-6 w-6"/> Langkah 2: Simpan Kunci di File .env</CardTitle>
+                    <CardDescription>Salin isi file JSON yang Anda unduh tadi ke dalam file `.env` di proyek ini.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <p className="text-sm">Buka file JSON yang baru saja diunduh dengan text editor. Salin **seluruh isinya**.</p>
+                    <div>
+                        <Label>Tempelkan di file `.env` dengan format seperti ini:</Label>
+                        <code className="relative block rounded bg-muted px-4 py-2 mt-2 text-sm">
+                           <span className="text-primary font-semibold">DRIVE_SERVICE_ACCOUNT_JSON</span>=
+                           <span className="text-muted-foreground">'{'{'}"type": "service_account", ...{'}'}'</span>
+                        </code>
+                        <p className="text-xs text-muted-foreground mt-1">Pastikan seluruh konten JSON berada dalam satu baris dan diapit oleh tanda kutip tunggal jika perlu.</p>
+                    </div>
+                </CardContent>
+            </Card>
+
+             <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-3"><FolderInput className="h-6 w-6"/> Langkah 3: Tentukan Folder Utama</CardTitle>
+                    <CardDescription>Masukkan ID dari folder di Google Drive Anda yang akan menjadi tempat semua folder pesanan baru dibuat.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                     <div className="space-y-2">
+                        <Label htmlFor="parent-folder-id">ID Folder Induk Google Drive</Label>
+                        <Input 
+                        id="parent-folder-id" 
+                        placeholder="Contoh: 1a2b3c4d5e6f7g8h9i0j_kL"
+                        value={parentFolderId}
+                        onChange={(e) => setParentFolderId(e.target.value)}
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                        Buka folder di Google Drive, ID-nya adalah bagian terakhir dari URL. Contoh: drive.google.com/drive/folders/<b>ID_FOLDER_ANDA</b>
+                        </p>
+                    </div>
+                </CardContent>
+            </Card>
+          </div>
+          
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><FolderCog/>Struktur Folder</CardTitle>
-              <CardDescription>Atur format penamaan dan lokasi folder proyek di Google Drive.</CardDescription>
+              <CardTitle className="flex items-center gap-2"><FolderCog/>Struktur Folder (Opsional)</CardTitle>
+              <CardDescription>Atur format penamaan folder proyek. Anda bisa menggunakan variabel yang tersedia.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="parent-folder-id">ID Folder Induk Google Drive</Label>
-                <Input 
-                  id="parent-folder-id" 
-                  placeholder="Contoh: 1a2b3c4d5e6f7g8h9i0j_kL"
-                  value={parentFolderId}
-                  onChange={(e) => setParentFolderId(e.target.value)}
-                />
-                 <p className="text-xs text-muted-foreground mt-1">
-                  Ambil ID dari URL folder utama di Google Drive Anda. Folder baru akan dibuat di dalamnya.
-                </p>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="folder-structure">Template Nama Folder</Label>
-                <Input 
-                  id="folder-structure" 
-                  value={folderTemplate}
-                  onChange={(e) => setFolderTemplate(e.target.value)}
-                />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Variabel yang tersedia: <code>[OrderID]</code>, <code>[CustomerName]</code>.
-                </p>
-              </div>
+            <CardContent>
+                <div className="space-y-2">
+                    <Label htmlFor="folder-structure">Template Nama Folder</Label>
+                    <Input 
+                    id="folder-structure" 
+                    value={folderTemplate}
+                    onChange={(e) => setFolderTemplate(e.target.value)}
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                    Variabel yang tersedia: <code>[OrderID]</code>, <code>[CustomerName]</code>.
+                    </p>
+                </div>
             </CardContent>
             <CardFooter>
-                <Button><Save className="mr-2 h-4 w-4" /> Simpan Pengaturan (Simulasi)</Button>
+                <Button variant="outline" disabled><Save className="mr-2 h-4 w-4" /> Simpan Pengaturan (Simulasi)</Button>
             </CardFooter>
           </Card>
 
-           <Card>
-            <CardHeader>
-              <CardTitle>Log Aktivitas</CardTitle>
-              <CardDescription>Riwayat aktivitas sinkronisasi folder yang berhasil.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Order ID</TableHead>
-                    <TableHead>Aktivitas</TableHead>
-                    <TableHead>Timestamp</TableHead>
-                    <TableHead>Tipe</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {activityLogs.map((log) => (
-                    <TableRow key={log.id}>
-                      <TableCell className="font-medium">{log.orderId}</TableCell>
-                      <TableCell className="flex items-center gap-2">
-                        {log.activity}
-                        {log.user === 'System (Live Test)' && (
-                             <Button asChild variant="ghost" size="icon" className="h-6 w-6">
-                                <a href={`https://drive.google.com/drive/folders/${log.id}`} target="_blank" rel="noopener noreferrer"><LinkIcon className="h-3 w-3" /></a>
-                             </Button>
-                        )}
-                      </TableCell>
-                      <TableCell>{log.timestamp}</TableCell>
-                      <TableCell><Badge variant={log.user === 'System (Live Test)' ? 'default' : 'secondary'} className={log.user === 'System (Live Test)' ? 'bg-green-600' : ''}>{log.user}</Badge></TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
         </div>
 
         <div className="lg:col-span-1 space-y-8">
           <Card className="sticky top-24">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2"><TestTube2 /> Uji Integrasi</CardTitle>
-                <CardDescription>Buat folder proyek tes untuk memastikan koneksi ke Google Drive berjalan.</CardDescription>
+                <CardDescription>Setelah menyelesaikan langkah 1-3, uji koneksi Anda dengan membuat folder tes.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="space-y-2">
                     <Label htmlFor="test-order-id">Test Order ID</Label>
                     <Input 
                         id="test-order-id" 
-                        placeholder="#TEST-DRV-001" 
                         value={testOrderId}
                         onChange={(e) => setTestOrderId(e.target.value)}
                     />
@@ -216,7 +210,6 @@ export default function DriveAutomationPage() {
                     <Label htmlFor="test-customer-name">Test Nama Klien</Label>
                     <Input 
                         id="test-customer-name" 
-                        placeholder="Test Customer" 
                         value={testCustomerName}
                         onChange={(e) => setTestCustomerName(e.target.value)}
                     />
@@ -230,6 +223,42 @@ export default function DriveAutomationPage() {
           </Card>
         </div>
       </div>
+      
+       <Card>
+        <CardHeader>
+          <CardTitle>Log Aktivitas</CardTitle>
+          <CardDescription>Riwayat aktivitas sinkronisasi folder yang berhasil.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Order ID</TableHead>
+                <TableHead>Aktivitas</TableHead>
+                <TableHead>Timestamp</TableHead>
+                <TableHead>Tipe</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {activityLogs.map((log) => (
+                <TableRow key={log.id}>
+                  <TableCell className="font-medium">{log.orderId}</TableCell>
+                  <TableCell className="flex items-center gap-2">
+                    {log.activity}
+                    {log.user === 'System (Live Test)' && (
+                         <Button asChild variant="ghost" size="icon" className="h-6 w-6">
+                            <a href={`https://drive.google.com/drive/folders/${log.id}`} target="_blank" rel="noopener noreferrer"><LinkIcon className="h-3 w-3" /></a>
+                         </Button>
+                    )}
+                  </TableCell>
+                  <TableCell>{log.timestamp}</TableCell>
+                  <TableCell><Badge variant={log.user === 'System (Live Test)' ? 'default' : 'secondary'} className={log.user === 'System (Live Test)' ? 'bg-green-600' : ''}>{log.user}</Badge></TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 }
