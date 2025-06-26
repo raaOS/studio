@@ -5,6 +5,7 @@ export type BudgetItem = {
   id: BudgetTier;
   title: string;
   description: string;
+  image: string;
 };
 
 export type Service = {

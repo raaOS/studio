@@ -49,7 +49,7 @@ export default function AdminBudgetsPage() {
         <div className="space-y-6">
             <div>
             <h1 className="text-2xl md:text-3xl font-bold font-headline">Tampilan & Budget</h1>
-            <p className="text-muted-foreground">Kelola judul dan deskripsi global untuk setiap tingkatan budget.</p>
+            <p className="text-muted-foreground">Kelola gambar, judul, dan deskripsi untuk setiap tingkatan budget.</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -86,6 +86,10 @@ export default function AdminBudgetsPage() {
                         <div className="space-y-2">
                             <Label htmlFor="description">Deskripsi</Label>
                             <Textarea id="description" value={editableBudget.description} onChange={(e) => handleFieldChange('description', e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="image">URL Gambar</Label>
+                            <Input id="image" value={editableBudget.image} onChange={(e) => handleFieldChange('image', e.target.value)} />
                         </div>
                     </div>
                 )}

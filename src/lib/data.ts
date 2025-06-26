@@ -5,16 +5,19 @@ export const budgetItems: BudgetItem[] = [
     id: 'kaki-lima',
     title: 'Budget Kaki Lima',
     description: 'Buat yang baru mulai atau iseng-iseng. Sat-set, harga bestie.',
+    image: 'https://placehold.co/40x40/f8fafc/64748b.png',
   },
   {
     id: 'umkm',
     title: 'Budget UMKM',
     description: 'Level up-in brand kamu. Biar makin pro dan dikenal luas.',
+    image: 'https://placehold.co/40x40/f1f5f9/334155.png',
   },
   {
     id: 'e-comm',
     title: 'Budget E-Commerce',
     description: 'Paket all-in buat para suhu e-comm. Visual auto-gacor.',
+    image: 'https://placehold.co/40x40/e2e8f0/1e293b.png',
   },
 ];
 
