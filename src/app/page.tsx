@@ -225,8 +225,8 @@ function OrderWorkflow() {
                 <h2 className="text-2xl font-headline font-semibold text-foreground">Langkah 4: Terakhir, pilih layanannya!</h2>
                 <p className="text-sm text-muted-foreground mt-2 max-w-2xl mx-auto">Scroll ke bawah dan masukkin semua yang kamu butuhin ke keranjang.</p>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-8">
-                <div className="lg:col-span-8 xl:col-span-9">
+            <div>
+                <div>
                     {Object.entries(serviceCategories).map(([category, servicesInCategory]) => (
                         <div key={category} className="mb-12">
                             <h3 className="text-2xl font-headline font-bold mb-6">{category}</h3>
@@ -240,11 +240,11 @@ function OrderWorkflow() {
                         </div>
                     ))}
                 </div>
-                <aside className="hidden lg:block lg:col-span-4 xl:col-span-3">
-                    <div className="sticky top-24">
-                        <OrderSummary />
-                    </div>
-                </aside>
+                
+                {/* Order Summary for Desktop */}
+                <div className="hidden lg:block max-w-4xl mx-auto mt-16">
+                    <OrderSummary />
+                </div>
             </div>
         </section>
       </main>
