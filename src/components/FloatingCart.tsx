@@ -1,16 +1,29 @@
+
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useAnimationControls } from "framer-motion";
 import { ShoppingCart } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { OrderSummary } from "./OrderSummary";
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useEffect } from "react";
 
 export function FloatingCart() {
   const isMobile = useIsMobile();
-  const { totalItems } = useCart();
+  const { totalItems, cartShake } = useCart();
+  const controls = useAnimationControls();
+
+  useEffect(() => {
+    if (cartShake > 0) {
+      controls.start({
+        scale: [1, 1.3, 1],
+        rotate: [0, -10, 10, -5, 5, 0],
+        transition: { duration: 0.5, type: "spring" }
+      });
+    }
+  }, [cartShake, controls]);
 
   if (!isMobile) {
     return null;
@@ -38,7 +51,9 @@ export function FloatingCart() {
                                 {totalItems}
                             </span>
                         )}
-                        <ShoppingCart className="h-6 w-6" />
+                        <motion.div animate={controls}>
+                          <ShoppingCart className="h-6 w-6" />
+                        </motion.div>
                         <span className="text-xs font-medium">Rincian Pesanan</span>
                     </Button>
                 </SheetTrigger>

@@ -15,6 +15,7 @@ interface CartContextType {
   paymentMethod: 'dp' | 'lunas' | null;
   setPaymentMethod: (method: 'dp' | 'lunas' | null) => void;
   getCartItem: (serviceId: string) => CartItem | undefined;
+  cartShake: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -22,6 +23,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [paymentMethod, setPaymentMethod] = useState<'dp' | 'lunas' | null>(null);
+  const [cartShake, setCartShake] = useState(0);
 
   const getCartItem = useCallback((serviceId: string) => {
     return cartItems.find(item => item.id === serviceId);
@@ -31,12 +33,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     const budgetName = budgetItems.find(b => b.id === budgetTier)?.title || 'Custom';
     
     setCartItems(prevItems => {
-      const existingItemIndex = prevItems.findIndex(item => item.id === service.id);
-      
       if (quantity <= 0) {
         return prevItems.filter(item => item.id !== service.id);
       }
 
+      const existingItemIndex = prevItems.findIndex(item => item.id === service.id);
+      
       const newItemData: CartItem = {
         id: service.id,
         name: service.name,
@@ -56,14 +58,17 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         return [...prevItems, newItemData];
       }
     });
+    setCartShake(s => s + 1);
   }, []);
 
   const removeItem = useCallback((serviceId: string) => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== serviceId));
+    setCartShake(s => s + 1);
   }, []);
 
   const clearCart = () => {
     setCartItems([]);
+    setCartShake(s => s + 1);
   };
 
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -81,6 +86,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         paymentMethod,
         setPaymentMethod,
         getCartItem,
+        cartShake,
       }}
     >
       {children}
