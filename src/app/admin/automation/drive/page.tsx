@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { mockDriveActivityLogs } from '@/lib/data';
-import { FolderSync, Save, TestTube2, Link as LinkIcon, FolderCog, KeyRound, FileJson, FolderInput, Lightbulb } from 'lucide-react';
+import { FolderSync, Save, TestTube2, Link as LinkIcon, FolderCog, KeyRound, FileJson, FolderInput, Lightbulb, UserPlus } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
 import type { DriveActivityLog } from '@/lib/types';
@@ -152,12 +152,29 @@ export default function DriveAutomationPage() {
 
              <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-3"><FolderInput className="h-6 w-6"/> Langkah 3: Tentukan Folder Utama</CardTitle>
-                    <CardDescription>Masukkan ID dari folder di Google Drive Anda yang akan menjadi tempat semua folder pesanan baru dibuat.</CardDescription>
+                    <CardTitle className="flex items-center gap-3"><FolderInput className="h-6 w-6"/> Langkah 3: Tentukan & Bagikan Folder Utama</CardTitle>
+                    <CardDescription>Pilih folder di Drive Anda & izinkan bot kita untuk menulis di dalamnya.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                     <div className="space-y-2">
-                        <Label htmlFor="parent-folder-id">ID Folder Induk Google Drive</Label>
+                     <ol className="list-decimal list-inside space-y-3 text-sm">
+                        <li>Buat sebuah folder baru di Google Drive Anda (misalnya: "Pesanan DesignFlow").</li>
+                        <li>Klik kanan pada folder tersebut dan pilih <span className="font-semibold">Bagikan (Share)</span>.</li>
+                        <li>
+                            Buka kembali file JSON Anda, cari alamat email di bawah kunci <code className="bg-muted px-1 py-0.5 rounded">client_email</code>.
+                        </li>
+                        <li>
+                            Di dialog "Bagikan", tempelkan alamat email tersebut, berikan peran sebagai <span className="font-semibold">Editor</span>, dan klik <span className="font-semibold">Kirim</span>.
+                             <div className="text-xs p-2 mt-2 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-800 dark:bg-amber-300/10 dark:border-amber-300/20 dark:text-amber-200 flex items-start gap-2">
+                                <UserPlus className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                                <div>
+                                    <strong>Langkah Penting:</strong> Tanpa membagikan folder ini, bot tidak akan bisa membuat folder baru di dalamnya.
+                                </div>
+                            </div>
+                        </li>
+                        <li>Buka folder tersebut. ID-nya adalah bagian terakhir dari URL di browser Anda.</li>
+                     </ol>
+                     <div className="space-y-2 pt-2">
+                        <Label htmlFor="parent-folder-id">Tempelkan ID Folder Induk di Sini</Label>
                         <Input 
                         id="parent-folder-id" 
                         placeholder="Contoh: 1a2b3c4d5e6f7g8h9i0j_kL"
@@ -165,7 +182,7 @@ export default function DriveAutomationPage() {
                         onChange={(e) => setParentFolderId(e.target.value)}
                         />
                         <p className="text-xs text-muted-foreground mt-1">
-                        Buka folder di Google Drive, ID-nya adalah bagian terakhir dari URL. Contoh: drive.google.com/drive/folders/<b>ID_FOLDER_ANDA</b>
+                        Contoh URL: drive.google.com/drive/folders/<b>ID_FOLDER_ANDA</b>
                         </p>
                     </div>
                 </CardContent>
