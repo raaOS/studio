@@ -20,12 +20,8 @@ import { formatRupiah } from '@/lib/utils';
 import { ShoppingCart } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
-interface ProductDetailDialogProps {
-  service: Service;
-  isOpen: boolean;
-  onOpenChange: (isOpen: boolean) => void;
-}
 
 const fallbackBriefFields = [
     { name: 'Mau desain seperti apa?', placeholder: 'Jelaskan konsep atau gaya desain yang Anda inginkan...', type: 'textarea' as const },
@@ -55,21 +51,19 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
       setBrief(initialBrief);
       setSelectedTier(initialTier);
       
-      // Set initial image based on saved tier or default
       setDisplayImage(initialTier ? service.tierImages[initialTier] : service.image);
 
       if (briefFields.length === 0) {
         setBriefFields(fallbackBriefFields);
       }
     } else {
-      // Reset state on close
       setTimeout(() => {
         setBriefFields([]);
         setSelectedTier(null);
         setQuantity(1);
         setBrief({});
         setDisplayImage(service.image);
-      }, 300); // Delay to allow exit animation
+      }, 300); 
     }
   }, [isOpen, service, getCartItem, briefFields.length]);
   
@@ -97,10 +91,10 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-4xl p-0">
-        <div className="grid grid-cols-1 md:grid-cols-2">
+      <DialogContent className="sm:max-w-4xl p-0 max-h-[90svh]">
+        <div className="grid grid-cols-1 md:grid-cols-2 h-full">
           {/* Left Column: Image Gallery */}
-          <div className="p-4 md:p-6">
+          <div className="p-4 md:p-6 flex items-center justify-center">
             <div className="relative aspect-square w-full rounded-lg overflow-hidden">
               <Image 
                 src={displayImage} 
@@ -118,23 +112,35 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
               <DialogTitle className="font-headline text-2xl">{service.name}</DialogTitle>
             </DialogHeader>
 
-            <div className="flex-grow space-y-4 pr-2">
+            <div className="flex-grow space-y-4">
               <div className="text-3xl font-bold text-primary">
-                {selectedTier ? formatRupiah(service.prices[selectedTier]) : "Pilih varian harga"}
+                {selectedTier ? formatRupiah(service.prices[selectedTier] * quantity) : "Pilih varian harga"}
               </div>
 
               <div className="space-y-2">
                 <Label>Varian</Label>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-col gap-2">
                   {budgetItems.map((budget) => (
-                    <Button
+                    <motion.div
                       key={budget.id}
-                      variant={selectedTier === budget.id ? 'default' : 'outline'}
-                      onClick={() => handleTierSelect(budget.id)}
-                      className="flex-grow md:flex-grow-0"
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
                     >
-                      {budget.title}
-                    </Button>
+                      <button
+                        onClick={() => handleTierSelect(budget.id)}
+                        className={cn(
+                            "w-full text-left p-3 border-2 rounded-lg transition-colors",
+                            "flex items-start gap-4",
+                            selectedTier === budget.id ? 'border-primary bg-primary/5' : 'border-muted bg-popover hover:bg-accent/50'
+                        )}
+                      >
+                        <Image src={budget.image} alt={budget.title} width={40} height={40} className="rounded-md" data-ai-hint="logo" />
+                        <div>
+                          <p className="font-semibold">{budget.title}</p>
+                          <p className="text-xs text-muted-foreground">{budget.description}</p>
+                        </div>
+                      </button>
+                    </motion.div>
                   ))}
                 </div>
               </div>
@@ -149,6 +155,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                           maxLength={500}
                           value={brief[field.name] ?? ''}
                           onChange={(e) => handleBriefChange(field.name, e.target.value)}
+                          className="focus-visible:ring-0 focus-visible:ring-offset-0"
                       />
                   ) : (
                       <Input
@@ -156,18 +163,18 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                           placeholder={field.placeholder}
                           value={brief[field.name] ?? ''}
                           onChange={(e) => handleBriefChange(field.name, e.target.value)}
+                          className="focus-visible:ring-0 focus-visible:ring-offset-0"
                       />
                   )}
                 </div>
               ))}
-              
-              <div className="flex items-center justify-between">
+            </div>
+
+            <div className="pt-6 mt-4 border-t flex-shrink-0">
+               <div className="flex items-center justify-between mb-4">
                 <Label>Kuantitas</Label>
                 <QuantityStepper quantity={quantity} onQuantityChange={setQuantity} />
               </div>
-            </div>
-
-            <div className="pt-6 mt-auto border-t">
               <Button type="button" onClick={handleSave} disabled={!selectedTier} className="w-full">
                 <ShoppingCart className="mr-2 h-4 w-4" />
                 {getCartItem(service.id) ? 'Simpan Perubahan' : 'Tambahkan ke Keranjang'}
