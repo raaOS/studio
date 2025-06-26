@@ -34,9 +34,9 @@ export function ServiceCard({ service }: ServiceCardProps) {
           <Image
             src={service.image}
             alt={service.name}
-            width={400}
-            height={300}
-            className="object-cover w-full h-48"
+            width={250}
+            height={200}
+            className="object-cover w-full"
             data-ai-hint={service.dataAiHint}
           />
         </CardHeader>
