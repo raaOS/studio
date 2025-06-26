@@ -84,7 +84,7 @@ function OrderWorkflow() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow container mx-auto px-4 pt-10 pb-16 space-y-16">
+      <main className="flex-grow container mx-auto px-4 pt-10 pb-16 space-y-12">
         
         {/* Customer Info */}
         <section id="info-section" className="max-w-2xl mx-auto">
@@ -95,7 +95,7 @@ function OrderWorkflow() {
             </CardHeader>
             <CardContent>
               <Form {...form}>
-                <div className="space-y-6">
+                <form className="space-y-6">
                   <FormField
                       control={form.control}
                       name="name"
@@ -144,7 +144,7 @@ function OrderWorkflow() {
                       </FormItem>
                       )}
                   />
-                </div>
+                </form>
               </Form>
             </CardContent>
           </Card>
