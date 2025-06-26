@@ -6,7 +6,7 @@ export const budgetItems: BudgetItem[] = [
     title: 'Budget Kaki Lima',
     description: 'Buat yang baru mulai atau iseng-iseng. Sat-set, harga bestie.',
     priceRange: 'Mulai dari Rp 15K',
-    icon: 'https://placehold.co/128x128.png',
+    image: 'https://placehold.co/128x128.png',
     dataAiHint: 'street stall'
   },
   {
@@ -14,7 +14,7 @@ export const budgetItems: BudgetItem[] = [
     title: 'Budget UMKM',
     description: 'Level up-in brand kamu. Biar makin pro dan dikenal luas.',
     priceRange: 'Mulai dari Rp 25K',
-    icon: 'https://placehold.co/128x128.png',
+    image: 'https://placehold.co/128x128.png',
     dataAiHint: 'small business'
   },
   {
@@ -22,7 +22,7 @@ export const budgetItems: BudgetItem[] = [
     title: 'Budget E-Commerce',
     description: 'Paket all-in buat para suhu e-comm. Visual auto-gacor.',
     priceRange: 'Mulai dari Rp 65K',
-    icon: 'https://placehold.co/128x128.png',
+    image: 'https://placehold.co/128x128.png',
     dataAiHint: 'online shopping'
   },
 ];

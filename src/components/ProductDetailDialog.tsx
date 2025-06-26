@@ -25,6 +25,7 @@ import { budgetItems } from '@/lib/data';
 import { formatRupiah } from '@/lib/utils';
 import { ShoppingCart } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { motion } from 'framer-motion';
 
 interface ProductDetailDialogProps {
   service: Service;
@@ -103,7 +104,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl">{service.name}</DialogTitle>
           <DialogDescription>
@@ -120,20 +121,25 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
                     className="grid grid-cols-1 gap-2"
                 >
                     {budgetItems.map((budget) => (
-                    <Label 
+                    <motion.div
                         key={budget.id}
-                        htmlFor={`${service.id}-${budget.id}`}
-                        className={`flex items-start justify-between rounded-md border-2 p-3 cursor-pointer transition-colors ${selectedTier === budget.id ? 'border-primary bg-primary/5' : 'border-muted hover:bg-accent/50'}`}
+                        whileTap={{ scale: 0.97 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 17 }}
                     >
-                        <div className="flex-1">
-                            <p className="font-semibold">{budget.title}</p>
-                            <p className="text-sm text-muted-foreground">{budget.description}</p>
-                        </div>
-                        <div className="text-right ml-4 flex-shrink-0">
-                            <p className="font-bold text-lg">{formatRupiah(service.prices[budget.id])}</p>
-                            <RadioGroupItem value={budget.id} id={`${service.id}-${budget.id}`} className="mt-2 ml-auto" />
-                        </div>
-                    </Label>
+                        <Label 
+                            htmlFor={`${service.id}-${budget.id}`}
+                            className={`flex items-start justify-between rounded-md border-2 p-3 cursor-pointer transition-colors ${selectedTier === budget.id ? 'border-primary bg-primary/5' : 'border-muted hover:bg-accent/50'}`}
+                        >
+                            <div className="flex-1">
+                                <p className="font-semibold">{budget.title}</p>
+                                <p className="text-sm text-muted-foreground">{budget.description}</p>
+                            </div>
+                            <div className="text-right ml-4 flex-shrink-0">
+                                <p className="font-bold text-lg">{formatRupiah(service.prices[budget.id])}</p>
+                                <RadioGroupItem value={budget.id} id={`${service.id}-${budget.id}`} className="mt-2 ml-auto" />
+                            </div>
+                        </Label>
+                    </motion.div>
                     ))}
                 </RadioGroup>
             </div>

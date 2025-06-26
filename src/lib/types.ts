@@ -6,7 +6,7 @@ export type BudgetItem = {
   title: string;
   description: string;
   priceRange: string;
-  icon: string; // Changed from React.ElementType to string
+  image: string;
   dataAiHint: string;
 };
 

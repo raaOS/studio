@@ -29,7 +29,8 @@ import {
   Folder,
   Calendar,
   Video,
-  CircleDollarSign
+  CircleDollarSign,
+  Palette
 } from 'lucide-react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/AdminHeader';
@@ -161,6 +162,14 @@ export default function AdminLayout({
                   SETTINGS
                 </SidebarGroupLabel>
                   <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="/admin/settings/budgets">
+                          <Palette />
+                          Tampilan Budget
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
                         <Link href="/admin/settings/capacity">
