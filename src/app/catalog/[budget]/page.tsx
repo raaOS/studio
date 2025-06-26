@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function CatalogRedirectPage() {
+export default function CatalogRedirectPage({ params }: { params: { budget: string }}) {
   const router = useRouter();
 
   useEffect(() => {
