@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { useCart } from '@/contexts/CartContext';
 import { QuantityStepper } from '@/components/QuantityStepper';
 import type { Service } from '@/lib/types';
-import { formatRupiah } from '@/lib/utils';
+import { formatRupiah, cn } from '@/lib/utils';
 
 interface ServiceCardProps {
   service: Service;
@@ -28,10 +28,14 @@ export function ServiceCard({ service }: ServiceCardProps) {
     updateBrief(service.id, field, value);
   }
 
-  const price = selectedBudget ? service.prices[selectedBudget.id] : 0;
+  const isBudgetSelected = !!selectedBudget;
+  const price = isBudgetSelected ? service.prices[selectedBudget.id] : 0;
 
   return (
-    <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg h-full">
+    <Card className={cn(
+        "flex flex-col overflow-hidden transition-all duration-300 h-full",
+        isBudgetSelected ? "hover:shadow-lg" : "opacity-60 cursor-not-allowed"
+    )}>
       <CardHeader className="p-0">
         <Image
           src={service.image}
@@ -44,15 +48,21 @@ export function ServiceCard({ service }: ServiceCardProps) {
       </CardHeader>
       <CardContent className="p-4 flex-grow">
         <CardTitle className="font-headline text-lg mb-2">{service.name}</CardTitle>
-        <p className="text-primary font-semibold text-xl">{formatRupiah(price)}</p>
+        <p className="text-primary font-semibold text-lg">
+            {isBudgetSelected ? formatRupiah(price) : 'Pilih budget dulu'}
+        </p>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex flex-col items-start gap-4">
         <div className="flex justify-between items-center w-full">
             <Label>Jumlah</Label>
-            <QuantityStepper quantity={quantity} onQuantityChange={handleQuantityChange} />
+            <QuantityStepper 
+                quantity={quantity} 
+                onQuantityChange={handleQuantityChange} 
+                disabled={!isBudgetSelected}
+            />
         </div>
         <AnimatePresence>
-          {quantity > 0 && (
+          {quantity > 0 && isBudgetSelected && (
             <motion.div
               className="w-full space-y-4"
               initial={{ opacity: 0, height: 0 }}
