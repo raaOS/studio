@@ -22,7 +22,7 @@ export function ProductCarousel({ title, services }: ProductCarouselProps) {
   };
 
   return (
-    <div className="mb-12">
+    <div className="mb-12 overflow-hidden">
       <div className="relative group">
         <h3 className="text-2xl font-headline font-bold mb-6">{title}</h3>
         
