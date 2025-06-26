@@ -2,42 +2,24 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { useParams, notFound } from 'next/navigation';
-import { mockOrders } from '@/lib/data';
+import { mockOrders, allOrderStatusesCategorized } from '@/lib/data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { formatRupiah, cn } from '@/lib/utils';
 import type { OrderStatus } from '@/lib/types';
-import { MessageSquare, Send, Folder, Calendar, Video } from 'lucide-react';
-
-const allOrderStatuses: OrderStatus[] = [
-  'Menunggu Pembayaran',
-  'Masuk Antrian',
-  'Masuk Antrian (Minggu Depan)',
-  'Sedang Dikerjakan',
-  'Siap Kirim Pratinjau',
-  'Menunggu Respon Klien',
-  'Sedang Direvisi',
-  'Selesai',
-  'Perlu Tinjauan Owner',
-  'Eskalasi: Revisi di Luar Lingkup',
-  'Dibatalkan (Tidak Dibayar)',
-  'Dibatalkan (Refund 90%)',
-  'Tidak Puas (Refund 50%)',
-  'Ditutup (Tanpa Refund)',
-];
-
+import { MessageSquare, Send, Folder, Calendar, Video, History } from 'lucide-react';
 
 export default function OrderDetailPage() {
   const params = useParams();
+  const orderId = params?.orderId as string;
   
   const order = useMemo(() => {
-    if (!params?.orderId) return null;
-    const orderId = `#${params.orderId}`;
+    if (!orderId) return null;
     return mockOrders.find(o => o.kode_order === orderId) || null;
-  }, [params]);
+  }, [orderId]);
 
   const [currentStatus, setCurrentStatus] = useState<OrderStatus>('Masuk Antrian');
 
@@ -47,14 +29,12 @@ export default function OrderDetailPage() {
     }
   }, [order]);
 
-  // This will be triggered once params are available but no order is found.
   if (params?.orderId && !order) {
     notFound();
   }
 
-  // Render a loading state while params are being resolved.
   if (!order) {
-    return <div>Loading...</div>; // Or a skeleton component
+    return <div>Loading...</div>;
   }
 
   const getStatusClass = (status: OrderStatus) => {
@@ -75,8 +55,7 @@ export default function OrderDetailPage() {
       case 'Eskalasi: Revisi di Luar Lingkup': return 'bg-orange-500 hover:bg-orange-500/90 text-orange-50 font-bold';
 
       // Negative/Cancellation statuses
-      case 'Dibatalkan (Tidak Dibayar)': return 'bg-red-500 hover:bg-red-500/90 text-red-50';
-      case 'Dibatalkan (Refund 90%)': return 'bg-red-500 hover:bg-red-500/90 text-red-50';
+      case 'Dibatalkan (Belum Dikerjakan)': return 'bg-red-500 hover:bg-red-500/90 text-red-50';
       case 'Dibatalkan (Sudah Dikerjakan)': return 'bg-red-600 hover:bg-red-600/90 text-red-50';
       case 'Tidak Puas (Refund 50%)': return 'bg-pink-500 hover:bg-pink-500/90 text-pink-50';
       case 'Ditutup (Tanpa Refund)': return 'bg-neutral-600 hover:bg-neutral-600/90 text-neutral-50';
@@ -101,7 +80,7 @@ export default function OrderDetailPage() {
             </CardHeader>
         </Card>
       
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         <div className="lg:col-span-12 xl:col-span-5 space-y-6">
             <Card>
                 <CardHeader>
@@ -144,7 +123,14 @@ export default function OrderDetailPage() {
                                 <SelectValue placeholder="Pilih status baru..." />
                             </SelectTrigger>
                             <SelectContent>
-                                {allOrderStatuses.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                                {allOrderStatusesCategorized.map((group) => (
+                                    <SelectGroup key={group.label}>
+                                        <SelectLabel>{group.label}</SelectLabel>
+                                        {group.statuses.map(status => (
+                                            <SelectItem key={status} value={status}>{status}</SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                ))}
                             </SelectContent>
                         </Select>
                     </div>
@@ -158,6 +144,26 @@ export default function OrderDetailPage() {
                     </Button>
                 </CardFooter>
             </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><History /> Log Aktivitas</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <ul className="space-y-4 text-sm">
+                        {order.log_aktivitas.map((log, index) => (
+                            <li key={index} className="flex gap-3">
+                                <div className="flex-shrink-0 h-5 w-5 rounded-full bg-primary/20 flex items-center justify-center">
+                                    <div className="h-2 w-2 rounded-full bg-primary"></div>
+                                </div>
+                                <div className="flex-grow">
+                                    <p className="font-medium">{log.aksi}</p>
+                                    <p className="text-muted-foreground capitalize">{log.oleh} - {new Date(log.waktu).toLocaleString('id-ID')}</p>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </CardContent>
+            </Card>
         </div>
 
         <div className="lg:col-span-6 xl:col-span-3 space-y-6">
@@ -169,7 +175,7 @@ export default function OrderDetailPage() {
                     <div>
                       <h4 className="font-semibold flex items-center gap-2"><Folder className="h-4 w-4" /> Drive Folder</h4>
                       <p className="text-sm text-muted-foreground">
-                        {order.driveFolderUrl ? `Last updated: 2 hours ago` : 'Belum dibuat'}
+                        {order.driveFolderUrl ? `Folder telah dibuat` : 'Belum dibuat'}
                       </p>
                       <Button asChild variant="outline" size="sm" className="mt-2 w-full" disabled={!order.driveFolderUrl}>
                         <a href={order.driveFolderUrl} target="_blank" rel="noopener noreferrer">

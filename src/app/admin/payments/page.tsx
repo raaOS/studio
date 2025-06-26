@@ -99,7 +99,7 @@ export default function AdminPaymentsPage() {
                 filteredOrders.map(order => (
                   <TableRow key={order.kode_order}>
                     <TableCell className="font-medium">
-                      <Link href={`/admin/orders/${order.kode_order.substring(1)}`} className="text-primary hover:underline">
+                      <Link href={`/admin/orders/${order.kode_order}`} className="text-primary hover:underline">
                         {order.kode_order}
                       </Link>
                     </TableCell>
@@ -111,12 +111,12 @@ export default function AdminPaymentsPage() {
                         {order.paymentStatus}
                       </Badge>
                     </TableCell>
-                    <TableCell>{order.timestamp}</TableCell>
+                    <TableCell>{new Date(order.timestamp).toLocaleDateString('id-ID')}</TableCell>
                     <TableCell className="text-right space-x-2">
                        {order.paymentStatus !== 'Lunas' && order.paymentStatus !== 'Batal' && <Button size="sm" variant="default">Validasi Pembayaran</Button>}
                        {order.paymentStatus === 'Belum Lunas' && <Button size="sm" variant="outline">Kirim Pengingat</Button>}
                        <Button asChild size="sm" variant="ghost">
-                          <Link href={`/admin/orders/${order.kode_order.substring(1)}`}>Detail</Link>
+                          <Link href={`/admin/orders/${order.kode_order}`}>Detail</Link>
                        </Button>
                     </TableCell>
                   </TableRow>

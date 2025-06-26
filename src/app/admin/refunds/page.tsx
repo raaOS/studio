@@ -55,7 +55,7 @@ export default function AdminRefundsPage() {
                 refunds.map((refund) => (
                   <TableRow key={refund.kode_order}>
                     <TableCell className="font-medium">
-                      <Link href={`/admin/orders/${refund.kode_order.substring(1)}`} className="text-primary hover:underline">
+                      <Link href={`/admin/orders/${refund.kode_order}`} className="text-primary hover:underline">
                         {refund.kode_order}
                       </Link>
                     </TableCell>

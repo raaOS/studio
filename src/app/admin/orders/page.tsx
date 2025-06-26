@@ -14,29 +14,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { mockOrders, mockCustomers } from '@/lib/data';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { mockOrders, allOrderStatusesCategorized } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import type { OrderStatus } from '@/lib/types';
 import { Folder } from 'lucide-react';
-
-const allOrderStatuses: OrderStatus[] = [
-  'Menunggu Pembayaran',
-  'Masuk Antrian',
-  'Masuk Antrian (Minggu Depan)',
-  'Sedang Dikerjakan',
-  'Siap Kirim Pratinjau',
-  'Menunggu Respon Klien',
-  'Sedang Direvisi',
-  'Selesai',
-  'Perlu Tinjauan Owner',
-  'Eskalasi: Revisi di Luar Lingkup',
-  'Dibatalkan (Belum Dikerjakan)',
-  'Dibatalkan (Sudah Dikerjakan)',
-  'Tidak Puas (Refund 50%)',
-  'Ditutup (Tanpa Refund)',
-];
-
 
 export default function AdminOrdersPage() {
   const [filters, setFilters] = useState({
@@ -107,10 +89,15 @@ export default function AdminOrdersPage() {
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="All">Semua Status</SelectItem>
-              {allOrderStatuses.map(status => (
-                  <SelectItem key={status} value={status}>{status}</SelectItem>
-              ))}
+                <SelectItem value="All">Semua Status</SelectItem>
+                {allOrderStatusesCategorized.map((group) => (
+                    <SelectGroup key={group.label}>
+                        <SelectLabel>{group.label}</SelectLabel>
+                        {group.statuses.map(status => (
+                            <SelectItem key={status} value={status}>{status}</SelectItem>
+                        ))}
+                    </SelectGroup>
+                ))}
             </SelectContent>
           </Select>
           <Select value={filters.pekan} onValueChange={value => handleFilterChange('pekan', value)}>
@@ -179,7 +166,7 @@ export default function AdminOrdersPage() {
                        {order.status_pesanan === 'Menunggu Respon Klien' && <Button size="sm" variant="outline">Kirim Pengingat</Button>}
                        {order.status_pesanan === 'Perlu Tinjauan Owner' && <Button size="sm" variant="destructive">Tinjau</Button>}
                        <Button asChild size="sm" variant="ghost">
-                          <Link href={`/admin/orders/${order.kode_order.substring(1)}`}>Detail</Link>
+                          <Link href={`/admin/orders/${order.kode_order}`}>Detail</Link>
                        </Button>
                     </TableCell>
                   </TableRow>

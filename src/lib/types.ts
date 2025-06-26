@@ -33,20 +33,17 @@ export type Customer = {
 };
 
 export type OrderStatus =
-  // Otomatis (Sistem)
   | 'Menunggu Pembayaran'
   | 'Masuk Antrian'
   | 'Masuk Antrian (Minggu Depan)'
   | 'Sedang Direvisi'
   | 'Menunggu Respon Klien'
   | 'Selesai'
-  | 'Dibatalkan (Tidak Dibayar)'
-  | 'Dibatalkan (Refund 90%)'
+  | 'Dibatalkan (Belum Dikerjakan)'
+  | 'Dibatalkan (Sudah Dikerjakan)'
   | 'Tidak Puas (Refund 50%)'
   | 'Ditutup (Tanpa Refund)'
-  // Intervensi Owner
   | 'Perlu Tinjauan Owner'
-  // Manual (Desainer)
   | 'Sedang Dikerjakan'
   | 'Siap Kirim Pratinjau'
   | 'Eskalasi: Revisi di Luar Lingkup';
@@ -56,14 +53,14 @@ export type Order = {
   kode_order: string;
   nama_klien: string;
   status_pesanan: OrderStatus;
-  tipe_pembayaran: 'LUNAS' | 'DP';
+  tipe_pembayaran: 'DP' | 'LUNAS';
   jumlah_transfer: number;
   total_harga: number;
   potongan_refund: number;
-  jenis_potongan: 'Biaya Admin & Slot Booking' | 'Biaya Produksi Awal' | '';
+  jenis_potongan: string;
   total_refund: number;
   status_refund: 'Sudah' | 'Belum' | '';
-  log_aktivitas?: {
+  log_aktivitas: {
     aksi: string;
     oleh: 'klien' | 'owner' | 'desainer' | 'sistem';
     waktu: string;

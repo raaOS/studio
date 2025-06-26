@@ -1,4 +1,4 @@
-import type { BudgetItem, Service, Order, Promo, Coupon, Banner, AdminUser, DriveActivityLog, CalendarActivityLog, MeetActivityLog, Category, CustomerProfile } from '@/lib/types';
+import type { BudgetItem, Service, Order, Promo, Coupon, Banner, AdminUser, DriveActivityLog, CalendarActivityLog, MeetActivityLog, Category, CustomerProfile, OrderStatus } from '@/lib/types';
 import { Briefcase, ShoppingCart, Store } from 'lucide-react';
 
 export const budgetItems: BudgetItem[] = [
@@ -191,10 +191,39 @@ export const services: Service[] = [
   },
 ];
 
+export const allOrderStatusesCategorized: { label: string; statuses: OrderStatus[] }[] = [
+    {
+        label: 'Status Otomatis (Sistem)',
+        statuses: [
+            'Menunggu Pembayaran',
+            'Masuk Antrian',
+            'Masuk Antrian (Minggu Depan)',
+            'Sedang Direvisi',
+            'Menunggu Respon Klien',
+            'Selesai',
+            'Dibatalkan (Belum Dikerjakan)',
+            'Dibatalkan (Sudah Dikerjakan)',
+            'Tidak Puas (Refund 50%)',
+            'Ditutup (Tanpa Refund)',
+        ],
+    },
+    {
+        label: 'Status Manual (Desainer)',
+        statuses: [
+            'Sedang Dikerjakan',
+            'Siap Kirim Pratinjau',
+            'Eskalasi: Revisi di Luar Lingkup',
+        ],
+    },
+    {
+        label: 'Status Intervensi (Owner)',
+        statuses: ['Perlu Tinjauan Owner'],
+    },
+];
 
 export const mockOrders: Order[] = [
   {
-    kode_order: '#001',
+    kode_order: 'DSN-240520-A1',
     nama_klien: 'John Doe',
     customerTelegram: '@johndoe',
     items: [
@@ -206,10 +235,10 @@ export const mockOrders: Order[] = [
     tipe_pembayaran: 'LUNAS',
     paymentStatus: 'Lunas',
     status_pesanan: 'Masuk Antrian',
-    timestamp: '2024-05-20',
+    timestamp: '2024-05-20T10:00:00Z',
     budget: 'UMKM',
     pekan: 'W1',
-    driveFolderUrl: '/uploads/orders/001',
+    driveFolderUrl: '/uploads/orders/DSN-240520-A1',
     potongan_refund: 0,
     jenis_potongan: '',
     total_refund: 0,
@@ -220,7 +249,7 @@ export const mockOrders: Order[] = [
     ]
   },
   {
-    kode_order: '#002',
+    kode_order: 'DSN-240522-B2',
     nama_klien: 'Jane Smith',
     customerTelegram: '@janesmith',
     items: [
@@ -231,128 +260,22 @@ export const mockOrders: Order[] = [
     tipe_pembayaran: 'DP',
     paymentStatus: 'DP',
     status_pesanan: 'Sedang Dikerjakan',
-    timestamp: '2024-05-22',
+    timestamp: '2024-05-22T14:00:00Z',
     budget: 'Kaki Lima',
     pekan: 'W1',
-    driveFolderUrl: '/uploads/orders/002',
-    potongan_refund: 0,
-    jenis_potongan: '',
-    total_refund: 0,
-    status_refund: '',
-  },
-  {
-    kode_order: '#003',
-    nama_klien: 'Bob Johnson',
-    customerTelegram: '@bobjohnson',
-    items: [
-      { name: 'Desain Visual Landing Page', quantity: 1, price: 950000, brief: {'Deskripsi Produk': 'Keripik singkong aneka rasa', 'Target Pasar': 'Anak muda, penyuka cemilan pedas', 'Pesan yang ingin disampaikan': 'Renyah, gurih, bikin nagih!'} },
-    ],
-    jumlah_transfer: 950000,
-    total_harga: 950000,
-    tipe_pembayaran: 'LUNAS',
-    paymentStatus: 'Lunas',
-    status_pesanan: 'Menunggu Respon Klien',
-    timestamp: '2024-05-23',
-    budget: 'E-Comm',
-    pekan: 'W2',
-    driveFolderUrl: '/uploads/orders/003',
-    potongan_refund: 0,
-    jenis_potongan: '',
-    total_refund: 0,
-    status_refund: '',
-  },
-  {
-    kode_order: '#004',
-    nama_klien: 'Agus Setiawan',
-    customerTelegram: '@agusset',
-    items: [
-        { name: 'Desain Spanduk / Banner Outdoor', quantity: 1, price: 85000, brief: {'Ukuran Banner': '3x1 meter', 'Teks Utama': 'Grand Opening Toko "Maju Jaya"', 'Informasi Tambahan': 'Diskon 20% selama minggu pertama.'} },
-    ],
-    jumlah_transfer: 85000,
-    total_harga: 85000,
-    tipe_pembayaran: 'LUNAS',
-    paymentStatus: 'Lunas',
-    status_pesanan: 'Selesai',
-    timestamp: '2024-05-24',
-    budget: 'UMKM',
-    pekan: 'W1',
-    driveFolderUrl: '/uploads/orders/004',
-    potongan_refund: 0,
-    jenis_potongan: '',
-    total_refund: 0,
-    status_refund: '',
-  },
-  {
-    kode_order: '#005',
-    nama_klien: 'Siti Aminah',
-    customerTelegram: '@sitiaminah',
-    items: [
-      { name: 'Desain Brosur / Pamflet Promosi', quantity: 1, price: 35000, brief: {'Judul': 'Promo Jasa Desain Grafis', 'Isi': 'Diskon 30% untuk semua layanan'} },
-    ],
-    jumlah_transfer: 0,
-    total_harga: 35000,
-    tipe_pembayaran: 'LUNAS',
-    paymentStatus: 'Belum Lunas',
-    status_pesanan: 'Menunggu Pembayaran',
-    timestamp: '2024-05-25',
-    budget: 'Kaki Lima',
-    pekan: 'W2',
-    driveFolderUrl: undefined,
-    potongan_refund: 0,
-    jenis_potongan: '',
-    total_refund: 0,
-    status_refund: '',
-  },
-  {
-    kode_order: '#006',
-    nama_klien: 'Budi Santoso',
-    customerTelegram: '@budisan',
-    items: [
-      { name: 'Desain Lanyard / Tali ID Card', quantity: 10, price: 20000, brief: { 'Detail': 'Desain lanyard untuk acara kantor.' } },
-    ],
-    jumlah_transfer: 100000,
-    total_harga: 200000,
-    tipe_pembayaran: 'DP',
-    paymentStatus: 'DP',
-    status_pesanan: 'Eskalasi: Revisi di Luar Lingkup',
-    timestamp: '2024-05-26',
-    budget: 'Kaki Lima',
-    pekan: 'W2',
-    driveFolderUrl: '/uploads/orders/006',
+    driveFolderUrl: '/uploads/orders/DSN-240522-B2',
     potongan_refund: 0,
     jenis_potongan: '',
     total_refund: 0,
     status_refund: '',
     log_aktivitas: [
-        { aksi: "Pesanan dibuat oleh klien", oleh: 'klien', waktu: '2024-05-26 08:00' },
-        { aksi: "Pembayaran divalidasi", oleh: 'owner', waktu: '2024-05-26 09:00' },
-        { aksi: "Status diubah ke 'Sedang Dikerjakan'", oleh: 'desainer', waktu: '2024-05-27 14:00' },
-        { aksi: "Status diubah ke 'Eskalasi: Revisi di Luar Lingkup'", oleh: 'desainer', waktu: '2024-05-28 16:00' }
+        { aksi: "Pesanan dibuat", oleh: 'klien', waktu: '2024-05-22 13:00' },
+        { aksi: "Pembayaran DP divalidasi", oleh: 'owner', waktu: '2024-05-22 13:30' },
+        { aksi: "Status diubah ke 'Sedang Dikerjakan'", oleh: 'desainer', waktu: '2024-05-22 14:00' }
     ]
   },
   {
-    kode_order: '#007',
-    nama_klien: 'Rina Wati',
-    customerTelegram: '@rinawati',
-    items: [
-      { name: 'Desain Buku Menu', quantity: 1, price: 60000, brief: { 'Detail': 'Menu untuk restoran seafood' } },
-    ],
-    jumlah_transfer: 30000,
-    total_harga: 60000,
-    tipe_pembayaran: 'DP',
-    paymentStatus: 'DP',
-    status_pesanan: 'Dibatalkan (Belum Dikerjakan)',
-    timestamp: '2024-05-27',
-    budget: 'UMKM',
-    pekan: 'W3',
-    driveFolderUrl: undefined,
-    potongan_refund: 6000,
-    jenis_potongan: 'Biaya Admin & Slot Booking',
-    total_refund: 24000,
-    status_refund: 'Belum',
-  },
-  {
-    kode_order: '#008',
+    kode_order: 'DSN-240528-C1',
     nama_klien: 'Eko Prasetyo',
     customerTelegram: '@ekopras',
     items: [
@@ -363,15 +286,45 @@ export const mockOrders: Order[] = [
     tipe_pembayaran: 'LUNAS',
     paymentStatus: 'Lunas',
     status_pesanan: 'Dibatalkan (Sudah Dikerjakan)',
-    timestamp: '2024-05-28',
+    timestamp: '2024-05-28T11:00:00Z',
     budget: 'E-Comm',
     pekan: 'W3',
-    driveFolderUrl: '/uploads/orders/008',
-    potongan_refund: 45000,
-    jenis_potongan: 'Biaya Produksi Awal',
-    total_refund: 135000,
+    driveFolderUrl: '/uploads/orders/DSN-240528-C1',
+    potongan_refund: 90000, // 50% dari total_harga
+    jenis_potongan: 'Sudah Masuk Produksi',
+    total_refund: 90000,
     status_refund: 'Sudah',
-  }
+    log_aktivitas: [
+        { aksi: "Pesanan dibuat", oleh: 'klien', waktu: '2024-05-28 09:00' },
+        { aksi: "Status diubah ke 'Sedang Dikerjakan'", oleh: 'desainer', waktu: '2024-05-28 10:00' },
+        { aksi: "Pesanan dibatalkan oleh klien", oleh: 'klien', waktu: '2024-05-28 11:00' }
+    ]
+  },
+  {
+    kode_order: 'DSN-240527-D4',
+    nama_klien: 'Rina Wati',
+    customerTelegram: '@rinawati',
+    items: [
+      { name: 'Desain Buku Menu', quantity: 1, price: 60000, brief: { 'Detail': 'Menu untuk restoran seafood' } },
+    ],
+    jumlah_transfer: 30000,
+    total_harga: 60000,
+    tipe_pembayaran: 'DP',
+    paymentStatus: 'DP',
+    status_pesanan: 'Dibatalkan (Belum Dikerjakan)',
+    timestamp: '2024-05-27T16:00:00Z',
+    budget: 'UMKM',
+    pekan: 'W3',
+    driveFolderUrl: undefined,
+    potongan_refund: 0,
+    jenis_potongan: 'DP Hangus',
+    total_refund: 0,
+    status_refund: 'Sudah',
+    log_aktivitas: [
+        { aksi: "Pesanan dibuat", oleh: 'klien', waktu: '2024-05-27 15:00' },
+        { aksi: "Pesanan dibatalkan oleh klien", oleh: 'klien', waktu: '2024-05-27 16:00' },
+    ]
+  },
 ];
 
 // Generate mock customer data from orders
