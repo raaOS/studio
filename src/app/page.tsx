@@ -84,14 +84,14 @@ function OrderWorkflow() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-16 space-y-24">
+      <main className="flex-grow container mx-auto px-4 pt-10 pb-16 space-y-16">
         
         {/* Customer Info */}
         <section id="info-section" className="max-w-2xl mx-auto">
           <Card>
             <CardHeader>
-              <CardTitle className="font-headline text-2xl">Data Diri Anda</CardTitle>
-              <CardDescription>Isi data Anda untuk melanjutkan proses pemesanan.</CardDescription>
+              <CardTitle className="font-headline text-2xl">Langkah 1: Kita isi data diri dulu, yuk?</CardTitle>
+              <CardDescription>Cuma butuh nama, nomor telepon, sama username Telegram biar gampang dihubungin.</CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
@@ -154,12 +154,12 @@ function OrderWorkflow() {
         <section id="payment-section" className="max-w-2xl mx-auto">
             <Card>
                 <CardHeader>
-                    <CardTitle className="font-headline text-2xl">Cara Pembayaran</CardTitle>
-                    <CardDescription>Pilih metode pembayaran yang Anda inginkan.</CardDescription>
+                    <CardTitle className="font-headline text-2xl">Langkah 2: Mau bayar pakai cara apa?</CardTitle>
+                    <CardDescription>Bisa bayar setengah dulu atau lunas sekalian, bebas!</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <RadioGroup 
-                        className="grid grid-cols-2 gap-4"
+                        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
                         onValueChange={(value) => handlePaymentSelect(value as 'dp' | 'lunas')}
                         value={paymentMethod || ''}
                     >
@@ -167,7 +167,7 @@ function OrderWorkflow() {
                             <RadioGroupItem value="dp" id="payment-dp" className="peer sr-only" />
                             <Label
                                 htmlFor="payment-dp"
-                                className="flex h-full flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                                className="flex h-full flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all"
                             >
                                 <h3 className="font-semibold text-lg">DP 50%</h3>
                                 <p className="text-muted-foreground text-sm text-center">Bayar setengahnya sekarang, sisanya setelah pratinjau.</p>
@@ -177,7 +177,7 @@ function OrderWorkflow() {
                             <RadioGroupItem value="lunas" id="payment-lunas" className="peer sr-only" />
                             <Label
                                 htmlFor="payment-lunas"
-                                className="flex h-full flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                                className="flex h-full flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all"
                             >
                                 <h3 className="font-semibold text-lg">Lunas</h3>
                                 <p className="text-muted-foreground text-sm text-center">Bayar lunas sekarang dan dapatkan prioritas pengerjaan.</p>
@@ -190,24 +190,24 @@ function OrderWorkflow() {
 
         {/* Budget Selection */}
         <section id="budget-selection-section">
-            <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">Pilih Budget Anda</h2>
-                <p className="text-lg text-muted-foreground mt-2">Pilih paket yang sesuai dengan kebutuhan Anda.</p>
+            <div className="text-center mb-10">
+                <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">Langkah 3: Budget kamu yang mana, nih?</h2>
+                <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">Harga layanan nanti bakal nyesuain sama pilihan budget kamu di sini.</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                 {budgetItems.map((item) => (
                 <Card 
                     key={item.id}
                     onClick={() => handleBudgetSelect(item)}
-                    className={`cursor-pointer text-center h-full flex flex-col hover:shadow-lg transition-all duration-300 ${selectedBudget?.id === item.id ? 'border-primary ring-2 ring-primary' : 'hover:border-primary'}`}
+                    className={`cursor-pointer text-center h-full flex flex-col hover:shadow-lg transition-all duration-300 ${selectedBudget?.id === item.id ? 'border-primary ring-2 ring-primary shadow-lg' : 'hover:border-primary/50'}`}
                 >
-                    <CardHeader>
+                    <CardHeader className="pt-8">
                         <item.icon className="mx-auto h-12 w-12 text-primary mb-4" />
-                        <CardTitle className="font-headline">{item.title}</CardTitle>
+                        <CardTitle className="font-headline text-xl">{item.title}</CardTitle>
                         <CardDescription>{item.priceRange}</CardDescription>
                     </CardHeader>
-                    <CardContent className="flex-grow flex items-center justify-center">
-                        <p className="text-muted-foreground px-4">{item.description}</p>
+                    <CardContent className="flex-grow flex items-center justify-center p-6">
+                        <p className="text-muted-foreground">{item.description}</p>
                     </CardContent>
                 </Card>
                 ))}
@@ -216,9 +216,9 @@ function OrderWorkflow() {
         
         {/* Catalog */}
         <section id="catalog-section" className="pt-8 flex-grow">
-            <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">Pilih Layanan</h2>
-                <p className="text-lg text-muted-foreground mt-2">Tambahkan layanan ke keranjang Anda. Harga yang ditampilkan sesuai dengan paket budget yang Anda pilih.</p>
+            <div className="text-center mb-10">
+                <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">Langkah 4: Terakhir, pilih layanannya!</h2>
+                <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">Scroll ke bawah dan masukkin semua yang kamu butuhin ke keranjang.</p>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-8">
                 <div className="lg:col-span-8 xl:col-span-9">
