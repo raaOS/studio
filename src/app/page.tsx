@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import Image from 'next/image';
 
 // Components
@@ -9,7 +9,6 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { OrderSummary } from '@/components/OrderSummary';
 import { FloatingCart } from '@/components/FloatingCart';
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ProductCarousel } from '@/components/ProductCarousel';
 import { PromotionalBannerCarousel } from '@/components/PromotionalBannerCarousel';
 import { PortfolioSection } from '@/components/PortfolioSection';
@@ -24,8 +23,7 @@ import { services, mockCategories } from '@/lib/data';
 import type { Service } from '@/lib/types';
 
 
-function OrderWorkflow() {
-  const [modalImage, setModalImage] = useState<{src: string, alt: string} | null>(null);
+function HomePageContent() {
 
   const serviceCategories = useMemo(() => {
     return services.reduce((acc, service) => {
@@ -81,24 +79,6 @@ function OrderWorkflow() {
             </div>
         </section>
       </main>
-
-      <Dialog open={!!modalImage} onOpenChange={(isOpen) => !isOpen && setModalImage(null)}>
-        <DialogContent className="p-0 border-0 max-w-4xl bg-transparent shadow-none">
-          <div className="sr-only">
-            <DialogTitle>{modalImage?.alt}</DialogTitle>
-            <DialogDescription>Gambar pratinjau untuk {modalImage?.alt}</DialogDescription>
-          </div>
-            {modalImage && (
-                <Image 
-                    src={modalImage.src} 
-                    alt={modalImage.alt} 
-                    width={1200}
-                    height={1200}
-                    className="object-contain w-full h-auto rounded-lg"
-                />
-            )}
-        </DialogContent>
-      </Dialog>
       
       <FloatingCart />
       <Footer />
@@ -110,7 +90,7 @@ function OrderWorkflow() {
 export default function Home() {
   return (
     <CartProvider>
-      <OrderWorkflow />
+      <HomePageContent />
     </CartProvider>
   )
 }
