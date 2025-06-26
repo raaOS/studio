@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useRef } from 'react';
@@ -28,7 +29,7 @@ export function ProductCarousel({ title, services }: ProductCarouselProps) {
         
         <div
           ref={scrollContainerRef}
-          className="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory pb-4 px-14"
+          className="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory pb-4 md:px-14"
         >
           {services.map((service) => (
             <div key={service.id} className="w-64 shrink-0 snap-start">
