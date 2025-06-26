@@ -84,7 +84,7 @@ function OrderWorkflow() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow container mx-auto px-4 pt-10 pb-16 space-y-12">
+      <main className="flex-grow container mx-auto px-4 pt-10 pb-16 space-y-8">
         
         {/* Customer Info */}
         <section id="info-section" className="max-w-2xl mx-auto">
@@ -158,32 +158,22 @@ function OrderWorkflow() {
                     <CardDescription>Bisa bayar setengah dulu atau lunas sekalian, bebas!</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <RadioGroup 
-                        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-                        onValueChange={(value) => handlePaymentSelect(value as 'dp' | 'lunas')}
-                        value={paymentMethod || ''}
-                    >
-                        <div>
-                            <RadioGroupItem value="dp" id="payment-dp" className="peer sr-only" />
-                            <Label
-                                htmlFor="payment-dp"
-                                className="flex h-full flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all"
-                            >
-                                <h3 className="font-semibold text-lg">DP 50%</h3>
-                                <p className="text-muted-foreground text-sm text-center">Bayar setengahnya sekarang, sisanya setelah pratinjau.</p>
-                            </Label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div
+                            onClick={() => handlePaymentSelect('dp')}
+                            className={`flex h-full flex-col items-center justify-center rounded-md border-2 p-4 cursor-pointer transition-all ${paymentMethod === 'dp' ? 'border-primary bg-accent' : 'border-muted bg-popover hover:bg-accent/50'}`}
+                        >
+                            <h3 className="font-semibold text-lg">DP 50%</h3>
+                            <p className="text-muted-foreground text-sm text-center">Bayar setengahnya sekarang, sisanya setelah pratinjau.</p>
                         </div>
-                        <div>
-                            <RadioGroupItem value="lunas" id="payment-lunas" className="peer sr-only" />
-                            <Label
-                                htmlFor="payment-lunas"
-                                className="flex h-full flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all"
-                            >
-                                <h3 className="font-semibold text-lg">Lunas</h3>
-                                <p className="text-muted-foreground text-sm text-center">Bayar lunas sekarang dan dapatkan prioritas pengerjaan.</p>
-                            </Label>
+                        <div
+                            onClick={() => handlePaymentSelect('lunas')}
+                            className={`flex h-full flex-col items-center justify-center rounded-md border-2 p-4 cursor-pointer transition-all ${paymentMethod === 'lunas' ? 'border-primary bg-accent' : 'border-muted bg-popover hover:bg-accent/50'}`}
+                        >
+                            <h3 className="font-semibold text-lg">Lunas</h3>
+                            <p className="text-muted-foreground text-sm text-center">Bayar lunas sekarang dan dapatkan prioritas pengerjaan.</p>
                         </div>
-                    </RadioGroup>
+                    </div>
                 </CardContent>
             </Card>
         </section>
@@ -191,8 +181,8 @@ function OrderWorkflow() {
         {/* Budget Selection */}
         <section id="budget-selection-section">
             <div className="text-center mb-10">
-                <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">Langkah 3: Budget kamu yang mana, nih?</h2>
-                <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">Harga layanan nanti bakal nyesuain sama pilihan budget kamu di sini.</p>
+                <h2 className="text-2xl font-headline font-semibold text-foreground">Langkah 3: Budget kamu yang mana, nih?</h2>
+                <p className="text-sm text-muted-foreground mt-2 max-w-2xl mx-auto">Harga layanan nanti bakal nyesuain sama pilihan budget kamu di sini.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                 {budgetItems.map((item) => (
@@ -217,8 +207,8 @@ function OrderWorkflow() {
         {/* Catalog */}
         <section id="catalog-section" className="pt-8 flex-grow">
             <div className="text-center mb-10">
-                <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">Langkah 4: Terakhir, pilih layanannya!</h2>
-                <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">Scroll ke bawah dan masukkin semua yang kamu butuhin ke keranjang.</p>
+                <h2 className="text-2xl font-headline font-semibold text-foreground">Langkah 4: Terakhir, pilih layanannya!</h2>
+                <p className="text-sm text-muted-foreground mt-2 max-w-2xl mx-auto">Scroll ke bawah dan masukkin semua yang kamu butuhin ke keranjang.</p>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-8">
                 <div className="lg:col-span-8 xl:col-span-9">
