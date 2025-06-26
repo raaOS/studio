@@ -16,7 +16,6 @@ const CreateOrderFolderInputSchema = z.object({
   orderId: z.string().describe('The ID of the order.'),
   customerName: z.string().describe('The name of the customer.'),
   folderTemplate: z.string().describe('The template for the folder name, e.g., "[OrderID] - [CustomerName]".'),
-  parentFolderId: z.string().optional().describe('The ID of the parent folder in Google Drive where the new folder will be created.'),
 });
 export type CreateOrderFolderInput = z.infer<typeof CreateOrderFolderInputSchema>;
 
@@ -41,7 +40,7 @@ const createOrderFolderFlow = ai.defineFlow(
   },
   async (input) => {
     const serviceAccountJson = process.env.DRIVE_SERVICE_ACCOUNT_JSON;
-    const parentFolderId = input.parentFolderId || process.env.DRIVE_PARENT_FOLDER_ID;
+    const parentFolderId = process.env.DRIVE_PARENT_FOLDER_ID;
 
     if (!serviceAccountJson) {
       const errorMsg = 'DRIVE_SERVICE_ACCOUNT_JSON environment variable is not set.';
@@ -50,7 +49,7 @@ const createOrderFolderFlow = ai.defineFlow(
     }
     
     if (!parentFolderId) {
-       const errorMsg = 'Parent Folder ID is not provided or set in DRIVE_PARENT_FOLDER_ID environment variable.';
+       const errorMsg = 'DRIVE_PARENT_FOLDER_ID environment variable is not set.';
        console.error(errorMsg);
        return { success: false, folderName: '', error: errorMsg };
     }

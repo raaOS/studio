@@ -27,7 +27,6 @@ export default function DriveAutomationPage() {
   const [testOrderId, setTestOrderId] = useState('DSN-TEST-001');
   const [testCustomerName, setTestCustomerName] = useState('Pelanggan Uji');
   const [folderTemplate, setFolderTemplate] = useState('[OrderID] - [CustomerName]');
-  const [parentFolderId, setParentFolderId] = useState('');
   const [activityLogs, setActivityLogs] = useState<DriveActivityLog[]>(mockDriveActivityLogs);
 
   const handleTestDrive = async () => {
@@ -39,15 +38,6 @@ export default function DriveAutomationPage() {
       });
       return;
     }
-    
-    if (!parentFolderId) {
-       toast({
-        title: 'Parent Folder ID Diperlukan',
-        description: 'Mohon masukkan ID folder utama di Google Drive dari Langkah 4.',
-        variant: 'destructive',
-      });
-      return;
-    }
 
     setIsTesting(true);
     try {
@@ -55,7 +45,6 @@ export default function DriveAutomationPage() {
         orderId: testOrderId,
         customerName: testCustomerName,
         folderTemplate: folderTemplate,
-        parentFolderId: parentFolderId,
       });
 
       if (result.success && result.folderId) {
@@ -79,7 +68,7 @@ export default function DriveAutomationPage() {
         setActivityLogs(prevLogs => [newLog, ...prevLogs]);
 
       } else {
-        throw new Error(result.error || 'Gagal membuat folder. Pastikan kredensial JSON dan API sudah benar.');
+        throw new Error(result.error || 'Gagal membuat folder. Pastikan semua variabel .env sudah benar.');
       }
     } catch (error: any) {
       toast({
@@ -125,7 +114,7 @@ export default function DriveAutomationPage() {
             
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-3"><KeyRound className="h-6 w-6"/> Langkah 2: Dapatkan Kunci API (Service Account)</CardTitle>
+                    <CardTitle className="flex items-center gap-3"><KeyRound className="h-6 w-6"/> Langkah 2: Buat Kunci API (Service Account)</CardTitle>
                     <CardDescription>Jika Anda sudah punya kunci dari proses sebelumnya, Anda bisa melewati ini. Jika belum, ikuti langkah ini untuk membuat "kunci" khusus untuk bot kita.</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -201,17 +190,16 @@ export default function DriveAutomationPage() {
                             </div>
                         </li>
                         <li>Buka folder tersebut. ID-nya adalah bagian terakhir dari URL di browser Anda.</li>
+                        <li>Salin ID tersebut dan tempelkan ke file <code>.env</code> Anda dengan nama variabel <code className="bg-muted px-1 py-0.5 rounded">DRIVE_PARENT_FOLDER_ID</code>.</li>
                      </ol>
                      <div className="space-y-2 pt-2">
-                        <Label htmlFor="parent-folder-id">Tempelkan ID Folder Induk di Sini</Label>
-                        <Input 
-                        id="parent-folder-id" 
-                        placeholder="Contoh: 1a2b3c4d5e6f7g8h9i0j_kL"
-                        value={parentFolderId}
-                        onChange={(e) => setParentFolderId(e.target.value)}
-                        />
+                        <Label>Format di file <code>.env</code></Label>
+                        <code className="relative block rounded bg-muted px-4 py-2 mt-2 text-sm">
+                           <span className="text-primary font-semibold">DRIVE_PARENT_FOLDER_ID</span>=
+                           <span className="text-muted-foreground">ID_FOLDER_ANDA_DI_SINI</span>
+                        </code>
                         <p className="text-xs text-muted-foreground mt-1">
-                        Contoh URL: drive.google.com/drive/folders/<b>ID_FOLDER_ANDA</b>
+                          Contoh URL: drive.google.com/drive/folders/<b>ID_FOLDER_ANDA</b>
                         </p>
                     </div>
                 </CardContent>
@@ -247,7 +235,7 @@ export default function DriveAutomationPage() {
           <Card className="sticky top-24">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2"><TestTube2 /> Uji Integrasi</CardTitle>
-                <CardDescription>Setelah menyelesaikan langkah 1-4, uji koneksi Anda dengan membuat folder tes.</CardDescription>
+                <CardDescription>Setelah menyelesaikan semua langkah, uji koneksi Anda dengan membuat folder tes.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="space-y-2">

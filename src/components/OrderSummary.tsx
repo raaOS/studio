@@ -8,6 +8,7 @@ import { ShoppingCart, Trash2 } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { sendTelegramUpdate } from '@/ai/flows/telegram-bot-integration';
+import { createOrderFolder } from '@/ai/flows/create-drive-folder';
 import { useState, useEffect } from "react";
 import type { Customer } from "@/lib/types";
 
@@ -34,49 +35,71 @@ export function OrderSummary() {
             return;
         }
 
-        if (!customer?.telegram) {
+        if (!customer?.telegram || !customer?.name) {
             toast({
                 title: 'Data Pelanggan Tidak Lengkap',
-                description: 'Mohon kembali ke Langkah 1 dan isi username Telegram Anda.',
+                description: 'Mohon kembali ke Langkah 1 dan isi nama serta username Telegram Anda.',
                 variant: 'destructive',
             });
             return;
         }
         
         setIsSubmitting(true);
-        const orderId = `#${Math.floor(1000 + Math.random() * 9000)}`;
-        const orderDetails = cartItems.map(item => `${item.name} (x${item.quantity})`).join(', ');
-        const message = `Halo ${customer.name}, pesanan baru Anda telah kami terima.
-Rincian: ${orderDetails}.
-Total: ${formatRupiah(totalPrice)}.
-Metode Bayar: ${paymentMethod === 'dp' ? 'DP 50%' : 'Lunas'}.
-Terima kasih!`;
+        const orderId = `#${String(Math.floor(1000 + Math.random() * 9000)).padStart(4, '0')}`;
+        let folderUrl = 'Tidak dibuat (konfigurasi .env belum lengkap)';
+        let folderCreationError = '';
 
         try {
-            const result = await sendTelegramUpdate({
-                telegramId: customer.telegram,
+            const folderResult = await createOrderFolder({
                 orderId: orderId,
+                customerName: customer.name,
+                folderTemplate: '[OrderID] - [CustomerName]',
+            });
+
+            if (folderResult.success && folderResult.folderUrl) {
+                folderUrl = folderResult.folderUrl;
+            } else {
+                folderCreationError = folderResult.error || 'Gagal membuat folder di Google Drive.';
+            }
+        } catch (error: any) {
+            console.error("Failed to create Drive folder:", error);
+            folderCreationError = error.message || 'Terjadi kesalahan saat menghubungi layanan Drive.';
+        }
+
+        const orderDetails = cartItems.map(item => `- ${item.name} (x${item.quantity})`).join('\n');
+        const message = `✅ *Pesanan Baru Diterima!*\n\n*Order ID:* \`${orderId}\`\n*Nama:* ${customer.name}\n*Telegram:* ${customer.telegram}\n\n*Rincian Pesanan:*\n${orderDetails}\n\n*Total Tagihan:* ${formatRupiah(totalPrice)}\n*Metode Bayar:* ${paymentMethod === 'dp' ? 'DP 50%' : 'Lunas'}\n\n*Folder Google Drive:*\n${folderUrl}\n\nTerima kasih! Tim kami akan segera memprosesnya.`;
+
+        try {
+            const telegramResult = await sendTelegramUpdate({
+                telegramId: customer.telegram,
                 message: message,
             });
 
-            if (result.success) {
+            if (telegramResult.success) {
                 toast({
                     title: 'Pesanan Terkirim!',
-                    description: `Terima kasih! Pesanan Anda ${orderId} sedang diproses. Cek Telegram untuk konfirmasi.`,
+                    description: `Pesanan ${orderId} sedang diproses. Cek Telegram untuk konfirmasi.`,
                 });
+                if (folderCreationError) {
+                    toast({
+                        title: 'Catatan Google Drive',
+                        description: folderCreationError,
+                        variant: 'destructive'
+                    });
+                }
                 clearCart();
             } else {
                  toast({
-                    title: 'Gagal Mengirim Pesanan',
-                    description: result.error || 'Terjadi kesalahan. Pastikan Anda sudah memulai chat dengan bot kami.',
+                    title: 'Gagal Mengirim Notifikasi',
+                    description: telegramResult.error || 'Pastikan Anda sudah memulai chat dengan bot kami.',
                     variant: 'destructive',
                 });
             }
         } catch (error: any) {
-            console.error("Failed to send order:", error);
+            console.error("Failed to send order via Telegram:", error);
             toast({
                 title: 'Gagal Mengirim Pesanan',
-                description: error.message || 'Terjadi kesalahan. Silakan coba lagi atau hubungi admin.',
+                description: error.message || 'Terjadi kesalahan. Silakan coba lagi.',
                 variant: 'destructive',
             });
         } finally {
