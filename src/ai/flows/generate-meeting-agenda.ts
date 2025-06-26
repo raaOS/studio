@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { googleAI } from '@genkit-ai/googleai';
 
 const GenerateMeetingAgendaInputSchema = z.object({
   orderId: z.string().describe('The ID of the order for which the meeting is scheduled.'),
@@ -34,6 +35,7 @@ export async function generateMeetingAgenda(
 
 const prompt = ai.definePrompt({
   name: 'generateMeetingAgendaPrompt',
+  model: googleAI.model('gemini-1.5-flash-latest'),
   input: {schema: GenerateMeetingAgendaInputSchema},
   output: {schema: GenerateMeetingAgendaOutputSchema},
   prompt: `You are an AI assistant designed to generate meeting agendas for client meetings.

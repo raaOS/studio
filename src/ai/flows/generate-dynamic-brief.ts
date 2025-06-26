@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { googleAI } from '@genkit-ai/googleai';
 
 const GenerateDynamicBriefInputSchema = z.object({
   serviceName: z.string().describe('The name of the design service.'),
@@ -29,6 +30,7 @@ export async function generateDynamicBrief(
 
 const prompt = ai.definePrompt({
   name: 'generateDynamicBriefPrompt',
+  model: googleAI.model('gemini-1.5-flash-latest'),
   input: {schema: GenerateDynamicBriefInputSchema},
   output: {schema: GenerateDynamicBriefOutputSchema},
   prompt: `You are a creative assistant helping a customer to provide a design brief.

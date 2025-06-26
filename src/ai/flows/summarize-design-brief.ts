@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { googleAI } from '@genkit-ai/googleai';
 
 const SummarizeDesignBriefInputSchema = z.object({
   designBriefs: z.array(z.record(z.string())).describe('An array of design briefs from the customer, where each brief is an object of question-answer pairs.'),
@@ -29,6 +30,7 @@ export async function summarizeDesignBrief(input: SummarizeDesignBriefInput): Pr
 
 const summarizeDesignBriefPrompt = ai.definePrompt({
   name: 'summarizeDesignBriefPrompt',
+  model: googleAI.model('gemini-1.5-flash-latest'),
   input: {schema: SummarizeDesignBriefInputSchema},
   output: {schema: SummarizeDesignBriefOutputSchema},
   prompt: `You are an AI assistant helping an Urgent Studio admin to quickly understand customer design briefs.
