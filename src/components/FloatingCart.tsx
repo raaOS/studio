@@ -1,4 +1,3 @@
-
 "use client";
 
 import { motion, useAnimationControls } from "framer-motion";
@@ -57,11 +56,8 @@ export function FloatingCart() {
                         <span className="text-xs font-medium">Rincian Pesanan</span>
                     </Button>
                 </SheetTrigger>
-                <SheetContent side="bottom" className="rounded-t-2xl p-0 max-h-[90vh]">
-                  <SheetHeader>
-                    <SheetTitle className="sr-only">Rincian Pesanan</SheetTitle>
-                  </SheetHeader>
-                  <div className="overflow-y-auto">
+                <SheetContent side="bottom" className="rounded-t-2xl p-0 max-h-[90vh] flex flex-col">
+                  <div className="flex-1 overflow-y-auto">
                       <OrderSummary />
                   </div>
                 </SheetContent>

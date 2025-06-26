@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useCart } from "@/contexts/CartContext";
@@ -136,7 +135,7 @@ export function OrderSummary() {
     const finalPrice = paymentMethod === 'dp' ? totalPrice / 2 : totalPrice;
 
     return (
-        <Card className="shadow-lg border-border">
+        <Card className="shadow-lg border-border flex flex-col h-full bg-background">
             <CardHeader>
                 <CardTitle className="font-headline flex items-center gap-2">
                     <ShoppingCart className="h-6 w-6" />
@@ -146,9 +145,9 @@ export function OrderSummary() {
                     {totalItems} Item | Total: {formatRupiah(totalPrice)}
                 </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 flex-1 overflow-y-auto">
                 {cartItems.length > 0 ? (
-                    <div className="overflow-y-auto pr-2 space-y-3">
+                    <div className="space-y-3">
                         {cartItems.map(item => (
                             <div key={item.id} className="flex justify-between items-start text-sm">
                                 <div>
@@ -258,6 +257,8 @@ export function OrderSummary() {
                       </div>
                 </div>
 
+                <Separator />
+
                 <div className="space-y-2">
                     <Label htmlFor="coupon-code" className="text-sm font-medium">Punya Kode Kupon?</Label>
                     <div className="flex space-x-2">
@@ -281,7 +282,7 @@ export function OrderSummary() {
                 )}
 
             </CardContent>
-            <CardFooter>
+            <CardFooter className="border-t pt-6">
                 <Button className="w-full" onClick={handleSubmitOrder} disabled={isSubmitting || totalItems === 0 || !paymentMethod}>
                     {isSubmitting ? 'Mengirim...' : 'Kirim Pesanan'}
                 </Button>
