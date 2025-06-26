@@ -7,11 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
 import type { Service } from '@/lib/types';
-import { formatRupiah, cn } from '@/lib/utils';
 import { useState } from 'react';
 import { ProductDetailDialog } from './ProductDetailDialog';
 import { PlusCircle } from 'lucide-react';
-import { budgetItems } from '@/lib/data';
 
 interface ServiceCardProps {
   service: Service;
@@ -40,14 +38,6 @@ export function ServiceCard({ service }: ServiceCardProps) {
 
         <CardContent className="p-4 flex-grow">
           <CardTitle className="font-headline text-lg mb-2">{service.name}</CardTitle>
-          <div className="space-y-1 text-sm">
-            {budgetItems.map(budget => (
-              <div key={budget.id} className="flex justify-between items-center">
-                <span className="text-muted-foreground">{budget.title}</span>
-                <span className="font-medium">{formatRupiah(service.prices[budget.id])}</span>
-              </div>
-            ))}
-          </div>
         </CardContent>
 
         <CardFooter className="p-4 pt-0">
