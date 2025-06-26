@@ -1,47 +1,63 @@
 
 "use client";
 
+import Link from 'next/link';
 import { motion } from "framer-motion";
-import { ShoppingCart } from "lucide-react";
+import { PackageSearch, ShoppingCart } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
-import { formatRupiah } from "@/lib/utils";
 import { OrderSummary } from "./OrderSummary";
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export function FloatingCart() {
-  const { totalItems, totalPrice } = useCart();
+  const isMobile = useIsMobile();
+  const { totalItems } = useCart();
 
-  if (totalItems === 0) {
+  if (!isMobile) {
     return null;
   }
 
   return (
-    <Sheet>
-      <motion.div
-        className="fixed bottom-4 left-4 right-4 z-40"
-        initial={{ y: 100 }}
-        animate={{ y: 0 }}
-        exit={{ y: 100 }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      >
-        <SheetTrigger asChild>
-          <Button className="w-full h-14 rounded-full shadow-lg text-lg flex justify-between items-center px-6 bg-primary hover:bg-primary/90">
-            <div className="flex items-center gap-3">
-              <div className="bg-primary-foreground/20 rounded-full p-2">
-                <ShoppingCart className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <span className="text-primary-foreground">{totalItems} item</span>
+    <>
+      {/* Spacer to prevent content from being hidden behind the fixed nav bar */}
+      <div className="block h-16 md:hidden" /> 
+
+      <Sheet>
+        <motion.div 
+            className="fixed bottom-0 left-0 right-0 z-40 block border-t bg-background/95 backdrop-blur-sm md:hidden"
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        >
+            <div className="container mx-auto grid h-16 grid-cols-2 items-stretch">
+                <Button asChild variant="ghost" className="h-full flex-col gap-1 rounded-none">
+                    <Link href="/track">
+                        <PackageSearch className="h-6 w-6" />
+                        <span className="text-xs font-medium">Lacak Pesanan</span>
+                    </Link>
+                </Button>
+
+                <SheetTrigger asChild>
+                    <Button variant="ghost" className="relative h-full flex-col gap-1 rounded-none">
+                        {totalItems > 0 && (
+                            <span className="absolute right-8 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                                {totalItems}
+                            </span>
+                        )}
+                        <ShoppingCart className="h-6 w-6" />
+                        <span className="text-xs font-medium">Rincian Pesanan</span>
+                    </Button>
+                </SheetTrigger>
             </div>
-            <span className="text-primary-foreground font-semibold">{formatRupiah(totalPrice)}</span>
-          </Button>
-        </SheetTrigger>
-      </motion.div>
-      <SheetContent side="bottom" className="rounded-t-2xl p-0 max-h-[90vh]">
-        <div className="overflow-y-auto">
-            <OrderSummary />
-        </div>
+        </motion.div>
+
+        <SheetContent side="bottom" className="rounded-t-2xl p-0 max-h-[90vh]">
+            <div className="overflow-y-auto">
+                <OrderSummary />
+            </div>
       </SheetContent>
     </Sheet>
+    </>
   );
 }

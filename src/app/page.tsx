@@ -253,7 +253,7 @@ function OrderWorkflow() {
         </DialogContent>
       </Dialog>
       
-      {isMobile && <FloatingCart />}
+      <FloatingCart />
       <Footer />
     </div>
   );
