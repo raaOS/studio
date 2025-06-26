@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Progress } from '@/components/ui/progress';
 import {
   Table,
   TableBody,
@@ -120,14 +119,12 @@ export default function AdminCapacityPage() {
                             <span className="text-sm font-medium">Minggu ini</span>
                             <span className="text-sm text-muted-foreground">3/5 (60%)</span>
                         </div>
-                        <Progress value={60} />
                     </div>
                     <div>
                          <div className="flex justify-between items-baseline mb-1">
                             <span className="text-sm font-medium">Bulan ini</span>
                             <span className="text-sm text-muted-foreground">12/20 (60%)</span>
                         </div>
-                        <Progress value={60} />
                     </div>
                 </CardContent>
             </Card>
