@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { ServiceCard } from './ServiceCard';
 import type { Service } from '@/lib/types';
 import { Button } from './ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ProductCarouselProps {
   title: string;
@@ -14,32 +15,36 @@ interface ProductCarouselProps {
 export function ProductCarousel({ title, services }: ProductCarouselProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(true);
+  const [showRightArrow, setShowRightArrow] = useState(false);
 
-  // This effect will update arrow visibility based on scroll position
-  // and also when the component or window resizes.
+  const updateArrowVisibility = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = container;
+    const tolerance = 1; // Add tolerance for sub-pixel calculations
+
+    setShowLeftArrow(scrollLeft > tolerance);
+    setShowRightArrow(scrollLeft < scrollWidth - clientWidth - tolerance);
+  }, []);
+
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
     
-    const updateArrowVisibility = () => {
-        const { scrollLeft, scrollWidth, clientWidth } = container;
-        const tolerance = 1; // Add tolerance for sub-pixel calculations
-        setShowLeftArrow(scrollLeft > tolerance);
-        setShowRightArrow(scrollLeft < scrollWidth - clientWidth - tolerance);
-    };
-
+    // ResizeObserver is more reliable for detecting element size changes
     const resizeObserver = new ResizeObserver(updateArrowVisibility);
     resizeObserver.observe(container);
     container.addEventListener('scroll', updateArrowVisibility, { passive: true });
 
-    updateArrowVisibility(); // Initial check
+    // Initial check
+    updateArrowVisibility();
 
     return () => {
       resizeObserver.disconnect();
       container.removeEventListener('scroll', updateArrowVisibility);
     };
-  }, [services]); // Re-run if the services list changes
+  }, [services, updateArrowVisibility]);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -69,7 +74,7 @@ export function ProductCarousel({ title, services }: ProductCarouselProps) {
           {services.map((service) => (
             <div 
               key={service.id} 
-              className="carousel-item w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.666rem)] shrink-0"
+              className="carousel-item w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.75rem)] shrink-0"
             >
               <ServiceCard service={service} />
             </div>
