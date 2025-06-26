@@ -22,6 +22,11 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
+interface ProductDetailDialogProps {
+  service: Service;
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+}
 
 const fallbackBriefFields = [
     { name: 'Mau desain seperti apa?', placeholder: 'Jelaskan konsep atau gaya desain yang Anda inginkan...', type: 'textarea' as const },
@@ -37,8 +42,6 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
   const [brief, setBrief] = useState<Record<string, string>>({});
   const [briefFields, setBriefFields] = useState<{name: string, placeholder: string, type: 'textarea' | 'input'}[]>([]);
   const [selectedTier, setSelectedTier] = useState<BudgetTier | null>(null);
-  const [displayImage, setDisplayImage] = useState(service.image);
-
 
   useEffect(() => {
     if (isOpen) {
@@ -51,25 +54,22 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
       setBrief(initialBrief);
       setSelectedTier(initialTier);
       
-      setDisplayImage(initialTier ? service.tierImages[initialTier] : service.image);
-
       if (briefFields.length === 0) {
         setBriefFields(fallbackBriefFields);
       }
     } else {
+      // Small delay to allow exit animation to finish before resetting state.
       setTimeout(() => {
         setBriefFields([]);
         setSelectedTier(null);
         setQuantity(1);
         setBrief({});
-        setDisplayImage(service.image);
-      }, 300); 
+      }, 300); // Should match animation duration
     }
   }, [isOpen, service, getCartItem, briefFields.length]);
   
   const handleTierSelect = (tier: BudgetTier) => {
     setSelectedTier(tier);
-    setDisplayImage(service.tierImages[tier]);
   };
 
   const handleBriefChange = (field: string, value: string) => {
@@ -91,97 +91,78 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-4xl p-0 max-h-[90svh]">
-        <div className="grid grid-cols-1 md:grid-cols-2 h-full">
-          {/* Left Column: Image Gallery */}
-          <div className="p-4 md:p-6 flex items-center justify-center">
-            <div className="relative aspect-square w-full rounded-lg overflow-hidden">
-              <Image 
-                src={displayImage} 
-                alt={service.name} 
-                fill 
-                className="object-cover"
-                data-ai-hint="product image"
-              />
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{service.name}</DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-4">
+          <div className="text-3xl font-bold text-primary">
+            {selectedTier ? formatRupiah(service.prices[selectedTier] * quantity) : "Pilih varian harga"}
+          </div>
+
+          <div className="space-y-2">
+            <Label>Varian</Label>
+            <div className="flex flex-col gap-2">
+              {budgetItems.map((budget) => (
+                 <motion.div
+                  key={budget.id}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  <button
+                    onClick={() => handleTierSelect(budget.id)}
+                    className={cn(
+                        "w-full text-left p-3 border-2 rounded-lg transition-colors",
+                        "flex items-start gap-4",
+                        selectedTier === budget.id ? 'border-primary bg-primary/5' : 'border-muted bg-popover hover:bg-accent/50'
+                    )}
+                  >
+                    <Image src={budget.image} alt={budget.title} width={40} height={40} className="rounded-md" data-ai-hint="logo" />
+                    <div>
+                      <p className="font-semibold">{budget.title}</p>
+                      <p className="text-xs text-muted-foreground">{budget.description}</p>
+                    </div>
+                  </button>
+                 </motion.div>
+              ))}
             </div>
           </div>
           
-          {/* Right Column: Details & Actions */}
-          <div className="p-4 md:p-6 flex flex-col bg-muted/30 overflow-y-auto">
-            <DialogHeader className="mb-4">
-              <DialogTitle className="font-headline text-2xl">{service.name}</DialogTitle>
-            </DialogHeader>
-
-            <div className="flex-grow space-y-4">
-              <div className="text-3xl font-bold text-primary">
-                {selectedTier ? formatRupiah(service.prices[selectedTier] * quantity) : "Pilih varian harga"}
-              </div>
-
-              <div className="space-y-2">
-                <Label>Varian</Label>
-                <div className="flex flex-col gap-2">
-                  {budgetItems.map((budget) => (
-                    <motion.div
-                      key={budget.id}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                    >
-                      <button
-                        onClick={() => handleTierSelect(budget.id)}
-                        className={cn(
-                            "w-full text-left p-3 border-2 rounded-lg transition-colors",
-                            "flex items-start gap-4",
-                            selectedTier === budget.id ? 'border-primary bg-primary/5' : 'border-muted bg-popover hover:bg-accent/50'
-                        )}
-                      >
-                        <Image src={budget.image} alt={budget.title} width={40} height={40} className="rounded-md" data-ai-hint="logo" />
-                        <div>
-                          <p className="font-semibold">{budget.title}</p>
-                          <p className="text-xs text-muted-foreground">{budget.description}</p>
-                        </div>
-                      </button>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-
-              {briefFields.map(field => (
-                <div key={field.name} className="w-full space-y-2">
-                  <Label htmlFor={`brief-${service.id}-${field.name}`}>{field.name}</Label>
-                  {field.type === 'textarea' ? (
-                      <Textarea
-                          id={`brief-${service.id}-${field.name}`}
-                          placeholder={field.placeholder}
-                          maxLength={500}
-                          value={brief[field.name] ?? ''}
-                          onChange={(e) => handleBriefChange(field.name, e.target.value)}
-                          className="focus-visible:ring-0 focus-visible:ring-offset-0"
-                      />
-                  ) : (
-                      <Input
-                          id={`brief-${service.id}-${field.name}`}
-                          placeholder={field.placeholder}
-                          value={brief[field.name] ?? ''}
-                          onChange={(e) => handleBriefChange(field.name, e.target.value)}
-                          className="focus-visible:ring-0 focus-visible:ring-offset-0"
-                      />
-                  )}
-                </div>
-              ))}
+          {briefFields.map(field => (
+            <div key={field.name} className="w-full space-y-2">
+              <Label htmlFor={`brief-${service.id}-${field.name}`}>{field.name}</Label>
+              {field.type === 'textarea' ? (
+                  <Textarea
+                      id={`brief-${service.id}-${field.name}`}
+                      placeholder={field.placeholder}
+                      maxLength={500}
+                      value={brief[field.name] ?? ''}
+                      onChange={(e) => handleBriefChange(field.name, e.target.value)}
+                  />
+              ) : (
+                  <Input
+                      id={`brief-${service.id}-${field.name}`}
+                      placeholder={field.placeholder}
+                      value={brief[field.name] ?? ''}
+                      onChange={(e) => handleBriefChange(field.name, e.target.value)}
+                  />
+              )}
             </div>
-
-            <div className="pt-6 mt-4 border-t flex-shrink-0">
-               <div className="flex items-center justify-between mb-4">
-                <Label>Kuantitas</Label>
-                <QuantityStepper quantity={quantity} onQuantityChange={setQuantity} />
-              </div>
-              <Button type="button" onClick={handleSave} disabled={!selectedTier} className="w-full">
-                <ShoppingCart className="mr-2 h-4 w-4" />
-                {getCartItem(service.id) ? 'Simpan Perubahan' : 'Tambahkan ke Keranjang'}
-              </Button>
-            </div>
-          </div>
+          ))}
         </div>
+        
+        <div className="pt-4 mt-2 border-t">
+          <div className="flex items-center justify-between mb-4">
+            <Label>Kuantitas</Label>
+            <QuantityStepper quantity={quantity} onQuantityChange={setQuantity} />
+          </div>
+          <Button type="button" onClick={handleSave} disabled={!selectedTier} className="w-full">
+            <ShoppingCart className="mr-2 h-4 w-4" />
+            {getCartItem(service.id) ? 'Simpan Perubahan' : 'Tambahkan ke Keranjang'}
+          </Button>
+        </div>
+
       </DialogContent>
     </Dialog>
   );
