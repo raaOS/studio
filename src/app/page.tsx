@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useMemo, useState, useEffect } from 'react';
@@ -225,7 +224,7 @@ function OrderWorkflow() {
                   <p className="text-sm text-muted-foreground mt-2 max-w-2xl mx-auto">Scroll ke bawah dan masukkin semua yang kamu butuhin ke keranjang.</p>
               </div>
               <div className="space-y-8">
-                  {Object.entries(serviceCategories).map(([category, servicesInCategory]) => (
+                  {Object.entries(serviceCategories).slice(0, 1).map(([category, servicesInCategory]) => (
                       <ProductCarousel key={category} title={category} services={servicesInCategory} />
                   ))}
               </div>
