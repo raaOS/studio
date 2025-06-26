@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useCart } from "@/contexts/CartContext";
@@ -141,16 +142,21 @@ export function OrderSummary() {
                 
                 <Separator />
 
-                <div className="space-y-1 text-lg">
-                    <div className="flex justify-between">
-                        <span>Total Bayar:</span>
-                        <span className="font-bold">{formatRupiah(finalPrice)}</span>
+                {paymentMethod ? (
+                    <div className="space-y-1 text-lg">
+                        <div className="flex justify-between">
+                            <span>Total Bayar:</span>
+                            <span className="font-bold">{formatRupiah(finalPrice)}</span>
+                        </div>
+                        {paymentMethod === 'dp' && <p className="text-xs text-muted-foreground text-right">Sisa pelunasan: {formatRupiah(totalPrice / 2)}</p>}
                     </div>
-                    {paymentMethod === 'dp' && <p className="text-xs text-muted-foreground text-right">Sisa pelunasan: {formatRupiah(totalPrice / 2)}</p>}
-                </div>
+                ) : (
+                    <p className="text-muted-foreground text-center py-4 text-sm">Pilih metode pembayaran untuk melihat total.</p>
+                )}
+
             </CardContent>
             <CardFooter>
-                <Button className="w-full" onClick={handleSubmitOrder} disabled={isSubmitting || totalItems === 0}>
+                <Button className="w-full" onClick={handleSubmitOrder} disabled={isSubmitting || totalItems === 0 || !paymentMethod}>
                     {isSubmitting ? 'Mengirim...' : 'Kirim Pesanan'}
                 </Button>
             </CardFooter>

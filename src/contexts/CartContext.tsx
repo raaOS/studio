@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
@@ -11,8 +12,8 @@ interface CartContextType {
   clearCart: () => void;
   totalPrice: number;
   totalItems: number;
-  paymentMethod: 'dp' | 'lunas';
-  setPaymentMethod: (method: 'dp' | 'lunas') => void;
+  paymentMethod: 'dp' | 'lunas' | null;
+  setPaymentMethod: (method: 'dp' | 'lunas' | null) => void;
   getItemQuantity: (serviceId: string) => number;
   selectedBudget: BudgetItem | null;
   setSelectedBudget: (budget: BudgetItem | null) => void;
@@ -22,7 +23,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [paymentMethod, setPaymentMethod] = useState<'dp' | 'lunas'>('dp');
+  const [paymentMethod, setPaymentMethod] = useState<'dp' | 'lunas' | null>(null);
   const [selectedBudget, setSelectedBudget] = useState<BudgetItem | null>(null);
 
   const getItemQuantity = useCallback((serviceId: string) => {

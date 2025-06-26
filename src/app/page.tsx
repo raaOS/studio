@@ -29,37 +29,44 @@ import { budgetItems, services, mockCategories } from '@/lib/data';
 import type { BudgetItem, Service, Customer } from '@/lib/types';
 
 // Form Schema
-const initialInfoFormSchema = z.object({
+const customerInfoFormSchema = z.object({
   name: z.string().min(2, { message: "Nama harus diisi, minimal 2 karakter." }),
   phone: z.string().min(10, { message: "Nomor telepon tidak valid." }),
   telegram: z.string().min(3, { message: "Username Telegram tidak valid." }).startsWith('@', { message: 'Username harus diawali dengan @' }),
-  paymentMethod: z.enum(['dp', 'lunas'], { required_error: 'Pilih metode pembayaran.' }),
 });
-type InitialInfoFormValues = z.infer<typeof initialInfoFormSchema>;
+type CustomerInfoFormValues = z.infer<typeof customerInfoFormSchema>;
 
 
 function OrderWorkflow() {
-  const { selectedBudget, setSelectedBudget, clearCart, setPaymentMethod } = useCart();
+  const { selectedBudget, setSelectedBudget, clearCart, setPaymentMethod, paymentMethod } = useCart();
+  const [infoSubmitted, setInfoSubmitted] = useState(false);
   const isMobile = useIsMobile();
   const { toast } = useToast();
 
-  const form = useForm<InitialInfoFormValues>({
-    resolver: zodResolver(initialInfoFormSchema),
-    defaultValues: { name: "", phone: "", telegram: "", paymentMethod: "dp" },
+  const form = useForm<CustomerInfoFormValues>({
+    resolver: zodResolver(customerInfoFormSchema),
+    defaultValues: { name: "", phone: "", telegram: "" },
   });
   
-  function onInfoSubmit(data: InitialInfoFormValues) {
+  function onInfoSubmit(data: CustomerInfoFormValues) {
     const customerData: Customer = { name: data.name, phone: data.phone, telegram: data.telegram };
     localStorage.setItem('customerData', JSON.stringify(customerData));
-    setPaymentMethod(data.paymentMethod);
+    setInfoSubmitted(true);
     toast({
       title: "Data tersimpan!",
-      description: `Data untuk ${data.name} telah disimpan. Silakan lanjutkan memilih budget.`,
+      description: `Data untuk ${data.name} telah disimpan. Silakan lanjutkan ke pembayaran.`,
     });
+    setTimeout(() => {
+        document.getElementById('payment-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }
+
+  const handlePaymentSelect = (method: 'dp' | 'lunas') => {
+    setPaymentMethod(method);
     setTimeout(() => {
         document.getElementById('budget-selection-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 100);
-  }
+  };
 
   const handleBudgetSelect = (budget: BudgetItem) => {
     if (selectedBudget?.id !== budget.id) {
@@ -85,11 +92,11 @@ function OrderWorkflow() {
       <Header />
       <main className="flex-grow container mx-auto px-4 py-16 space-y-24">
         
-        {/* Step 1: Combined Form */}
+        {/* Step 1: Customer Info */}
         <section id="info-section" className="max-w-2xl mx-auto">
           <Card>
             <CardHeader>
-              <CardTitle className="font-headline text-2xl">Langkah 1: Data Diri & Pembayaran</CardTitle>
+              <CardTitle className="font-headline text-2xl">Langkah 1: Data Diri Anda</CardTitle>
               <CardDescription>Isi data Anda untuk memulai proses pemesanan.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -143,42 +150,8 @@ function OrderWorkflow() {
                       </FormItem>
                       )}
                   />
-                  <FormField
-                      control={form.control}
-                      name="paymentMethod"
-                      render={({ field }) => (
-                          <FormItem className="space-y-3">
-                              <FormLabel>Cara Pembayaran</FormLabel>
-                              <FormControl>
-                                  <RadioGroup
-                                      onValueChange={field.onChange}
-                                      defaultValue={field.value}
-                                      className="flex pt-2 gap-6"
-                                  >
-                                      <FormItem className="flex items-center space-x-3 space-y-0">
-                                          <FormControl>
-                                              <RadioGroupItem value="dp" />
-                                          </FormControl>
-                                          <FormLabel className="font-normal">
-                                              DP 50%
-                                          </FormLabel>
-                                      </FormItem>
-                                      <FormItem className="flex items-center space-x-3 space-y-0">
-                                          <FormControl>
-                                              <RadioGroupItem value="lunas" />
-                                          </FormControl>
-                                          <FormLabel className="font-normal">
-                                              Lunas
-                                          </FormLabel>
-                                      </FormItem>
-                                  </RadioGroup>
-                              </FormControl>
-                              <FormMessage />
-                          </FormItem>
-                      )}
-                  />
                   <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                    {form.formState.isSubmitting ? 'Menyimpan...' : 'Simpan Data Diri'}
+                    {form.formState.isSubmitting ? 'Menyimpan...' : 'Simpan & Lanjut Pembayaran'}
                   </Button>
                 </form>
               </Form>
@@ -186,39 +159,77 @@ function OrderWorkflow() {
           </Card>
         </section>
 
-        {/* Step 2: Budget Selection */}
-        <section id="budget-selection-section">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">Langkah 2: Pilih Budget Anda</h2>
-            <p className="text-lg text-muted-foreground mt-2">Pilih paket yang sesuai dengan kebutuhan Anda.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {budgetItems.map((item) => (
-              <Card 
-                key={item.id}
-                className={`text-center h-full flex flex-col hover:shadow-lg transition-all duration-300 ${selectedBudget?.id === item.id ? 'border-primary ring-2 ring-primary' : 'hover:border-primary'}`}
-              >
-                <CardHeader>
-                  <item.icon className="mx-auto h-12 w-12 text-primary mb-4" />
-                  <CardTitle className="font-headline">{item.title}</CardTitle>
-                  <CardDescription>{item.priceRange}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow flex flex-col justify-between">
-                  <p className="text-muted-foreground mb-6">{item.description}</p>
-                  <Button onClick={() => handleBudgetSelect(item)} className="w-full">
-                    Pilih Paket Ini <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
+        {/* Step 2: Payment Method */}
+        {infoSubmitted && (
+            <section id="payment-section" className="max-w-2xl mx-auto">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline text-2xl">Langkah 2: Cara Pembayaran</CardTitle>
+                        <CardDescription>Pilih metode pembayaran yang Anda inginkan.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <RadioGroup 
+                            className="flex pt-2 gap-6"
+                            onValueChange={(value) => handlePaymentSelect(value as 'dp' | 'lunas')}
+                            value={paymentMethod || ''}
+                        >
+                            <FormItem className="flex items-center space-x-3 space-y-0">
+                                <FormControl>
+                                    <RadioGroupItem value="dp" />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                    DP 50%
+                                </FormLabel>
+                            </FormItem>
+                            <FormItem className="flex items-center space-x-3 space-y-0">
+                                <FormControl>
+                                    <RadioGroupItem value="lunas" />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                    Lunas
+                                </FormLabel>
+                            </FormItem>
+                        </RadioGroup>
+                    </CardContent>
+                </Card>
+            </section>
+        )}
+
+        {/* Step 3: Budget Selection */}
+        {paymentMethod && (
+            <section id="budget-selection-section">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">Langkah 3: Pilih Budget Anda</h2>
+                    <p className="text-lg text-muted-foreground mt-2">Pilih paket yang sesuai dengan kebutuhan Anda.</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {budgetItems.map((item) => (
+                    <Card 
+                        key={item.id}
+                        className={`text-center h-full flex flex-col hover:shadow-lg transition-all duration-300 ${selectedBudget?.id === item.id ? 'border-primary ring-2 ring-primary' : 'hover:border-primary'}`}
+                    >
+                        <CardHeader>
+                        <item.icon className="mx-auto h-12 w-12 text-primary mb-4" />
+                        <CardTitle className="font-headline">{item.title}</CardTitle>
+                        <CardDescription>{item.priceRange}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="flex-grow flex flex-col justify-between">
+                        <p className="text-muted-foreground mb-6">{item.description}</p>
+                        <Button onClick={() => handleBudgetSelect(item)} className="w-full">
+                            Pilih Paket Ini <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                        </CardContent>
+                    </Card>
+                    ))}
+                </div>
+            </section>
+        )}
         
-        {/* Step 3: Catalog (Conditional) */}
+        {/* Step 4: Catalog (Conditional) */}
         {selectedBudget && (
             <section id="catalog-section" className="pt-8 flex-grow">
                 <div className="text-center mb-12">
-                    <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">Langkah 3: Pilih Layanan</h2>
+                    <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">Langkah 4: Pilih Layanan</h2>
                     <p className="text-lg text-muted-foreground mt-2">Tambahkan layanan ke keranjang Anda.</p>
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-8">
