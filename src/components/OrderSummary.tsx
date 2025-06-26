@@ -7,28 +7,57 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShoppingCart, Trash2, Percent, CheckCircle } from "lucide-react";
+import { ShoppingCart, Trash2, Percent, CheckCircle, User, Phone, Send } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { sendTelegramUpdate } from '@/ai/flows/telegram-bot-integration';
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
 import { useState, useEffect } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import type { Customer } from "@/lib/types";
+
+// Form Schema
+const customerInfoFormSchema = z.object({
+  name: z.string().min(2, { message: "Nama harus diisi, minimal 2 karakter." }),
+  phone: z.string().min(10, { message: "Nomor telepon tidak valid." }),
+  telegram: z.string().min(3, { message: "Username Telegram tidak valid." }).startsWith('@', { message: 'Username harus diawali dengan @' }),
+});
+type CustomerInfoFormValues = z.infer<typeof customerInfoFormSchema>;
+
 
 export function OrderSummary() {
     const { cartItems, totalPrice, totalItems, paymentMethod, setPaymentMethod, removeItem, clearCart } = useCart();
     const { toast } = useToast();
-    const [customer, setCustomer] = useState<Customer | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const form = useForm<CustomerInfoFormValues>({
+        resolver: zodResolver(customerInfoFormSchema),
+        defaultValues: { name: "", phone: "", telegram: "" },
+    });
 
     useEffect(() => {
         const savedCustomerData = localStorage.getItem('customerData');
         if (savedCustomerData) {
-            setCustomer(JSON.parse(savedCustomerData));
+            const customer = JSON.parse(savedCustomerData);
+            form.reset(customer);
         }
-    }, []);
+    }, [form]);
 
     const handleSubmitOrder = async () => {
+        const isFormValid = await form.trigger();
+
+        if (!isFormValid) {
+             toast({
+                title: 'Data Diri Belum Lengkap',
+                description: 'Mohon isi nama, telepon, dan username Telegram Anda dengan benar.',
+                variant: 'destructive',
+            });
+            return;
+        }
+
         if (totalItems === 0) {
             toast({
                 title: 'Keranjang Kosong',
@@ -37,16 +66,10 @@ export function OrderSummary() {
             });
             return;
         }
-
-        if (!customer?.telegram || !customer?.name) {
-            toast({
-                title: 'Data Pelanggan Tidak Lengkap',
-                description: 'Mohon kembali ke Langkah 1 dan isi nama serta username Telegram Anda.',
-                variant: 'destructive',
-            });
-            return;
-        }
         
+        const customer = form.getValues();
+        localStorage.setItem('customerData', JSON.stringify(customer));
+
         setIsSubmitting(true);
         const orderId = `#${String(Math.floor(1000 + Math.random() * 9000)).padStart(4, '0')}`;
         let folderUrl = 'Tidak dibuat (konfigurasi .env belum lengkap)';
@@ -155,6 +178,64 @@ export function OrderSummary() {
                 
                 <Separator />
                 
+                <div className="space-y-4">
+                    <h4 className="text-sm font-medium text-foreground">Data Pemesan</h4>
+                     <Form {...form}>
+                        <form className="space-y-3">
+                            <FormField
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="sr-only">Nama Lengkap</FormLabel>
+                                    <FormControl>
+                                    <div className="relative">
+                                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                                        <Input placeholder="Nama Lengkap Anda" {...field} className="pl-10" />
+                                    </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="phone"
+                                render={({ field }) => (
+                                <FormItem>
+                                     <FormLabel className="sr-only">Nomor Telepon</FormLabel>
+                                    <FormControl>
+                                    <div className="relative">
+                                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                                        <Input placeholder="Nomor Telepon (Aktif)" {...field} className="pl-10" />
+                                    </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="telegram"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="sr-only">Username Telegram</FormLabel>
+                                    <FormControl>
+                                    <div className="relative">
+                                        <Send className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                                        <Input placeholder="Username Telegram (@anda)" {...field} className="pl-10" />
+                                    </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                        </form>
+                    </Form>
+                </div>
+                
+                <Separator />
+
                 <div className="space-y-2">
                     <h4 className="text-sm font-medium text-foreground">Pilih Metode Pembayaran</h4>
                      <div className="grid grid-cols-2 gap-4">
