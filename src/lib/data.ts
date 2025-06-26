@@ -1,3 +1,4 @@
+
 import type { BudgetItem, Service, Order, Promo, Coupon, Banner, AdminUser, DriveActivityLog, CalendarActivityLog, MeetActivityLog, Category, CustomerProfile, OrderStatus } from '@/lib/types';
 
 export const budgetItems: BudgetItem[] = [
@@ -85,7 +86,7 @@ export const services: Service[] = [
   // Kategori: Branding & Kantor
   {
     id: 'desain-kop-surat',
-    name: 'Desain Kop Surat (Letterhead)',
+    name: 'Desain Kop Surat',
     prices: { 'kaki-lima': 15000, 'umkm': 28000, 'e-comm': 65000 },
     tierImages: {
       'kaki-lima': 'https://placehold.co/128x128/f8fafc/64748b.png',
