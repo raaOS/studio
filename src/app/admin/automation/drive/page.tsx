@@ -114,7 +114,7 @@ export default function DriveAutomationPage() {
                         <li>Buka Google Cloud Console dan pastikan Anda memilih proyek yang benar.</li>
                         <li>Di menu pencarian, ketik "Service Accounts" dan buka halamannya.</li>
                         <li>Klik "+ CREATE SERVICE ACCOUNT", beri nama (misal: "designflow-bot"), lalu klik "CREATE AND CONTINUE".</li>
-                        <li>Pada bagian "Role", pilih "Editor", lalu klik "CONTINUE" dan "DONE".</li>
+                        <li>Pada bagian "Role", cari kategori <strong>Basic</strong>, lalu pilih <strong>Editor</strong>. Klik "CONTINUE" dan "DONE".</li>
                         <li>Temukan service account yang baru dibuat di daftar, klik ikon tiga titik di kolom "Actions", dan pilih "Manage keys".</li>
                         <li>Klik "ADD KEY" > "Create new key". Pilih "JSON" sebagai tipe, lalu klik "CREATE". Sebuah file JSON akan terunduh.</li>
                     </ol>
