@@ -1,7 +1,6 @@
 
 import Link from 'next/link';
 import { Sparkles } from 'lucide-react';
-import { Button } from './ui/button';
 
 export function Header() {
   return (
@@ -13,11 +12,6 @@ export function Header() {
             Urgent Studio
           </h1>
         </Link>
-        <nav>
-          <Button asChild variant="outline">
-            <Link href="/track">Lacak Pesanan</Link>
-          </Button>
-        </nav>
       </div>
     </header>
   );

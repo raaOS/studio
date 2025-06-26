@@ -1,13 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { PackageSearch, ShoppingCart } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { OrderSummary } from "./OrderSummary";
 import { useIsMobile } from '@/hooks/use-mobile';
-import { TrackOrderForm } from './TrackOrderForm';
 
 export function FloatingCart() {
   const isMobile = useIsMobile();
@@ -28,30 +27,14 @@ export function FloatingCart() {
           animate={{ y: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
-          <div className="container mx-auto grid h-16 grid-cols-2 items-stretch">
+          <div className="container mx-auto grid h-16 grid-cols-1 items-stretch">
               
-              {/* Sheet for Tracking Order */}
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="ghost" className="h-full flex-col gap-1 rounded-none">
-                      <PackageSearch className="h-6 w-6" />
-                      <span className="text-xs font-medium">Lacak Pesanan</span>
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="bottom" className="rounded-t-2xl p-4 pt-8 max-h-[90vh] overflow-y-auto">
-                    <SheetHeader className="sr-only">
-                        <SheetTitle>Lacak Pesanan</SheetTitle>
-                    </SheetHeader>
-                    <TrackOrderForm />
-                </SheetContent>
-              </Sheet>
-
               {/* Sheet for Order Summary */}
               <Sheet>
                 <SheetTrigger asChild>
                     <Button variant="ghost" className="relative h-full flex-col gap-1 rounded-none">
                         {totalItems > 0 && (
-                            <span className="absolute right-8 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                            <span className="absolute left-[calc(50%+1rem)] top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
                                 {totalItems}
                             </span>
                         )}
@@ -60,8 +43,8 @@ export function FloatingCart() {
                     </Button>
                 </SheetTrigger>
                 <SheetContent side="bottom" className="rounded-t-2xl p-0 max-h-[90vh]">
-                  <SheetHeader className="sr-only">
-                    <SheetTitle>Rincian Pesanan</SheetTitle>
+                  <SheetHeader>
+                    <SheetTitle className="sr-only">Rincian Pesanan</SheetTitle>
                   </SheetHeader>
                   <div className="overflow-y-auto">
                       <OrderSummary />
