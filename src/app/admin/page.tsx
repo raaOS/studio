@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { mockOrders } from "@/lib/data";
 import { CheckCircle, Inbox, Loader2 } from "lucide-react";
 import type { Order } from '@/lib/types';
@@ -74,7 +73,6 @@ export default function AdminDashboardPage() {
                     <h3 className="text-sm font-medium">Pekan {pekan.replace('W','')}</h3>
                     <span className="text-sm text-muted-foreground">{count}/{weeklyCapacity}</span>
                   </div>
-                  <Progress value={(count / weeklyCapacity) * 100} />
                 </div>
               ))}
             </div>
