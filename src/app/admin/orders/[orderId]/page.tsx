@@ -51,6 +51,7 @@ export default function OrderDetailPage() {
       const result = await createOrderFolder({
         orderId: order.kode_order,
         customerName: order.nama_klien,
+        folderTemplate: '[OrderID] - [CustomerName]',
       });
 
       if (result.success && result.folderUrl) {
@@ -80,7 +81,22 @@ export default function OrderDetailPage() {
 
     setIsSubmittingUpdate(true);
     try {
-        const message = `🔔 *Update Pesanan Anda* 🔔\n\nHalo ${order.nama_klien},\nStatus pesanan Anda dengan ID \`${order.kode_order}\` telah diperbarui menjadi:\n\n*${currentStatus}*\n\nJika ada pertanyaan, jangan ragu untuk membalas pesan ini. Terima kasih!`;
+        let message: string;
+
+        if (currentStatus === 'Siap Kirim Pratinjau') {
+             if (!driveUrl) {
+                toast({
+                    title: 'Folder Drive Belum Ada',
+                    description: 'Mohon buat folder Drive terlebih dahulu sebelum mengirim pratinjau.',
+                    variant: 'destructive',
+                });
+                setIsSubmittingUpdate(false);
+                return;
+            }
+            message = `🎨 *Pratinjau Desain Siap!* 🎨\n\nHalo ${order.nama_klien},\n\nKabar baik! Pratinjau pertama untuk pesanan \`${order.kode_order}\` sudah siap untuk Anda review.\n\nSilakan cek hasilnya di folder Google Drive Anda melalui link di bawah ini:\n${driveUrl}\n\nKami tunggu feedback atau permintaan revisi dari Anda. Terima kasih!`;
+        } else {
+            message = `🔔 *Update Pesanan Anda* 🔔\n\nHalo ${order.nama_klien},\nStatus pesanan Anda dengan ID \`${order.kode_order}\` telah diperbarui menjadi:\n\n*${currentStatus}*\n\nJika ada pertanyaan, jangan ragu untuk membalas pesan ini. Terima kasih!`;
+        }
         
         const result = await sendTelegramUpdate({
             telegramId: order.customerTelegram,

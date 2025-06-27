@@ -84,14 +84,14 @@ const processTelegramWebhookFlow = ai.defineFlow(
             message: `⏳ Terima kasih, ${customer.name}! Pesanan Anda dengan ID \`${orderId}\` sedang kami siapkan...`,
         });
 
-        const folderResult = await createOrderFolder({
+        // Create folder, but don't send the link yet.
+        await createOrderFolder({
             orderId: orderId,
             customerName: customer.name,
             folderTemplate: '[OrderID] - [CustomerName]',
         });
 
         const orderDetails = orderData.cartItems.map(item => `- ${item.name} (${item.budgetName}) x${item.quantity}`).join('\n');
-        const folderUrl = folderResult.success && folderResult.folderUrl ? folderResult.folderUrl : 'Gagal dibuat.';
         
         const confirmationMessage = `✅ *Pesanan Anda Diterima!*
 
@@ -104,9 +104,6 @@ ${orderDetails}
 
 *Total Tagihan:* ${formatRupiah(orderData.totalPrice)}
 *Metode Bayar:* ${orderData.paymentMethod === 'dp' ? 'DP 50%' : 'Lunas'}
-
-*Folder Google Drive:*
-${folderUrl}
 
 Terima kasih! Tim kami akan segera menghubungi Anda untuk langkah selanjutnya. Simpan pesan ini sebagai bukti pesanan Anda.`;
 
