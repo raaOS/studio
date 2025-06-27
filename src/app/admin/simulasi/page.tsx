@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   Table,
@@ -9,7 +10,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Bot, BrainCircuit, User, Shield, Info, MessageSquare, UserCheck } from 'lucide-react';
+import { Bot, BrainCircuit, User, Shield, Info, MessageSquare, UserCheck, Trash2, Ghost, DollarSign, CalendarOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const simulationData = [
@@ -27,6 +28,14 @@ const simulationData = [
     pemicu: 'Pembayaran (DP/Lunas) terkonfirmasi oleh admin di panel pembayaran atau melalui sistem pembayaran otomatis.',
     pesanPembeli: '👍 *Pembayaran Diterima!*\n\nPembayaran untuk pesanan `{{orderId}}` telah kami konfirmasi. Pesanan Anda sekarang resmi masuk ke dalam antrian pengerjaan. Kami akan memberi tahu Anda lagi setelah pratinjau siap.',
     pesanInternal: '✅ **Pembayaran Lunas!**\nOrder `{{orderId}}` siap untuk dikerjakan. Telah dimasukkan ke antrian desainer.',
+    aksiPembeli: 'Melakukan transfer dan konfirmasi pembayaran (di luar alur bot).',
+  },
+  {
+    status: 'Masuk Antrian (Minggu Depan)',
+    pj: { name: 'Sistem', icon: CalendarOff, color: 'bg-slate-100 text-slate-800 border-slate-200' },
+    pemicu: 'Pembayaran terkonfirmasi, namun kapasitas antrian minggu ini sudah penuh.',
+    pesanPembeli: '🙏 *Terima Kasih Atas Kesabaran Anda!*\n\nPembayaran untuk `{{orderId}}` telah kami konfirmasi. Karena antrian minggu ini sudah penuh, pesanan Anda telah kami jadwalkan untuk prioritas utama minggu depan.',
+    pesanInternal: '🗓️ **Dijadwalkan W+1**\nOrder `{{orderId}}` telah masuk, namun antrian penuh. Otomatis masuk ke antrian minggu depan.',
     aksiPembeli: 'Melakukan transfer dan konfirmasi pembayaran (di luar alur bot).',
   },
   {
@@ -85,6 +94,30 @@ const simulationData = [
     pesanInternal: '🛡️ **TINJAUAN OWNER DIPERLUKAN!**\nOrder `{{orderId}}` memerlukan keputusan Anda. Penyebab: `{{escalationReason}}`.',
     aksiPembeli: '-',
   },
+  {
+    status: 'Dibatalkan (Belum/Sudah Dikerjakan)',
+    pj: { name: 'Owner', icon: Trash2, color: 'bg-red-100 text-red-800 border-red-200' },
+    pemicu: 'Sistem: Pembayaran tidak diterima. Manual: Permintaan klien atau keputusan internal.',
+    pesanPembeli: '❌ *Pesanan Dibatalkan*\n\nMohon maaf, pesanan Anda `{{orderId}}` telah dibatalkan karena `{{cancellationReason}}`. Jika ada pertanyaan, silakan hubungi admin.',
+    pesanInternal: '🗑️ **Pembatalan Order**\nOrder `{{orderId}}` dibatalkan. Status: `{{preOrPostWork}}`. Alasan: `{{cancellationReason}}`',
+    aksiPembeli: 'Meminta pembatalan / Tidak melakukan pembayaran.',
+  },
+  {
+    status: 'Tidak Puas (Refund 50%)',
+    pj: { name: 'Owner', icon: DollarSign, color: 'bg-rose-100 text-rose-800 border-rose-200' },
+    pemicu: 'Manual: Keputusan bisnis setelah negosiasi buntu dengan klien.',
+    pesanPembeli: '📑 *Proses Refund*\n\nSesuai kesepakatan, kami telah memproses pengembalian dana 50% untuk pesanan `{{orderId}}`. Mohon maaf atas ketidaknyamanannya.',
+    pesanInternal: '💸 **Refund 50%**\nOrder `{{orderId}}` ditutup dengan refund 50%. Mohon tim keuangan memprosesnya.',
+    aksiPembeli: 'Menyetujui opsi refund setelah negosiasi.',
+  },
+   {
+    status: 'Ditutup (Tanpa Refund)',
+    pj: { name: 'Owner', icon: Ghost, color: 'bg-neutral-100 text-neutral-800 border-neutral-200' },
+    pemicu: 'Manual: Klien tidak responsif setelah beberapa kali dihubungi.',
+    pesanPembeli: '🔒 *Pesanan Ditutup*\n\nKarena tidak ada respon dalam waktu yang ditentukan, pesanan Anda `{{orderId}}` kami anggap selesai dan telah ditutup.',
+    pesanInternal: '👻 **Proyek Terbengkalai**\nOrder `{{orderId}}` ditutup karena klien tidak responsif. Tidak ada refund.',
+    aksiPembeli: 'Tidak merespon pesan/pengingat selama periode waktu tertentu.',
+  },
 ];
 
 export default function SimulasiPage() {
@@ -99,61 +132,63 @@ export default function SimulasiPage() {
 
       <Card>
         <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="min-w-[200px]">Status Pesanan</TableHead>
-                  <TableHead className="min-w-[180px]">Penanggung Jawab</TableHead>
-                  <TableHead className="min-w-[300px]">Pemicu Perubahan Status</TableHead>
-                  <TableHead className="min-w-[350px]">Contoh Pesan (Pembeli)</TableHead>
-                  <TableHead className="min-w-[350px]">Notifikasi Internal (Owner/Desainer)</TableHead>
-                  <TableHead className="min-w-[300px]">Contoh Aksi Pemicu dari Pembeli</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {simulationData.map((item, index) => (
-                  <TableRow key={index} className="align-top">
-                    <TableCell className="font-semibold text-foreground">{item.status}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={cn("whitespace-nowrap", item.pj.color)}>
-                        <item.pj.icon className="mr-2 h-4 w-4" />
-                        {item.pj.name}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{item.pemicu}</TableCell>
-                    <TableCell className="text-sm">
-                      {item.pesanPembeli !== '-' ? (
-                        <div className="p-3 rounded-md bg-muted border text-muted-foreground whitespace-pre-wrap font-mono text-xs">
-                          {item.pesanPembeli}
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground/60">-</span>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-sm">
-                       {item.pesanInternal !== '-' ? (
-                        <div className="p-3 rounded-md bg-muted border text-muted-foreground whitespace-pre-wrap font-mono text-xs">
-                           <Info className="h-4 w-4 float-left mr-2 mt-0.5 text-blue-500" />
-                          {item.pesanInternal}
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground/60">-</span>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-sm">
-                      {item.aksiPembeli !== '-' ? (
-                        <div className="p-3 rounded-md bg-green-50 border border-green-200 text-green-900 whitespace-pre-wrap font-mono text-xs">
-                           <UserCheck className="h-4 w-4 float-left mr-2 mt-0.5" />
-                          {item.aksiPembeli}
-                        </div>
-                      ) : (
-                         <span className="text-muted-foreground/60">-</span>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <div className="relative w-full overflow-auto">
+                <Table>
+                <TableHeader>
+                    <TableRow>
+                    <TableHead className="min-w-[200px]">Status Pesanan</TableHead>
+                    <TableHead className="min-w-[180px]">Penanggung Jawab</TableHead>
+                    <TableHead className="min-w-[300px]">Pemicu Perubahan Status</TableHead>
+                    <TableHead className="min-w-[350px]">Contoh Pesan (Pembeli)</TableHead>
+                    <TableHead className="min-w-[350px]">Notifikasi Internal (Tim)</TableHead>
+                    <TableHead className="min-w-[300px]">Contoh Aksi Pemicu dari Pembeli</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {simulationData.map((item, index) => (
+                    <TableRow key={index} className="align-top">
+                        <TableCell className="font-semibold text-foreground">{item.status}</TableCell>
+                        <TableCell>
+                        <Badge variant="outline" className={cn("whitespace-nowrap", item.pj.color)}>
+                            <item.pj.icon className="mr-2 h-4 w-4" />
+                            {item.pj.name}
+                        </Badge>
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground">{item.pemicu}</TableCell>
+                        <TableCell className="text-sm">
+                        {item.pesanPembeli !== '-' ? (
+                            <div className="p-3 rounded-md bg-muted border text-muted-foreground whitespace-pre-wrap font-mono text-xs">
+                            {item.pesanPembeli}
+                            </div>
+                        ) : (
+                            <span className="text-muted-foreground/60">-</span>
+                        )}
+                        </TableCell>
+                        <TableCell className="text-sm">
+                        {item.pesanInternal !== '-' ? (
+                            <div className="p-3 rounded-md bg-muted border text-muted-foreground whitespace-pre-wrap font-mono text-xs">
+                            <Info className="h-4 w-4 float-left mr-2 mt-0.5 text-blue-500" />
+                            {item.pesanInternal}
+                            </div>
+                        ) : (
+                            <span className="text-muted-foreground/60">-</span>
+                        )}
+                        </TableCell>
+                        <TableCell className="text-sm">
+                        {item.aksiPembeli !== '-' ? (
+                            <div className="p-3 rounded-md bg-green-50 border border-green-200 text-green-900 whitespace-pre-wrap font-mono text-xs">
+                            <UserCheck className="h-4 w-4 float-left mr-2 mt-0.5" />
+                            {item.aksiPembeli}
+                            </div>
+                        ) : (
+                            <span className="text-muted-foreground/60">-</span>
+                        )}
+                        </TableCell>
+                    </TableRow>
+                    ))}
+                </TableBody>
+                </Table>
+            </div>
         </CardContent>
       </Card>
     </div>
