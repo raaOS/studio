@@ -307,7 +307,7 @@ export const allOrderStatusesCategorized: { label: string; statuses: OrderStatus
         ],
     },
     {
-        label: 'Eskalasi & Resolusi (Manual/Sistem)',
+        label: 'Eskalasi & Pembatalan (Manual)',
         statuses: [
             'Perlu Tinjauan Owner',
             'Eskalasi: Revisi di Luar Lingkup',
@@ -564,5 +564,17 @@ export const mockMessageTemplates: MessageTemplate[] = [
     description: 'Pesan yang dikirim saat pesanan telah diselesaikan oleh klien.',
     content: '🎉 *Pesanan Selesai!*\n\nHalo {{customerName}},\n\nSenang sekali pesanan Anda `{{orderId}}` telah selesai! Terima kasih telah mempercayakan kebutuhan desain Anda kepada kami.\n\nKami menantikan kolaborasi berikutnya! Jangan lupa berikan kami ulasan ya. ⭐',
     lastUpdated: '2024-05-26 10:10 AM',
+  },
+  {
+    id: 'awaiting_client_response',
+    description: 'Pesan pengingat jika klien belum merespon pratinjau dalam waktu tertentu.',
+    content: '👋 *Menunggu Respon Anda*\n\nHalo {{customerName}}, kami hanya ingin mengingatkan bahwa pratinjau untuk pesanan `{{orderId}}` sedang menunggu feedback dari Anda. Silakan balas pesan pratinjau sebelumnya dengan "Setuju" atau permintaan revisi Anda.',
+    lastUpdated: '2024-05-28 14:00 PM',
+  },
+  {
+    id: 'revision_in_progress',
+    description: 'Pesan konfirmasi bahwa permintaan revisi sedang dikerjakan.',
+    content: '✍️ *Revisi Diterima*\n\nBaik, {{customerName}}. Permintaan revisi Anda untuk pesanan `{{orderId}}` telah kami catat dan sedang dikerjakan oleh tim desainer kami. Kami akan segera kembali dengan hasil terbarunya.',
+    lastUpdated: '2024-05-28 14:05 PM',
   },
 ];
