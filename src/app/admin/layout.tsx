@@ -31,7 +31,6 @@ import {
   Video,
   CircleDollarSign,
   Palette,
-  MessageSquare,
   PlayCircle,
   Workflow
 } from 'lucide-react';
@@ -62,7 +61,7 @@ export default function AdminLayout({
                       <SidebarMenuButton asChild>
                         <Link href="/admin/simulasi">
                           <PlayCircle />
-                          Simulasi
+                          Simulasi Bot
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -192,7 +191,7 @@ export default function AdminLayout({
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
                         <Link href="/admin/settings/messaging">
-                          <MessageSquare />
+                          <Send />
                           Pesan Bot
                         </Link>
                       </SidebarMenuButton>
