@@ -5,7 +5,7 @@ config();
 
 import '@/ai/flows/telegram-bot-integration.ts';
 import '@/ai/flows/telegram-bot-responder.ts';
+// AI generative flows have been removed.
 import '@/ai/flows/create-drive-folder.ts';
 import '@/ai/flows/verify-telegram-bot.ts';
-import '@/ai/flows/simulate-telegram-response.ts';
 import '@/ai/logic/bot-logic.ts';

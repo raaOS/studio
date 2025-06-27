@@ -32,7 +32,10 @@ import {
   CircleDollarSign,
   Palette,
   PlayCircle,
-  Workflow
+  Workflow,
+  Sparkles,
+  PercentCircle,
+  Paintbrush
 } from 'lucide-react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/AdminHeader';
@@ -48,28 +51,13 @@ export default function AdminLayout({
         <Sidebar>
             <SidebarContent>
               <SidebarGroup>
+                  <SidebarGroupLabel>OPERASIONAL</SidebarGroupLabel>
                   <SidebarMenu>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
                         <Link href="/admin">
                           <LayoutDashboard />
                           Dashboard
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/admin/simulasi">
-                          <PlayCircle />
-                          Simulasi Bot
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/admin/flowchart">
-                          <Workflow />
-                          Flowchart
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -131,17 +119,9 @@ export default function AdminLayout({
                   <SidebarMenu>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="/admin/marketing/promos">
-                          <Gift />
-                          Promo
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/admin/marketing/coupons">
-                          <Ticket />
-                          Kupon
+                        <Link href="/admin/marketing/discounts">
+                          <PercentCircle />
+                          Diskon & Promo
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -177,60 +157,25 @@ export default function AdminLayout({
               <SidebarGroup>
                 <SidebarGroupLabel className="flex items-center gap-2">
                   <Settings />
-                  SETTINGS
+                  PENGATURAN
                 </SidebarGroupLabel>
                   <SidebarMenu>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="/admin/settings/budgets">
-                          <Palette />
-                          Tampilan Budget
+                        <Link href="/admin/settings/general">
+                          <Paintbrush />
+                          Pengaturan Umum
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
-                    <SidebarMenuItem>
+                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="/admin/settings/messaging">
-                          <Send />
-                          Pesan Bot
+                        <Link href="/admin/automation/google">
+                          <Sparkles />
+                          Integrasi Google
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/admin/settings/capacity">
-                          <BarChart3 />
-                          Kapasitas
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/admin/settings/integrations">
-                          <Wrench />
-                          Integrasi
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/admin/settings/user-mgmt">
-                          <UserCog />
-                          User Mgmt
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  </SidebarMenu>
-              </SidebarGroup>
-              
-              <SidebarSeparator />
-
-              <SidebarGroup>
-                <SidebarGroupLabel className="flex items-center gap-2">
-                  <Bot />
-                  AUTOMATION
-                </SidebarGroupLabel>
-                  <SidebarMenu>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
                         <Link href="/admin/automation/telegram">
@@ -241,25 +186,17 @@ export default function AdminLayout({
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="/admin/automation/drive">
-                          <Folder />
-                          Drive
+                        <Link href="/admin/settings/user-mgmt">
+                          <UserCog />
+                          Manajemen User
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
-                    <SidebarMenuItem>
+                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="/admin/automation/calendar">
-                          <Calendar />
-                          Calendar
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/admin/automation/meet">
-                          <Video />
-                          Meet
+                        <Link href="/admin/settings/integrations">
+                          <Wrench />
+                          Panduan Deployment
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
