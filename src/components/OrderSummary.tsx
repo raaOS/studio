@@ -14,8 +14,8 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { app as firebaseApp } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { isFirebaseConfigured, db } from "@/lib/firebase";
 
 
 // Form Schema
@@ -68,9 +68,27 @@ export function OrderSummary() {
         
         const customer = form.getValues();
         localStorage.setItem('customerData', JSON.stringify(customer));
-
         setIsSubmitting(true);
 
+        // Check if Firebase is configured. If not, run a simulation.
+        if (!isFirebaseConfigured || !db) {
+            toast({
+                title: 'Mode Simulasi',
+                description: 'Konfigurasi Firebase tidak ditemukan. Menjalankan simulasi checkout...',
+            });
+
+            setTimeout(() => {
+                toast({
+                    title: 'Simulasi Berhasil!',
+                    description: 'Dalam aplikasi nyata, Anda akan diarahkan ke Telegram sekarang.',
+                });
+                setIsSubmitting(false);
+                clearCart();
+            }, 2500);
+            return;
+        }
+
+        // --- Real Checkout Flow ---
         const orderPayload = {
             customer,
             cartItems: cartItems.map(item => ({
@@ -84,12 +102,10 @@ export function OrderSummary() {
             })),
             totalPrice,
             paymentMethod,
-            createdAt: serverTimestamp(), // Add a timestamp for potential cleanup of old pending orders
+            createdAt: serverTimestamp(),
         };
 
         try {
-            // Save the order to Firestore to get a unique, short ID
-            const db = getFirestore(firebaseApp);
             const pendingOrdersCol = collection(db, "pendingOrders");
             const docRef = await addDoc(pendingOrdersCol, orderPayload);
             const pendingOrderId = docRef.id;
@@ -98,24 +114,21 @@ export function OrderSummary() {
             if (!botUsername) {
                  toast({
                     title: 'Konfigurasi Bot Diperlukan',
-                    description: 'Admin belum mengatur username bot di file .env. Silakan hubungi admin.',
+                    description: 'Admin perlu mengatur NEXT_PUBLIC_TELEGRAM_BOT_USERNAME di file .env',
                     variant: 'destructive',
                 });
                 setIsSubmitting(false);
                 return;
             }
 
-            // The payload is now short, secure, and URL-safe
             const telegramUrl = `https://t.me/${botUsername}?start=${pendingOrderId}`;
-            
-            // Redirect user to Telegram
             window.location.href = telegramUrl;
             
         } catch (error) {
             console.error("Failed to create pending order or redirect:", error);
             toast({
                 title: 'Gagal Memproses Pesanan',
-                description: 'Terjadi kesalahan saat menyiapkan pesanan Anda. Silakan coba lagi.',
+                description: 'Terjadi kesalahan saat terhubung ke database. Pastikan konfigurasi Firebase sudah benar.',
                 variant: 'destructive',
             });
             setIsSubmitting(false);
@@ -277,7 +290,7 @@ export function OrderSummary() {
                      {isSubmitting ? (
                         <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Mengarahkan...
+                            Memproses...
                         </>
                     ) : (
                         <>
