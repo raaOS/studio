@@ -25,14 +25,6 @@ import type { Service } from '@/lib/types';
 
 function HomePageContent() {
 
-  const serviceCategories = useMemo(() => {
-    return services.reduce((acc, service) => {
-        const categoryName = mockCategories.find(c => c.id === service.category)?.name || 'Lainnya';
-        (acc[categoryName] = acc[categoryName] || []).push(service);
-        return acc;
-    }, {} as Record<string, Service[]>);
-  }, []);
-
   const categoryOrder = [
     'Konten Media Sosial',
     'Branding & Kantor',
@@ -51,14 +43,21 @@ function HomePageContent() {
         {/* Catalog */}
         <section id="catalog-section" className="pt-10 pb-16">
             <div className="container mx-auto px-4 space-y-8">
-                {categoryOrder.map((category) => {
-                  const servicesInCategory = serviceCategories[category];
-                  if (!servicesInCategory) return null;
+                {categoryOrder.map((categoryName) => {
+                  const category = mockCategories.find(c => c.name === categoryName);
+                  if (!category) return null;
+
+                  const servicesInCategory = services.filter(s => s.category === category.id);
+                  if (servicesInCategory.length === 0) return null;
 
                   return (
-                    <div key={category}>
-                      <ProductCarousel title={category} services={servicesInCategory} />
-                      {category === 'Branding & Kantor' && <CouponInfoSection />}
+                    <div key={category.id}>
+                      <ProductCarousel 
+                        title={category.name} 
+                        services={servicesInCategory} 
+                        categoryId={category.id} 
+                      />
+                      {category.name === 'Branding & Kantor' && <CouponInfoSection />}
                     </div>
                   );
                 })}

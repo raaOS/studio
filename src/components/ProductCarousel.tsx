@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
@@ -5,11 +6,13 @@ import { ServiceCard } from './ServiceCard';
 import type { Service } from '@/lib/types';
 import { Button } from './ui/button';
 import { ChevronLeft, ChevronRight, LayoutPanelLeft, Briefcase, Megaphone, MonitorSmartphone } from 'lucide-react';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 interface ProductCarouselProps {
   title: string;
   services: Service[];
+  categoryId: string;
 }
 
 const categoryIcons: Record<string, React.ElementType> = {
@@ -20,7 +23,7 @@ const categoryIcons: Record<string, React.ElementType> = {
 };
 
 
-export function ProductCarousel({ title, services }: ProductCarouselProps) {
+export function ProductCarousel({ title, services, categoryId }: ProductCarouselProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
@@ -74,10 +77,15 @@ export function ProductCarousel({ title, services }: ProductCarouselProps) {
   return (
     <div className="mb-12">
       <div className="relative">
-        <h3 className="text-2xl font-headline font-bold mb-6 px-4 md:px-0 flex items-center gap-3">
-          {Icon && <Icon className="h-7 w-7 text-primary" />}
-          {title}
-        </h3>
+        <div className="flex justify-between items-center mb-6 px-4 md:px-0">
+          <h3 className="text-2xl font-headline font-bold flex items-center gap-3">
+            {Icon && <Icon className="h-7 w-7 text-primary" />}
+            {title}
+          </h3>
+          <Link href={`/catalog/${categoryId}`} className="text-green-600 font-semibold text-sm hover:underline shrink-0 ml-4">
+              Lihat Semua
+          </Link>
+        </div>
         
         <div
           ref={scrollContainerRef}
