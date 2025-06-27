@@ -85,7 +85,7 @@ export function MessageTemplateFormDialog({ template, isOpen, onOpenChange }: Me
         <DialogHeader>
           <DialogTitle>{template ? 'Edit Template Pesan' : 'Buat Template Baru'}</DialogTitle>
           <DialogDescription>
-            Gunakan variabel dalam kurung kurawal, contoh: `+"`{{customerName}}`"+`, untuk menyisipkan data dinamis.
+            Gunakan variabel dalam kurung kurawal, contoh: <code>{`{{customerName}}`}</code>, untuk menyisipkan data dinamis.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
