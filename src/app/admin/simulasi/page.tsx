@@ -1,4 +1,6 @@
 
+'use client';
+
 import React from 'react';
 import {
   Table,
@@ -95,12 +97,20 @@ const simulationData = [
     aksiPembeli: '-',
   },
   {
-    status: 'Dibatalkan (Belum/Sudah Dikerjakan)',
+    status: 'Dibatalkan (Belum Dikerjakan)',
     pj: { name: 'Owner', icon: Trash2, color: 'bg-red-100 text-red-800 border-red-200' },
-    pemicu: 'Sistem: Pembayaran tidak diterima. Manual: Permintaan klien atau keputusan internal.',
-    pesanPembeli: '❌ *Pesanan Dibatalkan*\n\nMohon maaf, pesanan Anda `{{orderId}}` telah dibatalkan karena `{{cancellationReason}}`. Jika ada pertanyaan, silakan hubungi admin.',
-    pesanInternal: '🗑️ **Pembatalan Order**\nOrder `{{orderId}}` dibatalkan. Status: `{{preOrPostWork}}`. Alasan: `{{cancellationReason}}`',
+    pemicu: 'Sistem: Pembayaran tidak diterima. Manual: Permintaan klien sebelum pekerjaan dimulai.',
+    pesanPembeli: '❌ *Pesanan Dibatalkan*\n\nMohon maaf, pesanan Anda `{{orderId}}` telah dibatalkan karena `{{cancellationReason}}`. Jika sudah terlanjur membayar, dana akan dikembalikan penuh.',
+    pesanInternal: '🗑️ **Pembatalan Pre-Work**\nOrder `{{orderId}}` dibatalkan sebelum dikerjakan. Alasan: `{{cancellationReason}}`.',
     aksiPembeli: 'Meminta pembatalan / Tidak melakukan pembayaran.',
+  },
+  {
+    status: 'Dibatalkan (Sudah Dikerjakan)',
+    pj: { name: 'Owner', icon: Trash2, color: 'bg-red-100 text-red-800 border-red-200' },
+    pemicu: 'Manual: Permintaan klien atau keputusan internal setelah pekerjaan dimulai.',
+    pesanPembeli: '❌ *Pesanan Dibatalkan*\n\nMohon maaf, pesanan `{{orderId}}` dibatalkan atas permintaan Anda. Karena pekerjaan sudah dimulai, akan ada potongan biaya sesuai kebijakan.',
+    pesanInternal: '🗑️ **Pembatalan Post-Work**\nOrder `{{orderId}}` dibatalkan setelah dikerjakan. Alasan: `{{cancellationReason}}`. Periksa kebijakan refund.',
+    aksiPembeli: 'Meminta pembatalan setelah proses desain berjalan.',
   },
   {
     status: 'Tidak Puas (Refund 50%)',
