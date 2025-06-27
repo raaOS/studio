@@ -62,17 +62,23 @@ const processTelegramWebhookFlow = ai.defineFlow(
   },
   async (payload) => {
     const chatId = payload.message?.chat?.id;
-    const text = payload.message?.text?.trim();
+    const incomingText = payload.message?.text?.trim();
 
-    if (!chatId || !text) {
+    if (!chatId || !incomingText) {
       console.log('Webhook received without chat ID or text. Ignoring.');
-      return { success: true };
+      return { success: true }; // Success to avoid Telegram retries
     }
 
-    // Check for /start command with an order payload
-    if (text.startsWith('/start ')) {
+    const lowerCaseText = incomingText.toLowerCase();
+
+    // Keyword definitions for natural language commands
+    const approvalKeywords = ['setuju', 'ok', 'approve', 'lanjutkan', 'sip', 'sudah bagus'];
+    const revisionKeywords = ['revisi', 'ubah', 'ganti', 'perbaiki', 'tolong perbaiki'];
+
+    // 1. Check for /start command with an order payload
+    if (lowerCaseText.startsWith('/start ')) {
       try {
-        const base64Payload = text.substring(7); // remove '/start '
+        const base64Payload = incomingText.substring(7); // remove '/start '
         const decodedJson = Buffer.from(base64Payload, 'base64').toString('utf-8');
         const orderData = OrderPayloadSchema.parse(JSON.parse(decodedJson));
         
@@ -84,7 +90,6 @@ const processTelegramWebhookFlow = ai.defineFlow(
             message: `⏳ Terima kasih, ${customer.name}! Pesanan Anda dengan ID \`${orderId}\` sedang kami siapkan...`,
         });
 
-        // Create folder, but don't send the link yet.
         await createOrderFolder({
             orderId: orderId,
             customerName: customer.name,
@@ -121,11 +126,41 @@ Terima kasih! Tim kami akan segera menghubungi Anda untuk langkah selanjutnya. S
           message: `Terjadi kesalahan saat memproses pesanan Anda. Data pesanan tidak valid. Silakan coba lagi dari website atau hubungi admin. Error: ${e.message}`,
         });
       }
-    } else if (text.toLowerCase() === '/start') {
+    } 
+    // 2. Check for approval keywords
+    else if (approvalKeywords.some(keyword => lowerCaseText.includes(keyword))) {
+        await sendTelegramUpdate({
+          telegramId: String(chatId),
+          message: `✅ *Persetujuan Diterima!*
+
+Terima kasih atas konfirmasi Anda. Kami akan segera menyelesaikan pesanan Anda dan mengirimkan semua file final. (Ini adalah simulasi, status pesanan belum benar-benar berubah).`,
+        });
+    }
+    // 3. Check for revision keywords
+    else if (revisionKeywords.some(keyword => lowerCaseText.startsWith(keyword))) {
+        await sendTelegramUpdate({
+          telegramId: String(chatId),
+          message: `✍️ *Permintaan Revisi Dicatat!*
+
+Catatan revisi Anda telah kami terima dan akan diteruskan ke tim desainer. (Ini adalah simulasi, status pesanan belum benar-benar berubah).`,
+        });
+    }
+    // 4. Check for a simple /start command
+    else if (lowerCaseText === '/start') {
       const welcomeMessage = `Selamat datang di Urgent Studio Bot! 🤖\n\nUntuk memesan, silakan kembali ke website kami, isi keranjang Anda, dan klik tombol "Selesaikan via Telegram".`;
       await sendTelegramUpdate({
         telegramId: String(chatId),
         message: welcomeMessage,
+      });
+    } 
+    // 5. Fallback for any other message
+    else {
+      await sendTelegramUpdate({
+        telegramId: String(chatId),
+        message: `Maaf, saya belum mengerti maksud Anda. 
+
+Jika ingin menyetujui desain, balas pesan pratinjau dengan "Setuju". 
+Jika ingin revisi, balas pesan pratinjau dengan "Revisi: [catatan Anda]".`,
       });
     }
 
