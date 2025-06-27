@@ -62,7 +62,7 @@ export default function AdminLayout({
                       <SidebarMenuButton asChild>
                         <Link href="/admin/customers">
                           <Users />
-                          Pelanggan
+                          Pelanggan & Loyalitas
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -79,14 +79,6 @@ export default function AdminLayout({
                         <Link href="/admin/marketing/banners">
                           <ImageIcon />
                           Banner
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/admin/marketing/loyalty">
-                          <Heart />
-                          Loyalty
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
