@@ -19,7 +19,7 @@ export default function OrderDetailPage() {
   const params = useParams();
   const { toast } = useToast();
   
-  const orderId = typeof params?.orderId === 'string' ? params.orderId : '';
+  const orderId = params.orderId as string;
   
   const order: Order | null = useMemo(() => {
     if (!orderId) return null;

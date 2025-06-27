@@ -18,7 +18,7 @@ const getServicesByCategory = (categoryId: string) => {
 // The param is named `budget` due to the folder structure [budget]
 function CategoryPageContent() {
     const params = useParams();
-    const budget = typeof params.budget === 'string' ? params.budget : '';
+    const budget = params.budget as string;
     const category = getCategoryBySlug(budget);
     
     if (!category) {
