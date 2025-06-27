@@ -12,13 +12,13 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
-export const SimulateTelegramResponseInputSchema = z.object({
+const SimulateTelegramResponseInputSchema = z.object({
   text: z.string().describe('The message text sent by the user.'),
   chatId: z.number().describe('The chat ID of the user.'),
 });
 export type SimulateTelegramResponseInput = z.infer<typeof SimulateTelegramResponseInputSchema>;
 
-export const SimulateTelegramResponseOutputSchema = z.object({
+const SimulateTelegramResponseOutputSchema = z.object({
   response: z.string().describe('The message that the bot would send back.'),
 });
 export type SimulateTelegramResponseOutput = z.infer<typeof SimulateTelegramResponseOutputSchema>;
