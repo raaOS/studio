@@ -33,7 +33,7 @@ const simulationData = [
     pesanInternal: '✅ **Pembayaran Lunas!**\nOrder `{{orderId}}` siap untuk dikerjakan. Telah dimasukkan ke antrian desainer.',
     aksiPembeli: 'Melakukan transfer dan konfirmasi pembayaran (di luar alur bot).',
   },
-  {
+    {
     status: { name: 'Masuk Antrian (Minggu Depan)', color: 'bg-slate-100 text-slate-800 border-slate-200' },
     pj: { name: 'Sistem', icon: CalendarOff, color: 'bg-slate-100 text-slate-800 border-slate-200' },
     pemicu: 'Pembayaran terkonfirmasi, namun kapasitas antrian minggu ini sudah penuh (Sistem Otomatis).',
@@ -97,7 +97,7 @@ const simulationData = [
     pesanInternal: '🛡️ **TINJAUAN OWNER DIPERLUKAN!**\nOrder `{{orderId}}` memerlukan keputusan Anda. Penyebab: `{{escalationReason}}`.',
     aksiPembeli: '-',
   },
-  {
+   {
     status: { name: 'Dibatalkan (Belum Dikerjakan)', color: 'bg-red-100 text-red-800 border-red-200' },
     pj: { name: 'Owner', icon: Trash2, color: 'bg-red-100 text-red-800 border-red-200' },
     pemicu: 'Sistem: Pembayaran tidak diterima. Manual: Permintaan klien sebelum pekerjaan dimulai.',
@@ -150,67 +150,67 @@ const HighlightPemicu = ({ text }: { text: string }) => {
 };
 
 const DesktopView = () => (
-  <Card>
-    <div className="w-full overflow-x-auto">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="min-w-[200px]">Status Pesanan</TableHead>
-            <TableHead className="min-w-[150px]">Penanggung Jawab</TableHead>
-            <TableHead className="min-w-[250px]">Pemicu Perubahan Status</TableHead>
-            <TableHead className="min-w-[300px]">Contoh Pesan (Pembeli)</TableHead>
-            <TableHead className="min-w-[300px]">Notifikasi Internal (Tim)</TableHead>
-            <TableHead className="min-w-[250px]">Contoh Aksi Pemicu dari Pembeli</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {simulationData.map((item, index) => (
-            <TableRow key={index} className="align-top">
-              <TableCell>
-                <Badge variant="outline" className={cn("whitespace-nowrap font-semibold", item.status.color)}>{item.status.name}</Badge>
-              </TableCell>
-              <TableCell>
-                <Badge variant="outline" className={cn("whitespace-nowrap", item.pj.color)}>
-                    <item.pj.icon className="mr-2 h-4 w-4" />
-                    {item.pj.name}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <HighlightPemicu text={item.pemicu} />
-              </TableCell>
-              <TableCell>
-                {item.pesanPembeli !== '-' ? (
-                  <div className="p-3 rounded-md bg-muted border text-muted-foreground whitespace-pre-wrap font-mono text-xs">
-                    {item.pesanPembeli}
-                  </div>
-                ) : (
-                  <span className="text-muted-foreground/60">-</span>
-                )}
-              </TableCell>
-              <TableCell>
-                {item.pesanInternal !== '-' ? (
-                  <div className="p-3 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-900 dark:bg-blue-300/10 dark:border-blue-300/20 dark:text-blue-200 whitespace-pre-wrap font-mono text-xs">
-                    {item.pesanInternal}
-                  </div>
-                ) : (
-                  <span className="text-muted-foreground/60">-</span>
-                )}
-              </TableCell>
-              <TableCell>
-                {item.aksiPembeli !== '-' ? (
-                  <div className="p-3 rounded-md bg-green-50 border-green-200 text-green-900 dark:bg-green-500/10 dark:border-green-500/20 dark:text-green-200 whitespace-pre-wrap font-mono text-xs">
-                    {item.aksiPembeli}
-                  </div>
-                ) : (
-                  <span className="text-muted-foreground/60">-</span>
-                )}
-              </TableCell>
+    <Card>
+      <div className="w-full overflow-x-auto">
+        <Table className="table-fixed">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[12%] min-w-[150px]">Status Pesanan</TableHead>
+              <TableHead className="w-[10%] min-w-[150px]">Penanggung Jawab</TableHead>
+              <TableHead className="w-[18%] min-w-[200px]">Pemicu Perubahan Status</TableHead>
+              <TableHead className="w-[20%] min-w-[250px]">Contoh Pesan (Pembeli)</TableHead>
+              <TableHead className="w-[20%] min-w-[250px]">Notifikasi Internal (Tim)</TableHead>
+              <TableHead className="w-[20%] min-w-[250px]">Contoh Aksi Pemicu dari Pembeli</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  </Card>
+          </TableHeader>
+          <TableBody>
+            {simulationData.map((item, index) => (
+              <TableRow key={index} className="align-top">
+                <TableCell>
+                  <Badge variant="outline" className={cn("whitespace-nowrap font-semibold", item.status.color)}>{item.status.name}</Badge>
+                </TableCell>
+                <TableCell>
+                  <Badge variant="outline" className={cn("whitespace-nowrap", item.pj.color)}>
+                      <item.pj.icon className="mr-2 h-4 w-4" />
+                      {item.pj.name}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <HighlightPemicu text={item.pemicu} />
+                </TableCell>
+                <TableCell>
+                  {item.pesanPembeli !== '-' ? (
+                    <div className="p-3 rounded-md bg-muted border text-muted-foreground whitespace-pre-wrap font-mono text-xs">
+                      {item.pesanPembeli}
+                    </div>
+                  ) : (
+                    <span className="text-muted-foreground/60">-</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {item.pesanInternal !== '-' ? (
+                    <div className="p-3 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-900 dark:bg-blue-300/10 dark:border-blue-300/20 dark:text-blue-200 whitespace-pre-wrap font-mono text-xs">
+                      {item.pesanInternal}
+                    </div>
+                  ) : (
+                    <span className="text-muted-foreground/60">-</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {item.aksiPembeli !== '-' ? (
+                    <div className="p-3 rounded-md bg-green-50 border-green-200 text-green-900 dark:bg-green-500/10 dark:border-green-500/20 dark:text-green-200 whitespace-pre-wrap font-mono text-xs">
+                      {item.aksiPembeli}
+                    </div>
+                  ) : (
+                    <span className="text-muted-foreground/60">-</span>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </Card>
 );
 
 const MobileView = () => (
@@ -280,5 +280,3 @@ export default function SimulasiPage() {
     </div>
   );
 }
-
-    
