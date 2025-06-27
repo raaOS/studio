@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Header } from '@/components/Header';
@@ -19,8 +18,8 @@ const getServicesByCategory = (categoryId: string) => {
 // The param is named `budget` due to the folder structure [budget]
 function CategoryPageContent() {
     const params = useParams();
-    const budget = params.budget as string;
-    const category = getCategoryBySlug(budget); // Use budget from params hook
+    const budget = typeof params.budget === 'string' ? params.budget : '';
+    const category = getCategoryBySlug(budget);
     
     if (!category) {
         notFound();

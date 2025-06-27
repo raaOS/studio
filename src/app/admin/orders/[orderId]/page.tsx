@@ -17,8 +17,9 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function OrderDetailPage() {
   const params = useParams();
-  const orderId = params?.orderId as string;
   const { toast } = useToast();
+  
+  const orderId = typeof params?.orderId === 'string' ? params.orderId : '';
   
   const order: Order | null = useMemo(() => {
     if (!orderId) return null;
@@ -37,7 +38,7 @@ export default function OrderDetailPage() {
     }
   }, [order]);
 
-  if (params?.orderId && !order) {
+  if (orderId && !order) {
     notFound();
   }
 
