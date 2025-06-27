@@ -33,8 +33,8 @@ export function ServiceCard({ service }: ServiceCardProps) {
     <>
       <Card className="flex flex-col h-full overflow-hidden">
         <CardHeader className="p-0">
-          <div 
-            className="w-full cursor-pointer"
+          <div
+            className="relative w-full cursor-pointer overflow-hidden aspect-[4/3]"
             onClick={() => setIsImagePreviewOpen(true)}
             role="button"
             aria-label={`Lihat gambar untuk ${service.name}`}
@@ -42,8 +42,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
             <Image
               src={service.image}
               alt={service.name}
-              width={250}
-              height={200}
+              fill
               className="object-cover"
               data-ai-hint={service.dataAiHint}
             />
