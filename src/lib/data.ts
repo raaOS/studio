@@ -523,10 +523,28 @@ export const mockMeetActivityLogs: MeetActivityLog[] = [
 
 export const mockMessageTemplates: MessageTemplate[] = [
   {
+    id: 'welcome_start',
+    description: 'Pesan balasan saat pengguna baru mengirim /start tanpa payload pesanan.',
+    content: 'Selamat datang di Urgent Studio Bot! 🤖\n\nUntuk memesan, silakan kembali ke website kami, isi keranjang Anda, dan klik tombol "Selesaikan via Telegram".',
+    lastUpdated: '2024-05-20 09:00 AM',
+  },
+  {
     id: 'order_confirmation',
     description: 'Pesan yang dikirim saat pesanan baru berhasil diterima oleh bot.',
-    content: '✅ *Pesanan Anda Diterima!*\n\n*Order ID:* `{{orderId}}`\n*Nama:* {{customerName}}\n\nTerima kasih! Tim kami akan segera menghubungi Anda.',
+    content: '✅ *Pesanan Anda Diterima!*\n\n*Order ID:* `{{orderId}}`\n*Nama:* {{customerName}}\n\nTerima kasih! Tim kami akan segera menghubungi Anda untuk konfirmasi pembayaran.',
     lastUpdated: '2024-05-25 10:00 AM',
+  },
+   {
+    id: 'payment_pending',
+    description: 'Pesan yang dikirim setelah checkout, meminta pembayaran (jika diperlukan).',
+    content: '⏳ *Menunggu Pembayaran*\n\nHalo {{customerName}},\n\nPesanan Anda `{{orderId}}` telah kami terima. Total tagihan Anda adalah *{{totalPrice}}*.\n\nSilakan lakukan pembayaran ke rekening berikut:\n**BCA: 1234567890 (a/n Urgent Studio)**\n\nSetelah melakukan pembayaran, pesanan Anda akan otomatis masuk ke antrian pengerjaan. Terima kasih!',
+    lastUpdated: '2024-05-26 10:00 AM',
+  },
+  {
+    id: 'order_queued',
+    description: 'Pesan yang dikirim setelah pembayaran terkonfirmasi dan pesanan masuk antrian.',
+    content: '👍 *Pembayaran Diterima & Masuk Antrian*\n\nHalo {{customerName}},\n\nPembayaran untuk pesanan `{{orderId}}` telah kami konfirmasi. Pesanan Anda sekarang resmi masuk ke dalam antrian pengerjaan.\n\nKami akan memberi tahu Anda lagi setelah pratinjau desain pertama siap.',
+    lastUpdated: '2024-05-26 10:05 AM',
   },
   {
     id: 'preview_ready',
@@ -535,9 +553,9 @@ export const mockMessageTemplates: MessageTemplate[] = [
     lastUpdated: '2024-05-25 11:30 AM',
   },
   {
-    id: 'welcome_start',
-    description: 'Pesan balasan saat pengguna baru mengirim /start tanpa payload pesanan.',
-    content: 'Selamat datang di Urgent Studio Bot! 🤖\n\nUntuk memesan, silakan kembali ke website kami, isi keranjang Anda, dan klik tombol "Selesaikan via Telegram".',
-    lastUpdated: '2024-05-20 09:00 AM',
+    id: 'order_completed',
+    description: 'Pesan yang dikirim saat pesanan telah diselesaikan oleh klien.',
+    content: '🎉 *Pesanan Selesai!*\n\nHalo {{customerName}},\n\nSenang sekali pesanan Anda `{{orderId}}` telah selesai! Terima kasih telah mempercayakan kebutuhan desain Anda kepada kami.\n\nKami menantikan kolaborasi berikutnya! Jangan lupa berikan kami ulasan ya. ⭐',
+    lastUpdated: '2024-05-26 10:10 AM',
   },
 ];
