@@ -1,59 +1,81 @@
-
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
-import { Gift, Percent } from "lucide-react";
-import { mockBanners } from "@/lib/data";
-import React from "react";
-
-const iconMap = {
-    Gift: Gift,
-    Percent: Percent,
-};
+import React, { useState } from 'react';
+import Image from 'next/image';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { mockCoupons } from "@/lib/data";
+import { Copy, Check } from "lucide-react";
+import type { Coupon } from '@/lib/types';
 
 export function CouponInfoSection() {
-    const infoCards = mockBanners.filter(
-        (banner) => banner.position === 'Info Card' && banner.status === 'Aktif'
-    );
+    const { toast } = useToast();
+    const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
-    if (infoCards.length === 0) {
+    // Get the first two active coupons to display
+    const activeCoupons = mockCoupons.filter(c => c.status === 'Aktif').slice(0, 2);
+
+    const handleCopy = (code: string) => {
+        navigator.clipboard.writeText(code).then(() => {
+            setCopiedCode(code);
+            toast({
+                title: "Kode Kupon Disalin!",
+                description: `Kode "${code}" telah disalin ke clipboard.`,
+            });
+            setTimeout(() => setCopiedCode(null), 2000);
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+            toast({
+                title: 'Gagal Menyalin Kode',
+                description: 'Coba salin secara manual.',
+                variant: 'destructive',
+            });
+        });
+    };
+
+    if (activeCoupons.length === 0) {
         return null;
     }
-    
+
     return (
         <section className="container mx-auto px-4 py-12 md:py-16">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {infoCards.map((card) => {
-                    const Icon = card.icon ? iconMap[card.icon as keyof typeof iconMap] : null;
-                    return (
-                        <Card key={card.id} className="overflow-hidden flex flex-col md:flex-row items-center shadow-lg h-full">
-                            <div className="w-full md:w-1/3 shrink-0">
-                                <Image
-                                    src={card.image || 'https://placehold.co/400x400.png'}
-                                    alt={card.name}
-                                    width={400}
-                                    height={400}
-                                    className="object-cover w-full h-48 md:h-full"
-                                    data-ai-hint={card.dataAiHint}
-                                />
-                            </div>
-                            <div className="p-6 flex-1">
+                {activeCoupons.map((coupon: Coupon) => (
+                     <Card key={coupon.id} className="overflow-hidden flex flex-col md:flex-row items-center shadow-lg h-full">
+                        <div className="w-full md:w-1/3 shrink-0">
+                            <Image
+                                src='https://placehold.co/400x400.png'
+                                alt={`Promo ${coupon.code}`}
+                                width={400}
+                                height={400}
+                                className="object-cover w-full h-48 md:h-full"
+                                data-ai-hint="coupon gift"
+                            />
+                        </div>
+                        <div className="p-6 flex-1 flex flex-col justify-between h-full w-full">
+                            <div>
                                 <CardHeader className="p-0">
-                                    <CardTitle className="flex items-center gap-2">
-                                        {Icon && <Icon className="h-5 w-5" />}
-                                        {card.name}
+                                    <CardTitle>
+                                        {coupon.code === 'NEWBIE20' ? 'Spesial Pengguna Baru' : 'Kupon Diskon Tersedia'}
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent className="p-0 pt-4">
-                                    <p className="text-muted-foreground">
-                                        {card.content}
+                                <CardContent className="p-0 pt-2">
+                                    <p className="text-muted-foreground text-sm">
+                                        Gunakan kode di bawah ini saat checkout untuk mendapatkan diskon sebesar {coupon.discount}.
                                     </p>
                                 </CardContent>
                             </div>
-                        </Card>
-                    );
-                })}
+                             <div className="flex items-center justify-between rounded-lg border-2 border-dashed bg-muted p-3 mt-4">
+                                <p className="font-mono text-lg font-bold text-primary">{coupon.code}</p>
+                                <Button size="sm" onClick={() => handleCopy(coupon.code)} className='shrink-0'>
+                                    {copiedCode === coupon.code ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                                    <span className="ml-2 hidden sm:inline">{copiedCode === coupon.code ? 'Disalin' : 'Salin'}</span>
+                                </Button>
+                            </div>
+                        </div>
+                    </Card>
+                ))}
             </div>
         </section>
     );
