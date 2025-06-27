@@ -22,7 +22,7 @@ const TelegramWebhookPayloadSchema = z.object({
 });
 export type TelegramWebhookPayload = z.infer<typeof TelegramWebhookPayloadSchema>;
 
-// This schema should match the payload sent from the website
+// This schema should match the payload sent from the website checkout
 const OrderPayloadSchema = z.object({
     customer: z.object({
       name: z.string(),
@@ -79,6 +79,7 @@ const processTelegramWebhookFlow = ai.defineFlow(
     if (lowerCaseText.startsWith('/start ')) {
       try {
         const base64Payload = incomingText.substring(7); // remove '/start '
+        // In a browser, it's btoa(). In Node.js, it's Buffer.
         const decodedJson = Buffer.from(base64Payload, 'base64').toString('utf-8');
         const orderData = OrderPayloadSchema.parse(JSON.parse(decodedJson));
         
@@ -90,7 +91,8 @@ const processTelegramWebhookFlow = ai.defineFlow(
             message: `⏳ Terima kasih, ${customer.name}! Pesanan Anda dengan ID \`${orderId}\` sedang kami siapkan...`,
         });
 
-        await createOrderFolder({
+        // We can create the folder in parallel.
+        createOrderFolder({
             orderId: orderId,
             customerName: customer.name,
             folderTemplate: '[OrderID] - [CustomerName]',
@@ -127,7 +129,15 @@ Terima kasih! Tim kami akan segera menghubungi Anda untuk langkah selanjutnya. S
         });
       }
     } 
-    // 2. Check for approval keywords
+    // 2. Check for a simple /start command
+    else if (lowerCaseText === '/start') {
+      const welcomeMessage = `Selamat datang di Urgent Studio Bot! 🤖\n\nUntuk memesan, silakan kembali ke website kami, isi keranjang Anda, dan klik tombol "Selesaikan via Telegram".`;
+      await sendTelegramUpdate({
+        telegramId: String(chatId),
+        message: welcomeMessage,
+      });
+    }
+    // 3. Check for approval keywords
     else if (approvalKeywords.some(keyword => lowerCaseText.includes(keyword))) {
         await sendTelegramUpdate({
           telegramId: String(chatId),
@@ -136,7 +146,7 @@ Terima kasih! Tim kami akan segera menghubungi Anda untuk langkah selanjutnya. S
 Terima kasih atas konfirmasi Anda. Kami akan segera menyelesaikan pesanan Anda dan mengirimkan semua file final. (Ini adalah simulasi, status pesanan belum benar-benar berubah).`,
         });
     }
-    // 3. Check for revision keywords
+    // 4. Check for revision keywords
     else if (revisionKeywords.some(keyword => lowerCaseText.startsWith(keyword))) {
         await sendTelegramUpdate({
           telegramId: String(chatId),
@@ -145,14 +155,6 @@ Terima kasih atas konfirmasi Anda. Kami akan segera menyelesaikan pesanan Anda d
 Catatan revisi Anda telah kami terima dan akan diteruskan ke tim desainer. (Ini adalah simulasi, status pesanan belum benar-benar berubah).`,
         });
     }
-    // 4. Check for a simple /start command
-    else if (lowerCaseText === '/start') {
-      const welcomeMessage = `Selamat datang di Urgent Studio Bot! 🤖\n\nUntuk memesan, silakan kembali ke website kami, isi keranjang Anda, dan klik tombol "Selesaikan via Telegram".`;
-      await sendTelegramUpdate({
-        telegramId: String(chatId),
-        message: welcomeMessage,
-      });
-    } 
     // 5. Fallback for any other message
     else {
       await sendTelegramUpdate({
