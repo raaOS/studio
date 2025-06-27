@@ -14,28 +14,21 @@ import {
   Package,
   CreditCard,
   Archive,
-  Gift,
-  Ticket,
-  Image as ImageIcon,
+  ImageIcon,
   Users,
-  Mail,
   Settings,
-  BarChart3,
   Wrench,
   LineChart,
   UserCog,
-  Bot,
   Send,
-  Folder,
-  Calendar,
-  Video,
-  CircleDollarSign,
-  Palette,
-  PlayCircle,
-  Workflow,
   Sparkles,
-  PercentCircle,
-  Paintbrush
+  CircleDollarSign,
+  Paintbrush,
+  Heart,
+  Briefcase,
+  Wallet,
+  BrainCircuit,
+  PercentCircle
 } from 'lucide-react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/AdminHeader';
@@ -50,8 +43,12 @@ export default function AdminLayout({
       <div className="flex min-h-screen bg-muted/40">
         <Sidebar>
             <SidebarContent>
+              {/* RUANG OWNER */}
               <SidebarGroup>
-                  <SidebarGroupLabel>OPERASIONAL</SidebarGroupLabel>
+                  <SidebarGroupLabel className="flex items-center gap-2">
+                    <Briefcase />
+                    RUANG OWNER
+                  </SidebarGroupLabel>
                   <SidebarMenu>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
@@ -61,11 +58,11 @@ export default function AdminLayout({
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
-                    <SidebarMenuItem>
+                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="/admin/orders">
-                          <Package />
-                          Pesanan
+                        <Link href="/admin/analytics">
+                          <LineChart />
+                          Analytics
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -77,47 +74,7 @@ export default function AdminLayout({
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/admin/payments">
-                          <CreditCard />
-                          Pembayaran
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                            <Link href="/admin/refunds">
-                                <CircleDollarSign />
-                                Refund
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
                      <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/admin/products">
-                          <Archive />
-                          Produk
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href="/admin/analytics">
-                          <LineChart />
-                          Analytics
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  </SidebarMenu>
-              </SidebarGroup>
-
-              <SidebarSeparator />
-
-              <SidebarGroup>
-                <SidebarGroupLabel>MARKETING</SidebarGroupLabel>
-                  <SidebarMenu>
-                    <SidebarMenuItem>
                       <SidebarMenuButton asChild>
                         <Link href="/admin/marketing/discounts">
                           <PercentCircle />
@@ -136,16 +93,36 @@ export default function AdminLayout({
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
                         <Link href="/admin/marketing/loyalty">
-                          <Users />
+                          <Heart />
                           Loyalty
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
+                  </SidebarMenu>
+              </SidebarGroup>
+
+              <SidebarSeparator />
+
+              {/* RUANG DESAINER */}
+              <SidebarGroup>
+                <SidebarGroupLabel className="flex items-center gap-2">
+                    <Paintbrush/>
+                    RUANG DESAINER
+                </SidebarGroupLabel>
+                  <SidebarMenu>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="/admin/marketing/email">
-                          <Mail />
-                          Email
+                        <Link href="/admin/orders">
+                          <Package />
+                          Pesanan
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                     <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="/admin/products">
+                          <Archive />
+                          Produk
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -154,16 +131,45 @@ export default function AdminLayout({
               
               <SidebarSeparator />
 
+               {/* RUANG FINANCE */}
               <SidebarGroup>
                 <SidebarGroupLabel className="flex items-center gap-2">
-                  <Settings />
-                  PENGATURAN
+                    <Wallet/>
+                    RUANG FINANCE
+                </SidebarGroupLabel>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="/admin/payments">
+                          <CreditCard />
+                          Pembayaran
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <Link href="/admin/refunds">
+                                <CircleDollarSign />
+                                Refund
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+              </SidebarGroup>
+
+              <SidebarSeparator />
+
+              {/* RUANG OTAK (SISTEM) */}
+              <SidebarGroup>
+                <SidebarGroupLabel className="flex items-center gap-2">
+                  <BrainCircuit />
+                  RUANG OTAK (SISTEM)
                 </SidebarGroupLabel>
                   <SidebarMenu>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
                         <Link href="/admin/settings/general">
-                          <Paintbrush />
+                          <Settings />
                           Pengaturan Umum
                         </Link>
                       </SidebarMenuButton>
