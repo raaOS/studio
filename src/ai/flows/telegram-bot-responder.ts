@@ -11,6 +11,7 @@ import { z } from 'genkit';
 import { sendTelegramUpdate } from './telegram-bot-integration';
 import { createOrderFolder } from './create-drive-folder';
 import { adminDb } from '@/lib/firebase-admin';
+import { getTelegramResponse } from '../logic/bot-logic';
 
 // This schema defines the part of the Telegram webhook payload we care about.
 const TelegramWebhookPayloadSchema = z.object({
@@ -73,11 +74,8 @@ const processTelegramWebhookFlow = ai.defineFlow(
 
     const lowerCaseText = incomingText.toLowerCase();
     
-    // Keyword definitions for natural language commands
-    const revisionKeywords = ['revisi', 'ubah', 'ganti', 'perbaiki', 'tolong perbaiki'];
-    const approvalKeywords = ['setuju', 'ok', 'approve', 'lanjutkan', 'sip', 'sudah bagus', 'oke'];
-
-    // PRIORITY 1: Check for /start command with an order payload ID
+    // PRIORITY 1: Check for /start command with an order payload ID. This is a special case
+    // that requires database interaction and shouldn't be in the shared conversational logic.
     if (lowerCaseText.startsWith('/start ')) {
       const pendingOrderId = incomingText.substring(7); // remove '/start '
 
@@ -110,6 +108,7 @@ const processTelegramWebhookFlow = ai.defineFlow(
             message: `⏳ Terima kasih, ${customer.name}! Pesanan Anda dengan ID \`${orderId}\` sedang kami siapkan...`,
         });
 
+        // This is a real action, so we do it here.
         createOrderFolder({
             orderId: orderId,
             customerName: customer.name,
@@ -126,6 +125,7 @@ const processTelegramWebhookFlow = ai.defineFlow(
         });
 
         console.log(`Order ${orderId} for chat ID ${chatId} processed successfully.`);
+        return { success: true };
 
       } catch (e: any) {
         console.error("Failed to process order payload from Firestore:", e);
@@ -133,44 +133,18 @@ const processTelegramWebhookFlow = ai.defineFlow(
           telegramId: String(chatId),
           message: `Terjadi kesalahan saat mengambil data pesanan Anda. Tautan mungkin sudah tidak valid atau kedaluwarsa. Silakan coba lagi dari website atau hubungi admin.`,
         });
+        return { success: false };
       }
     } 
-    // PRIORITY 2: Check for a simple /start command
-    else if (lowerCaseText === '/start') {
-      const welcomeMessage = `Selamat datang di Urgent Studio Bot! 🤖\n\nUntuk memesan, silakan kembali ke website kami, isi keranjang Anda, dan klik tombol "Selesaikan via Telegram".`;
-      await sendTelegramUpdate({
-        telegramId: String(chatId),
-        message: welcomeMessage,
-      });
-    }
-    // PRIORITY 3: Check for revision keywords
-    else if (revisionKeywords.some(keyword => lowerCaseText.includes(keyword))) {
-        await sendTelegramUpdate({
-          telegramId: String(chatId),
-          message: `✍️ *Permintaan Revisi Dicatat!*
-
-Catatan revisi Anda telah kami terima dan akan diteruskan ke tim desainer. (Ini adalah simulasi, status pesanan belum benar-benar berubah).`,
-        });
-    }
-    // PRIORITY 4: Check for approval keywords
-    else if (approvalKeywords.some(keyword => lowerCaseText.includes(keyword))) {
-        await sendTelegramUpdate({
-          telegramId: String(chatId),
-          message: `✅ *Persetujuan Diterima!*
-
-Terima kasih atas konfirmasi Anda. Kami akan segera menyelesaikan pesanan Anda dan mengirimkan semua file final. (Ini adalah simulasi, status pesanan belum benar-benar berubah).`,
-        });
-    }
-    // PRIORITY 5: Fallback for any other message
-    else {
-      await sendTelegramUpdate({
-        telegramId: String(chatId),
-        message: `Maaf, saya belum mengerti maksud Anda. 
-
-Jika ingin menyetujui desain, balas pesan pratinjau dengan "Setuju". 
-Jika ingin revisi, balas pesan pratinjau dengan "Revisi: [catatan Anda]".`,
-      });
-    }
+    
+    // For all other messages, delegate to the shared logic to get the response.
+    const responseMessage = await getTelegramResponse(incomingText, chatId);
+    
+    // And then perform the real action of sending the message.
+    await sendTelegramUpdate({
+      telegramId: String(chatId),
+      message: responseMessage,
+    });
 
     return { success: true };
   }
