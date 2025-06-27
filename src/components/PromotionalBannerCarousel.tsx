@@ -42,12 +42,12 @@ export function PromotionalBannerCarousel() {
                 <CarouselItem key={banner.id}>
                 <Link href={banner.href || '#'}>
                     <Card className="overflow-hidden border-0 shadow-lg rounded-xl">
-                    <CardContent className="flex aspect-[6/1] items-center justify-center p-0">
+                    <CardContent className="flex aspect-[3/1] items-center justify-center p-0">
                         {banner.image && (
                             <Image
                                 src={banner.image}
                                 alt={banner.name}
-                                width={1200}
+                                width={600}
                                 height={200}
                                 className="object-cover w-full h-full"
                                 data-ai-hint={banner.dataAiHint}
