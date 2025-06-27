@@ -5,7 +5,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { ServiceCard } from '@/components/ServiceCard';
 import { services, mockCategories } from '@/lib/data';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { CartProvider } from '@/contexts/CartContext';
 
 const getCategoryBySlug = (slug: string) => {
@@ -17,8 +17,10 @@ const getServicesByCategory = (categoryId: string) => {
 };
 
 // The param is named `budget` due to the folder structure [budget]
-function CategoryPageContent({ params }: { params: { budget: string }}) { 
-    const category = getCategoryBySlug(params.budget); // Use params.budget as the slug
+function CategoryPageContent() {
+    const params = useParams();
+    const budget = params.budget as string;
+    const category = getCategoryBySlug(budget); // Use budget from params hook
     
     if (!category) {
         notFound();
@@ -48,10 +50,10 @@ function CategoryPageContent({ params }: { params: { budget: string }}) {
 }
 
 // The param is named `budget` due to the folder structure [budget]
-export default function CatalogPage({ params }: { params: { budget: string }}) {
+export default function CatalogPage() {
   return (
     <CartProvider>
-      <CategoryPageContent params={params} />
+      <CategoryPageContent />
     </CartProvider>
   )
 }
