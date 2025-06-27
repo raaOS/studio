@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -39,7 +38,7 @@ const fallbackBriefFields = [
 ];
 
 export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDetailDialogProps) {
-  const { addOrUpdateItem, getCartItem } = useCart();
+  const { addOrUpdateItem, getCartItem, setCheckoutActive } = useCart();
   const { toast } = useToast();
   const router = useRouter();
 
@@ -133,6 +132,7 @@ export function ProductDetailDialog({ service, isOpen, onOpenChange }: ProductDe
   const handleCheckout = () => {
     const success = handleSave();
     if (success) {
+        setCheckoutActive(true);
         router.push('/#summary-section'); 
     }
   }

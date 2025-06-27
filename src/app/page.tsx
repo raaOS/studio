@@ -1,15 +1,13 @@
-
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { PortfolioSection } from '@/components/PortfolioSection';
 import { ProductCarousel } from '@/components/ProductCarousel';
 import { PromotionalBannerCarousel } from '@/components/PromotionalBannerCarousel';
 import { CouponInfoSection } from '@/components/CouponInfoSection';
-import { TrackOrderForm } from '@/components/TrackOrderForm';
-import { OrderSummary } from '@/components/OrderSummary';
 import { FloatingCart } from '@/components/FloatingCart';
 import { CartWrapper } from '@/components/CartWrapper';
 import { services, mockCategories } from '@/lib/data';
+import { CheckoutSection } from '@/components/CheckoutSection';
 
 export default function Home() {
   const categoryOrder = [
@@ -52,18 +50,7 @@ export default function Home() {
           </section>
 
           {/* Desktop-only Track Order & Order Summary */}
-          <section id="summary-section" className="hidden md:block container mx-auto px-4 pb-12">
-            <div className="grid lg:grid-cols-2 gap-12 items-start">
-              <div>
-                <h2 className="text-2xl font-headline font-semibold text-foreground text-center mb-6">Lacak Status Pesanan Anda</h2>
-                <TrackOrderForm />
-              </div>
-              <div>
-                <h2 className="text-2xl font-headline font-semibold text-foreground text-center mb-6">Periksa & Kirim Pesanan Anda</h2>
-                <OrderSummary />
-              </div>
-            </div>
-          </section>
+          <CheckoutSection />
         </main>
         <FloatingCart />
       </CartWrapper>
