@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { ServiceCard } from './ServiceCard';
 import type { Service } from '@/lib/types';
 import { Button } from './ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LayoutPanelLeft, Briefcase, Megaphone, MonitorSmartphone } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ProductCarouselProps {
@@ -12,17 +12,26 @@ interface ProductCarouselProps {
   services: Service[];
 }
 
+const categoryIcons: Record<string, React.ElementType> = {
+  'Konten Media Sosial': LayoutPanelLeft,
+  'Branding & Kantor': Briefcase,
+  'Materi Promosi': Megaphone,
+  'Desain Digital & Event': MonitorSmartphone,
+};
+
+
 export function ProductCarousel({ title, services }: ProductCarouselProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
+  const Icon = categoryIcons[title];
 
   const updateArrowVisibility = useCallback(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
     const { scrollLeft, scrollWidth, clientWidth } = container;
-    const tolerance = 1; // Add tolerance for sub-pixel calculations
+    const tolerance = 1;
 
     setShowLeftArrow(scrollLeft > tolerance);
     setShowRightArrow(scrollLeft < scrollWidth - clientWidth - tolerance);
@@ -32,17 +41,17 @@ export function ProductCarousel({ title, services }: ProductCarouselProps) {
     const container = scrollContainerRef.current;
     if (!container) return;
     
-    // ResizeObserver is more reliable for detecting element size changes
     const resizeObserver = new ResizeObserver(updateArrowVisibility);
     resizeObserver.observe(container);
     container.addEventListener('scroll', updateArrowVisibility, { passive: true });
 
-    // Initial check
     updateArrowVisibility();
 
     return () => {
       resizeObserver.disconnect();
-      container.removeEventListener('scroll', updateArrowVisibility);
+      if (container) {
+        container.removeEventListener('scroll', updateArrowVisibility);
+      }
     };
   }, [services, updateArrowVisibility]);
 
@@ -52,7 +61,7 @@ export function ProductCarousel({ title, services }: ProductCarouselProps) {
       const item = container.querySelector('.carousel-item');
       if (!item) return;
       const itemWidth = item.clientWidth;
-      const gap = 16; // Corresponds to gap-4 in Tailwind
+      const gap = 16;
       const scrollAmount = (itemWidth + gap) * (direction === 'left' ? -1 : 1);
       
       container.scrollBy({ 
@@ -65,7 +74,10 @@ export function ProductCarousel({ title, services }: ProductCarouselProps) {
   return (
     <div className="mb-12">
       <div className="relative">
-        <h3 className="text-2xl font-headline font-bold mb-6 px-4 md:px-0">{title}</h3>
+        <h3 className="text-2xl font-headline font-bold mb-6 px-4 md:px-0 flex items-center gap-3">
+          {Icon && <Icon className="h-7 w-7 text-primary" />}
+          {title}
+        </h3>
         
         <div
           ref={scrollContainerRef}
