@@ -137,22 +137,22 @@ Terima kasih! Tim kami akan segera menghubungi Anda untuk langkah selanjutnya. S
         message: welcomeMessage,
       });
     }
-    // 3. Check for approval keywords
+    // 3. Check for revision keywords FIRST (more specific intent, more flexible)
+    else if (revisionKeywords.some(keyword => lowerCaseText.includes(keyword))) {
+        await sendTelegramUpdate({
+          telegramId: String(chatId),
+          message: `✍️ *Permintaan Revisi Dicatat!*
+
+Catatan revisi Anda telah kami terima dan akan diteruskan ke tim desainer. (Ini adalah simulasi, status pesanan belum benar-benar berubah).`,
+        });
+    }
+    // 4. Check for approval keywords
     else if (approvalKeywords.some(keyword => lowerCaseText.includes(keyword))) {
         await sendTelegramUpdate({
           telegramId: String(chatId),
           message: `✅ *Persetujuan Diterima!*
 
 Terima kasih atas konfirmasi Anda. Kami akan segera menyelesaikan pesanan Anda dan mengirimkan semua file final. (Ini adalah simulasi, status pesanan belum benar-benar berubah).`,
-        });
-    }
-    // 4. Check for revision keywords
-    else if (revisionKeywords.some(keyword => lowerCaseText.startsWith(keyword))) {
-        await sendTelegramUpdate({
-          telegramId: String(chatId),
-          message: `✍️ *Permintaan Revisi Dicatat!*
-
-Catatan revisi Anda telah kami terima dan akan diteruskan ke tim desainer. (Ini adalah simulasi, status pesanan belum benar-benar berubah).`,
         });
     }
     // 5. Fallback for any other message
