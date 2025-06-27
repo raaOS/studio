@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -152,7 +151,7 @@ const HighlightPemicu = ({ text }: { text: string }) => {
 const DesktopView = () => (
     <Card>
       <div className="w-full overflow-x-auto">
-        <Table className="table-fixed">
+        <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[12%] min-w-[150px]">Status Pesanan</TableHead>

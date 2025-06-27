@@ -32,7 +32,8 @@ import {
   CircleDollarSign,
   Palette,
   MessageSquare,
-  PlayCircle
+  PlayCircle,
+  Workflow
 } from 'lucide-react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/AdminHeader';
@@ -61,7 +62,15 @@ export default function AdminLayout({
                       <SidebarMenuButton asChild>
                         <Link href="/admin/simulasi">
                           <PlayCircle />
-                          Simulasi Alur Kerja
+                          Simulasi
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                     <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="/admin/flowchart">
+                          <Workflow />
+                          Flowchart
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
