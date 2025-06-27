@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShoppingCart, Trash2, Percent, CheckCircle, User, Phone, Send, Info, Loader2 } from "lucide-react";
+import { ShoppingCart, Trash2, Percent, CheckCircle, User, Phone, Send, Loader2 } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
@@ -14,11 +14,15 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { app as firebaseApp } from "@/lib/firebase";
+
 
 // Form Schema
 const customerInfoFormSchema = z.object({
   name: z.string().min(2, { message: "Nama harus diisi, minimal 2 karakter." }),
   phone: z.string().min(10, { message: "Nomor telepon tidak valid." }),
+  telegram: z.string().min(3, { message: "Username Telegram tidak valid." }).startsWith('@', { message: 'Username harus diawali dengan @' }),
 });
 type CustomerInfoFormValues = z.infer<typeof customerInfoFormSchema>;
 
@@ -30,7 +34,7 @@ export function OrderSummary() {
 
     const form = useForm<CustomerInfoFormValues>({
         resolver: zodResolver(customerInfoFormSchema),
-        defaultValues: { name: "", phone: "" },
+        defaultValues: { name: "", phone: "", telegram: "" },
     });
 
     useEffect(() => {
@@ -47,7 +51,7 @@ export function OrderSummary() {
         if (!isFormValid) {
              toast({
                 title: 'Data Diri Belum Lengkap',
-                description: 'Mohon isi nama dan nomor telepon Anda dengan benar.',
+                description: 'Mohon isi nama, telepon, dan username Telegram Anda dengan benar.',
                 variant: 'destructive',
             });
             return;
@@ -80,33 +84,38 @@ export function OrderSummary() {
             })),
             totalPrice,
             paymentMethod,
+            createdAt: serverTimestamp(), // Add a timestamp for potential cleanup of old pending orders
         };
 
         try {
-            const jsonString = JSON.stringify(orderPayload);
-            const base64Payload = btoa(jsonString);
+            // Save the order to Firestore to get a unique, short ID
+            const db = getFirestore(firebaseApp);
+            const pendingOrdersCol = collection(db, "pendingOrders");
+            const docRef = await addDoc(pendingOrdersCol, orderPayload);
+            const pendingOrderId = docRef.id;
 
             const botUsername = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME;
             if (!botUsername) {
                  toast({
                     title: 'Konfigurasi Bot Diperlukan',
-                    description: 'Admin belum mengatur username bot. Silakan hubungi admin.',
+                    description: 'Admin belum mengatur username bot di file .env. Silakan hubungi admin.',
                     variant: 'destructive',
                 });
                 setIsSubmitting(false);
                 return;
             }
 
-            const telegramUrl = `https://t.me/${botUsername}?start=${base64Payload}`;
+            // The payload is now short, secure, and URL-safe
+            const telegramUrl = `https://t.me/${botUsername}?start=${pendingOrderId}`;
             
             // Redirect user to Telegram
             window.location.href = telegramUrl;
             
         } catch (error) {
-            console.error("Failed to create Telegram link", error);
+            console.error("Failed to create pending order or redirect:", error);
             toast({
-                title: 'Gagal Membuat Tautan',
-                description: 'Terjadi kesalahan saat menyiapkan pesanan Anda.',
+                title: 'Gagal Memproses Pesanan',
+                description: 'Terjadi kesalahan saat menyiapkan pesanan Anda. Silakan coba lagi.',
                 variant: 'destructive',
             });
             setIsSubmitting(false);
@@ -188,6 +197,22 @@ export function OrderSummary() {
                                     <div className="relative">
                                         <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                                         <Input placeholder="Nomor Telepon (Aktif)" {...field} className="pl-10" />
+                                    </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="telegram"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="sr-only">Username Telegram</FormLabel>
+                                    <FormControl>
+                                    <div className="relative">
+                                        <Send className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                                        <Input placeholder="Username Telegram (@anda)" {...field} className="pl-10" />
                                     </div>
                                     </FormControl>
                                     <FormMessage />

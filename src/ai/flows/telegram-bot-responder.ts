@@ -10,6 +10,7 @@ import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 import { sendTelegramUpdate } from './telegram-bot-integration';
 import { createOrderFolder } from './create-drive-folder';
+import { adminDb } from '@/lib/firebase-admin';
 
 // This schema defines the part of the Telegram webhook payload we care about.
 const TelegramWebhookPayloadSchema = z.object({
@@ -22,11 +23,12 @@ const TelegramWebhookPayloadSchema = z.object({
 });
 export type TelegramWebhookPayload = z.infer<typeof TelegramWebhookPayloadSchema>;
 
-// This schema should match the payload sent from the website checkout
+// This schema should match the payload stored in Firestore
 const OrderPayloadSchema = z.object({
     customer: z.object({
       name: z.string(),
       phone: z.string(),
+      telegram: z.string(),
     }),
     cartItems: z.array(z.object({
       id: z.string(),
@@ -70,19 +72,36 @@ const processTelegramWebhookFlow = ai.defineFlow(
     }
 
     const lowerCaseText = incomingText.toLowerCase();
-
+    
     // Keyword definitions for natural language commands
-    const approvalKeywords = ['setuju', 'ok', 'approve', 'lanjutkan', 'sip', 'sudah bagus'];
     const revisionKeywords = ['revisi', 'ubah', 'ganti', 'perbaiki', 'tolong perbaiki'];
+    const approvalKeywords = ['setuju', 'ok', 'approve', 'lanjutkan', 'sip', 'sudah bagus', 'oke'];
 
-    // 1. Check for /start command with an order payload
+    // PRIORITY 1: Check for /start command with an order payload ID
     if (lowerCaseText.startsWith('/start ')) {
+      const pendingOrderId = incomingText.substring(7); // remove '/start '
+
+      if (!adminDb) {
+        console.error('Firebase Admin not initialized. Cannot fetch pending order. Check FIREBASE_SERVICE_ACCOUNT_JSON.');
+        await sendTelegramUpdate({
+            telegramId: String(chatId),
+            message: '🚨 Terjadi kesalahan di sisi server. Konfigurasi database belum lengkap. Mohon hubungi admin.',
+        });
+        return { success: false };
+      }
+
       try {
-        const base64Payload = incomingText.substring(7); // remove '/start '
-        // In a browser, it's btoa(). In Node.js, it's Buffer.
-        const decodedJson = Buffer.from(base64Payload, 'base64').toString('utf-8');
-        const orderData = OrderPayloadSchema.parse(JSON.parse(decodedJson));
+        const orderDocRef = adminDb.collection('pendingOrders').doc(pendingOrderId);
+        const orderDoc = await orderDocRef.get();
+
+        if (!orderDoc.exists) {
+            throw new Error(`Pending order with ID ${pendingOrderId} not found.`);
+        }
         
+        const orderData = OrderPayloadSchema.parse(orderDoc.data());
+        
+        await orderDocRef.delete();
+
         const orderId = `DSN-${String(Math.floor(1000 + Math.random() * 9000)).padStart(4, '0')}`;
         const customer = orderData.customer;
 
@@ -91,7 +110,6 @@ const processTelegramWebhookFlow = ai.defineFlow(
             message: `⏳ Terima kasih, ${customer.name}! Pesanan Anda dengan ID \`${orderId}\` sedang kami siapkan...`,
         });
 
-        // We can create the folder in parallel.
         createOrderFolder({
             orderId: orderId,
             customerName: customer.name,
@@ -100,19 +118,7 @@ const processTelegramWebhookFlow = ai.defineFlow(
 
         const orderDetails = orderData.cartItems.map(item => `- ${item.name} (${item.budgetName}) x${item.quantity}`).join('\n');
         
-        const confirmationMessage = `✅ *Pesanan Anda Diterima!*
-
-*Order ID:* \`${orderId}\`
-*Nama:* ${customer.name}
-*Telepon:* ${customer.phone}
-
-*Rincian Pesanan:*
-${orderDetails}
-
-*Total Tagihan:* ${formatRupiah(orderData.totalPrice)}
-*Metode Bayar:* ${orderData.paymentMethod === 'dp' ? 'DP 50%' : 'Lunas'}
-
-Terima kasih! Tim kami akan segera menghubungi Anda untuk langkah selanjutnya. Simpan pesan ini sebagai bukti pesanan Anda.`;
+        const confirmationMessage = `✅ *Pesanan Anda Diterima!*\n\n*Order ID:* \`${orderId}\`\n*Nama:* ${customer.name}\n*Telepon:* ${customer.phone}\n*Telegram (dari form):* ${customer.telegram}\n\n*Rincian Pesanan:*\n${orderDetails}\n\n*Total Tagihan:* ${formatRupiah(orderData.totalPrice)}\n*Metode Bayar:* ${orderData.paymentMethod === 'dp' ? 'DP 50%' : 'Lunas'}\n\nTerima kasih! Tim kami akan segera menghubungi Anda untuk langkah selanjutnya. Simpan pesan ini sebagai bukti pesanan Anda.`;
 
         await sendTelegramUpdate({
             telegramId: String(chatId),
@@ -122,14 +128,14 @@ Terima kasih! Tim kami akan segera menghubungi Anda untuk langkah selanjutnya. S
         console.log(`Order ${orderId} for chat ID ${chatId} processed successfully.`);
 
       } catch (e: any) {
-        console.error("Failed to process order payload:", e);
+        console.error("Failed to process order payload from Firestore:", e);
         await sendTelegramUpdate({
           telegramId: String(chatId),
-          message: `Terjadi kesalahan saat memproses pesanan Anda. Data pesanan tidak valid. Silakan coba lagi dari website atau hubungi admin. Error: ${e.message}`,
+          message: `Terjadi kesalahan saat mengambil data pesanan Anda. Tautan mungkin sudah tidak valid atau kedaluwarsa. Silakan coba lagi dari website atau hubungi admin.`,
         });
       }
     } 
-    // 2. Check for a simple /start command
+    // PRIORITY 2: Check for a simple /start command
     else if (lowerCaseText === '/start') {
       const welcomeMessage = `Selamat datang di Urgent Studio Bot! 🤖\n\nUntuk memesan, silakan kembali ke website kami, isi keranjang Anda, dan klik tombol "Selesaikan via Telegram".`;
       await sendTelegramUpdate({
@@ -137,7 +143,7 @@ Terima kasih! Tim kami akan segera menghubungi Anda untuk langkah selanjutnya. S
         message: welcomeMessage,
       });
     }
-    // 3. Check for revision keywords FIRST (more specific intent, more flexible)
+    // PRIORITY 3: Check for revision keywords
     else if (revisionKeywords.some(keyword => lowerCaseText.includes(keyword))) {
         await sendTelegramUpdate({
           telegramId: String(chatId),
@@ -146,7 +152,7 @@ Terima kasih! Tim kami akan segera menghubungi Anda untuk langkah selanjutnya. S
 Catatan revisi Anda telah kami terima dan akan diteruskan ke tim desainer. (Ini adalah simulasi, status pesanan belum benar-benar berubah).`,
         });
     }
-    // 4. Check for approval keywords
+    // PRIORITY 4: Check for approval keywords
     else if (approvalKeywords.some(keyword => lowerCaseText.includes(keyword))) {
         await sendTelegramUpdate({
           telegramId: String(chatId),
@@ -155,7 +161,7 @@ Catatan revisi Anda telah kami terima dan akan diteruskan ke tim desainer. (Ini 
 Terima kasih atas konfirmasi Anda. Kami akan segera menyelesaikan pesanan Anda dan mengirimkan semua file final. (Ini adalah simulasi, status pesanan belum benar-benar berubah).`,
         });
     }
-    // 5. Fallback for any other message
+    // PRIORITY 5: Fallback for any other message
     else {
       await sendTelegramUpdate({
         telegramId: String(chatId),
