@@ -44,7 +44,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
               alt={service.name}
               width={250}
               height={200}
-              className="object-cover w-full"
+              className="object-cover"
               data-ai-hint={service.dataAiHint}
             />
           </div>
