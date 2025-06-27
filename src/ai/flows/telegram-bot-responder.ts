@@ -42,7 +42,7 @@ const processTelegramWebhookFlow = ai.defineFlow(
 
     // Only respond to the /start command for now.
     if (text.toLowerCase() === '/start') {
-      const welcomeMessage = `Selamat datang di Urgent Studio Bot! 🤖\n\nSaya akan mengirimkan notifikasi penting seputar pesanan Anda di sini.\n\n*Chat ID Anda:* \`${chatId}\`\n\nSilakan gunakan Chat ID ini di panel admin jika Anda adalah admin, atau berikan kepada kami jika diminta.`;
+      const welcomeMessage = `Selamat datang di Urgent Studio Bot! 🤖\n\nUntuk menyelesaikan pesanan, kami memerlukan ID unik Anda.\n\n*ID Chat Telegram Anda adalah:*\n\`${chatId}\`\n\n☝️ **Salin ID di atas** dan tempelkan ke kolom "Telegram Chat ID" pada formulir pemesanan di website kami.`;
 
       try {
         await sendTelegramUpdate({

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShoppingCart, Trash2, Percent, CheckCircle, User, Phone, Send } from "lucide-react";
+import { ShoppingCart, Trash2, Percent, CheckCircle, User, Phone, Send, Info } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { sendTelegramUpdate } from '@/ai/flows/telegram-bot-integration';
@@ -15,14 +15,14 @@ import { useState, useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import type { Customer } from "@/lib/types";
 
 // Form Schema
 const customerInfoFormSchema = z.object({
   name: z.string().min(2, { message: "Nama harus diisi, minimal 2 karakter." }),
   phone: z.string().min(10, { message: "Nomor telepon tidak valid." }),
-  telegram: z.string().min(3, { message: "Username Telegram tidak valid." }).startsWith('@', { message: 'Username harus diawali dengan @' }),
+  telegram: z.string().regex(/^-?\d+$/, { message: "Chat ID harus berupa angka." }).min(5, { message: "Chat ID tidak valid." }),
 });
 type CustomerInfoFormValues = z.infer<typeof customerInfoFormSchema>;
 
@@ -51,7 +51,7 @@ export function OrderSummary() {
         if (!isFormValid) {
              toast({
                 title: 'Data Diri Belum Lengkap',
-                description: 'Mohon isi nama, telepon, dan username Telegram Anda dengan benar.',
+                description: 'Mohon isi nama, telepon, dan Telegram Chat ID Anda dengan benar.',
                 variant: 'destructive',
             });
             return;
@@ -92,9 +92,10 @@ export function OrderSummary() {
         }
 
         const orderDetails = cartItems.map(item => `- ${item.name} (${item.budgetName}) (x${item.quantity})`).join('\n');
-        const message = `✅ *Pesanan Baru Diterima!*\n\n*Order ID:* \`${orderId}\`\n*Nama:* ${customer.name}\n*Telegram:* ${customer.telegram}\n\n*Rincian Pesanan:*\n${orderDetails}\n\n*Total Tagihan:* ${formatRupiah(totalPrice)}\n*Metode Bayar:* ${paymentMethod === 'dp' ? 'DP 50%' : 'Lunas'}\n\n*Folder Google Drive:*\n${folderUrl}\n\nTerima kasih! Tim kami akan segera memprosesnya.`;
+        const message = `✅ *Pesanan Baru Diterima!*\n\n*Order ID:* \`${orderId}\`\n*Nama:* ${customer.name}\n*Telegram Chat ID:* ${customer.telegram}\n\n*Rincian Pesanan:*\n${orderDetails}\n\n*Total Tagihan:* ${formatRupiah(totalPrice)}\n*Metode Bayar:* ${paymentMethod === 'dp' ? 'DP 50%' : 'Lunas'}\n\n*Folder Google Drive:*\n${folderUrl}\n\nTerima kasih! Tim kami akan segera memprosesnya.`;
 
         try {
+            // NOTE: The telegramId here is now the numeric Chat ID, which is more reliable.
             const telegramResult = await sendTelegramUpdate({
                 telegramId: customer.telegram,
                 message: message,
@@ -116,7 +117,7 @@ export function OrderSummary() {
             } else {
                  toast({
                     title: 'Gagal Mengirim Notifikasi',
-                    description: telegramResult.error || 'Pastikan Anda sudah memulai chat dengan bot kami.',
+                    description: telegramResult.error || 'Pastikan Chat ID yang Anda masukkan benar.',
                     variant: 'destructive',
                 });
             }
@@ -218,13 +219,21 @@ export function OrderSummary() {
                                 name="telegram"
                                 render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="sr-only">Username Telegram</FormLabel>
+                                    <FormLabel className="sr-only">Telegram Chat ID</FormLabel>
                                     <FormControl>
                                     <div className="relative">
                                         <Send className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                                        <Input placeholder="Username Telegram (@anda)" {...field} className="pl-10" />
+                                        <Input placeholder="Telegram Chat ID Anda" {...field} className="pl-10" />
                                     </div>
                                     </FormControl>
+                                     <FormDescription className="text-xs flex items-start gap-2">
+                                        <Info className="h-4 w-4 shrink-0 mt-0.5" />
+                                        <div>
+                                            Klik link ini untuk memulai chat dengan bot kami & dapatkan ID Anda: 
+                                            <a href="https://t.me/YOUR_BOT_NAME_HERE" target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:underline"> t.me/YOUR_BOT_NAME_HERE</a>.
+                                            {/* IMPORTANT: Ganti YOUR_BOT_NAME_HERE dengan username bot Anda */}
+                                        </div>
+                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                                 )}
