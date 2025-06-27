@@ -1,9 +1,8 @@
-
 "use client";
 
 import { motion, useAnimationControls } from "framer-motion";
 import { ShoppingCart, PackageSearch } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useCart } from "@/contexts/CartContext";
 import { OrderSummary } from "./OrderSummary";
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -65,6 +64,9 @@ export function FloatingCart() {
                     </button>
                 </SheetTrigger>
                 <SheetContent side="bottom" className="rounded-t-2xl p-0 max-h-[90vh] flex flex-col">
+                  <SheetHeader className="sr-only">
+                    <SheetTitle>Ringkasan Pesanan</SheetTitle>
+                  </SheetHeader>
                   <OrderSummary />
                 </SheetContent>
               </Sheet>
