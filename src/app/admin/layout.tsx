@@ -52,17 +52,9 @@ export default function AdminLayout({
                   <SidebarMenu>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="/admin">
-                          <LayoutDashboard />
-                          Dashboard
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
                         <Link href="/admin/analytics">
-                          <LineChart />
-                          Analytics
+                          <LayoutDashboard />
+                          Dashboard & Analytics
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
