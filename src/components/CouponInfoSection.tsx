@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -13,8 +14,8 @@ export function CouponInfoSection() {
     const { toast } = useToast();
     const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
-    // Get the first two active coupons to display
-    const activeCoupons = mockCoupons.filter(c => c.status === 'Aktif').slice(0, 2);
+    // Only display the NEWBIE20 coupon.
+    const activeCoupons = mockCoupons.filter(c => c.status === 'Aktif' && c.code === 'NEWBIE20');
 
     const handleCopy = (code: string) => {
         navigator.clipboard.writeText(code).then(() => {
@@ -40,7 +41,7 @@ export function CouponInfoSection() {
 
     return (
         <section className="container mx-auto px-4 py-12 md:py-16">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:max-w-2xl mx-auto gap-8">
                 {activeCoupons.map((coupon: Coupon) => (
                      <Card key={coupon.id} className="overflow-hidden flex flex-col md:flex-row items-center shadow-lg h-full">
                         <div className="w-full md:w-1/3 shrink-0">
@@ -68,7 +69,7 @@ export function CouponInfoSection() {
                                     </Button>
                                 </div>
                                 <p className="text-muted-foreground text-sm mt-2">
-                                    Gunakan kode di bawah ini saat checkout untuk mendapatkan diskon sebesar {coupon.discount}.
+                                    Gunakan kode ini saat checkout untuk mendapatkan diskon sebesar {coupon.discount}.
                                 </p>
                             </CardContent>
                         </div>
