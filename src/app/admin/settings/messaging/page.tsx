@@ -22,7 +22,7 @@ export default function AdminMessagingPage() {
           <h1 className="text-2xl md:text-3xl font-bold font-headline">Template Pesan Bot</h1>
           <p className="text-muted-foreground">Kelola semua pesan otomatis yang dikirim oleh bot Telegram.</p>
         </div>
-        <Button>
+        <Button disabled>
           <PlusCircle className="mr-2 h-4 w-4" />
           Buat Template Baru
         </Button>
