@@ -30,7 +30,8 @@ import {
   Calendar,
   Video,
   CircleDollarSign,
-  Palette
+  Palette,
+  MessageSquare
 } from 'lucide-react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/AdminHeader';
@@ -167,6 +168,14 @@ export default function AdminLayout({
                         <Link href="/admin/settings/budgets">
                           <Palette />
                           Tampilan Budget
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="/admin/settings/messaging">
+                          <MessageSquare />
+                          Pesan Bot
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>

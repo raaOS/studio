@@ -1,5 +1,4 @@
-
-import type { BudgetItem, Service, Order, Promo, Coupon, Banner, AdminUser, DriveActivityLog, CalendarActivityLog, MeetActivityLog, Category, CustomerProfile, OrderStatus } from '@/lib/types';
+import type { BudgetItem, Service, Order, Promo, Coupon, Banner, AdminUser, DriveActivityLog, CalendarActivityLog, MeetActivityLog, Category, CustomerProfile, OrderStatus, MessageTemplate } from '@/lib/types';
 
 export const budgetItems: BudgetItem[] = [
   {
@@ -520,4 +519,25 @@ export const mockCalendarActivityLogs: CalendarActivityLog[] = [
 export const mockMeetActivityLogs: MeetActivityLog[] = [
   { id: 'm1', orderId: '#003', activity: 'Meeting Scheduled: "Konsultasi Revisi..."', timestamp: '2024-05-23 10:00 AM', trigger: 'Revisi > 2x' },
   { id: 'm2', orderId: '#001', activity: 'Meeting Scheduled: "Kickoff Meeting..."', timestamp: '2024-05-20 11:00 AM', trigger: 'Pesanan Baru' },
+];
+
+export const mockMessageTemplates: MessageTemplate[] = [
+  {
+    id: 'order_confirmation',
+    description: 'Pesan yang dikirim saat pesanan baru berhasil diterima oleh bot.',
+    content: '✅ *Pesanan Anda Diterima!*\n\n*Order ID:* `{{orderId}}`\n*Nama:* {{customerName}}\n\nTerima kasih! Tim kami akan segera menghubungi Anda.',
+    lastUpdated: '2024-05-25 10:00 AM',
+  },
+  {
+    id: 'preview_ready',
+    description: 'Pesan yang dikirim saat desainer mengubah status menjadi "Siap Kirim Pratinjau".',
+    content: '🎨 *Pratinjau Desain Siap!* 🎨\n\nHalo {{customerName}},\n\nKabar baik! Pratinjau untuk pesanan `{{orderId}}` sudah siap.\n\nSilakan cek hasilnya di folder Google Drive Anda:\n{{driveUrl}}',
+    lastUpdated: '2024-05-25 11:30 AM',
+  },
+  {
+    id: 'welcome_start',
+    description: 'Pesan balasan saat pengguna baru mengirim /start tanpa payload pesanan.',
+    content: 'Selamat datang di Urgent Studio Bot! 🤖\n\nUntuk memesan, silakan kembali ke website kami, isi keranjang Anda, dan klik tombol "Selesaikan via Telegram".',
+    lastUpdated: '2024-05-20 09:00 AM',
+  },
 ];

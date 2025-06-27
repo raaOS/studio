@@ -1,4 +1,3 @@
-
 export type BudgetTier = 'kaki-lima' | 'umkm' | 'e-comm';
 
 export type BudgetItem = {
@@ -163,4 +162,11 @@ export type MeetActivityLog = {
 export type Category = {
   id: string;
   name: string;
+};
+
+export type MessageTemplate = {
+  id: string; // e.g., 'order_confirmation'
+  description: string;
+  content: string;
+  lastUpdated: string;
 };
