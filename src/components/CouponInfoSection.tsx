@@ -53,26 +53,24 @@ export function CouponInfoSection() {
                                 data-ai-hint="coupon gift"
                             />
                         </div>
-                        <div className="p-6 flex-1 flex flex-col justify-between h-full w-full">
-                            <div>
-                                <CardHeader className="p-0">
-                                    <CardTitle>
-                                        {coupon.code === 'NEWBIE20' ? 'Spesial Pengguna Baru' : 'Kupon Diskon Tersedia'}
-                                    </CardTitle>
+                        <div className="p-6 flex-1 flex flex-col justify-center h-full w-full">
+                            {coupon.code === 'NEWBIE20' && (
+                                <CardHeader className="p-0 mb-2">
+                                    <CardTitle>Spesial Pengguna Baru</CardTitle>
                                 </CardHeader>
-                                <CardContent className="p-0 pt-2">
-                                    <p className="text-muted-foreground text-sm">
-                                        Gunakan kode di bawah ini saat checkout untuk mendapatkan diskon sebesar {coupon.discount}.
-                                    </p>
-                                </CardContent>
-                            </div>
-                             <div className="flex items-center justify-between rounded-lg border-2 border-dashed bg-muted p-3 mt-4">
-                                <p className="font-mono text-lg font-bold text-primary">{coupon.code}</p>
-                                <Button size="sm" onClick={() => handleCopy(coupon.code)} className='shrink-0'>
-                                    {copiedCode === coupon.code ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                                    <span className="ml-2 hidden sm:inline">{copiedCode === coupon.code ? 'Disalin' : 'Salin'}</span>
-                                </Button>
-                            </div>
+                            )}
+                            <CardContent className="p-0">
+                                <div className="flex items-center justify-between rounded-lg border-2 border-dashed bg-muted p-3">
+                                    <p className="font-mono text-lg font-bold text-primary">{coupon.code}</p>
+                                    <Button size="sm" onClick={() => handleCopy(coupon.code)} className='shrink-0'>
+                                        {copiedCode === coupon.code ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                                        <span className="ml-2 hidden sm:inline">{copiedCode === coupon.code ? 'Disalin' : 'Salin Kupon'}</span>
+                                    </Button>
+                                </div>
+                                <p className="text-muted-foreground text-sm mt-2">
+                                    Gunakan kode di bawah ini saat checkout untuk mendapatkan diskon sebesar {coupon.discount}.
+                                </p>
+                            </CardContent>
                         </div>
                     </Card>
                 ))}
