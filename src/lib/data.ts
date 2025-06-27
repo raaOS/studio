@@ -410,7 +410,7 @@ export const mockBanners: Banner[] = [
     period: '1-31 Des',
     status: 'Aktif',
     type: 'Image',
-    image: 'https://placehold.co/1200x400.png',
+    image: 'https://placehold.co/1200x200.png',
     dataAiHint: 'sale banner',
     content: 'Promo diskon akhir tahun untuk semua layanan desain grafis.',
     href: '#catalog-section'
@@ -422,7 +422,7 @@ export const mockBanners: Banner[] = [
     period: 'Bulan Ini',
     status: 'Aktif',
     type: 'Image',
-    image: 'https://placehold.co/1200x400.png',
+    image: 'https://placehold.co/1200x200.png',
     dataAiHint: 'business branding',
     content: 'Tingkatkan brand UMKM Anda dengan paket branding lengkap dari kami.',
     href: '#catalog-section'
@@ -434,11 +434,37 @@ export const mockBanners: Banner[] = [
     period: 'Bulan Ini',
     status: 'Aktif',
     type: 'Image',
-    image: 'https://placehold.co/1200x400.png',
+    image: 'https://placehold.co/1200x200.png',
     dataAiHint: 'social media design',
     content: 'Buat konten media sosial Anda lebih menarik dengan desain profesional.',
     href: '#catalog-section'
   },
+  {
+    id: 'b4',
+    name: 'Kupon Bulan Depan',
+    position: 'Info Card',
+    period: 'Ongoing',
+    status: 'Aktif',
+    type: 'Text',
+    icon: 'Gift',
+    image: 'https://placehold.co/400x400.png',
+    dataAiHint: 'coupon gift',
+    content: 'Siap-siap! Bulan depan akan ada kupon spesial untuk pelanggan setia. Pastikan Anda sudah terdaftar di program loyalitas kami.',
+    href: '#'
+  },
+  {
+    id: 'b5',
+    name: 'Promo Akhir Pekan',
+    position: 'Info Card',
+    period: 'Weekend',
+    status: 'Aktif',
+    type: 'Text',
+    icon: 'Percent',
+    image: 'https://placehold.co/400x400.png',
+    dataAiHint: 'special offer',
+    content: 'Dapatkan diskon tambahan 10% untuk semua desain konten media sosial setiap akhir pekan. Hubungi kami untuk info lebih lanjut!',
+    href: '#'
+  }
 ];
 
 export const mockAdminUsers: AdminUser[] = [

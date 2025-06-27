@@ -105,10 +105,11 @@ export type Coupon = {
 export type Banner = {
   id: string;
   name: string;
-  position: 'Top Banner' | 'Hero Section' | 'Popup' | 'Footer';
+  position: 'Top Banner' | 'Hero Section' | 'Popup' | 'Footer' | 'Info Card';
   period: string;
   status: 'Aktif' | 'Draft' | 'Selesai';
   image?: string;
+  icon?: string;
   dataAiHint?: string;
   content: string;
   type: 'Image' | 'Text';
