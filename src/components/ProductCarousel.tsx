@@ -75,9 +75,9 @@ export function ProductCarousel({ title, services, categoryId }: ProductCarousel
   };
 
   return (
-    <div className="mb-12">
+    <div className="mb-10">
       <div className="relative">
-        <div className="flex justify-between items-center mb-6 px-4 md:px-0">
+        <div className="flex justify-between items-center mb-6">
           <h3 className="text-2xl font-headline font-bold flex items-center gap-3">
             {Icon && <Icon className="h-7 w-7 text-primary" />}
             {title}
@@ -89,7 +89,7 @@ export function ProductCarousel({ title, services, categoryId }: ProductCarousel
         
         <div
           ref={scrollContainerRef}
-          className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-4 px-4 md:px-0"
+          className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-4 -mx-4 px-4 md:mx-0 md:px-0"
         >
           {services.map((service) => (
             <div 

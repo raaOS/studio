@@ -23,7 +23,7 @@ export function PromotionalBannerCarousel() {
   }
 
   return (
-    <section className="w-full py-8 md:py-12">
+    <section className="w-full py-6 md:py-10">
       <div className="container mx-auto px-4">
         <Carousel
             plugins={[

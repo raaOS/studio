@@ -40,7 +40,7 @@ export function CouponInfoSection() {
     }
 
     return (
-        <section className="container mx-auto px-4 py-12 md:py-16">
+        <section className="container mx-auto px-4 py-6 md:py-10">
             <div className="grid grid-cols-1 md:max-w-2xl mx-auto gap-8">
                 {activeCoupons.map((coupon: Coupon) => (
                      <Card key={coupon.id} className="overflow-hidden flex flex-col md:flex-row items-center shadow-lg h-full">

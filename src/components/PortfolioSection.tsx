@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react';
 
 export function PortfolioSection() {
     return (
-        <section className="py-12 md:py-16 bg-background">
+        <section className="py-8 md:py-12 bg-background">
             <div className="container mx-auto text-center">
                 <h2 className="text-3xl font-bold font-headline tracking-tight sm:text-4xl">Desain Cepat, Hasil Hebat.</h2>
                 <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
