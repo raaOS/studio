@@ -13,7 +13,8 @@ import { useToast } from "@/hooks/use-toast";
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
 import type { DriveActivityLog } from '@/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
+import { ResponsiveTableWrapper } from '@/components/ResponsiveTableWrapper';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const DriveTab = () => {
   const { toast } = useToast();
@@ -98,7 +99,17 @@ const DriveTab = () => {
                 </div>
             </CardContent>
             <CardFooter>
-                <Button variant="outline" disabled><Save className="mr-2 h-4 w-4" /> Simpan Pengaturan (Simulasi)</Button>
+                 <Button 
+                    variant="outline"
+                    onClick={() => {
+                        toast({
+                            title: "Pengaturan Disimpan!",
+                            description: "Template nama folder telah disimpan (simulasi)."
+                        })
+                    }}
+                >
+                    <Save className="mr-2 h-4 w-4" /> Simpan Pengaturan
+                </Button>
             </CardFooter>
           </Card>
         </div>
@@ -141,36 +152,36 @@ const DriveTab = () => {
           <CardTitle>Log Aktivitas Drive</CardTitle>
           <CardDescription>Riwayat aktivitas sinkronisasi folder yang berhasil.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {activityLogs.length > 0 ? (
-            activityLogs.map((log) => (
-              <Card key={log.id} className="text-sm">
-                <CardContent className="p-3 grid grid-cols-2 sm:grid-cols-4 gap-2 items-center">
-                  <div>
-                    <p className="font-semibold">Order ID</p>
-                    <p className="text-muted-foreground">{log.orderId}</p>
-                  </div>
-                  <div className="sm:col-span-2">
-                    <p className="font-semibold">Aktivitas</p>
-                    <p className="text-muted-foreground flex items-center gap-2">
-                      {log.activity}
-                      {log.user === 'System (Live Test)' && (
-                         <Button asChild variant="ghost" size="icon" className="h-6 w-6">
-                            <a href={`https://drive.google.com/drive/folders/${log.id}`} target="_blank" rel="noopener noreferrer"><LinkIcon className="h-3 w-3" /></a>
-                         </Button>
-                      )}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-semibold">Timestamp</p>
-                    <p className="text-muted-foreground">{log.timestamp}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          ) : (
-             <p className="text-muted-foreground text-center py-8">Tidak ada log aktivitas.</p>
-          )}
+        <CardContent>
+            <ResponsiveTableWrapper>
+                <Table>
+                    <TableHeader>
+                    <TableRow>
+                        <TableHead className="whitespace-nowrap">Order ID</TableHead>
+                        <TableHead className="min-w-[250px]">Aktivitas</TableHead>
+                        <TableHead className="whitespace-nowrap">Timestamp</TableHead>
+                        <TableHead className="whitespace-nowrap">Tipe</TableHead>
+                    </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                    {activityLogs.map((log) => (
+                        <TableRow key={log.id}>
+                        <TableCell className="font-medium whitespace-nowrap">{log.orderId}</TableCell>
+                        <TableCell className="flex items-center gap-2">
+                            {log.activity}
+                            {log.user === 'System (Live Test)' && (
+                                <Button asChild variant="ghost" size="icon" className="h-6 w-6">
+                                    <a href={`https://drive.google.com/drive/folders/${log.id}`} target="_blank" rel="noopener noreferrer"><LinkIcon className="h-3 w-3" /></a>
+                                </Button>
+                            )}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">{log.timestamp}</TableCell>
+                        <TableCell className="whitespace-nowrap"><Badge variant={log.user === 'System (Live Test)' ? 'default' : 'secondary'} className={log.user === 'System (Live Test)' ? 'bg-green-600' : ''}>{log.user}</Badge></TableCell>
+                        </TableRow>
+                    ))}
+                    </TableBody>
+                </Table>
+            </ResponsiveTableWrapper>
         </CardContent>
       </Card>
     </div>
@@ -255,29 +266,29 @@ const CalendarTab = () => {
         <CardHeader>
           <CardTitle>Log Aktivitas Kalender</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {mockCalendarActivityLogs.length > 0 ? (
-            mockCalendarActivityLogs.map((log) => (
-               <Card key={log.id} className="text-sm">
-                <CardContent className="p-3 grid grid-cols-2 sm:grid-cols-4 gap-2 items-center">
-                  <div>
-                    <p className="font-semibold">Order ID</p>
-                    <p className="text-muted-foreground">{log.orderId}</p>
-                  </div>
-                  <div className="sm:col-span-2">
-                    <p className="font-semibold">Aktivitas</p>
-                    <p className="text-muted-foreground">{log.activity}</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold">Pemicu</p>
-                    <Badge variant="secondary">{log.trigger}</Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          ) : (
-            <p className="text-muted-foreground text-center py-8">Tidak ada log aktivitas.</p>
-          )}
+        <CardContent>
+            <ResponsiveTableWrapper>
+                <Table>
+                    <TableHeader>
+                    <TableRow>
+                        <TableHead className="whitespace-nowrap">Order ID</TableHead>
+                        <TableHead className="min-w-[250px]">Aktivitas</TableHead>
+                        <TableHead className="whitespace-nowrap">Timestamp</TableHead>
+                        <TableHead className="whitespace-nowrap">Pemicu</TableHead>
+                    </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                    {mockCalendarActivityLogs.map((log) => (
+                        <TableRow key={log.id}>
+                        <TableCell className="font-medium whitespace-nowrap">{log.orderId}</TableCell>
+                        <TableCell>{log.activity}</TableCell>
+                        <TableCell className="whitespace-nowrap">{log.timestamp}</TableCell>
+                        <TableCell className="whitespace-nowrap"><Badge variant="secondary">{log.trigger}</Badge></TableCell>
+                        </TableRow>
+                    ))}
+                    </TableBody>
+                </Table>
+            </ResponsiveTableWrapper>
         </CardContent>
       </Card>
     </div>
@@ -361,29 +372,29 @@ const MeetTab = () => {
         <CardHeader>
           <CardTitle>Log Penjadwalan Meet</CardTitle>
         </CardHeader>
-         <CardContent className="space-y-4">
-          {mockMeetActivityLogs.length > 0 ? (
-            mockMeetActivityLogs.map((log) => (
-              <Card key={log.id} className="text-sm">
-                <CardContent className="p-3 grid grid-cols-2 sm:grid-cols-4 gap-2 items-center">
-                  <div>
-                    <p className="font-semibold">Order ID</p>
-                    <p className="text-muted-foreground">{log.orderId}</p>
-                  </div>
-                  <div className="sm:col-span-2">
-                    <p className="font-semibold">Aktivitas</p>
-                    <p className="text-muted-foreground">{log.activity}</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold">Pemicu</p>
-                    <Badge variant="secondary">{log.trigger}</Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          ) : (
-            <p className="text-muted-foreground text-center py-8">Tidak ada log aktivitas.</p>
-          )}
+        <CardContent>
+            <ResponsiveTableWrapper>
+                <Table>
+                    <TableHeader>
+                    <TableRow>
+                        <TableHead className="whitespace-nowrap">Order ID</TableHead>
+                        <TableHead className="min-w-[250px]">Aktivitas</TableHead>
+                        <TableHead className="whitespace-nowrap">Timestamp</TableHead>
+                        <TableHead className="whitespace-nowrap">Pemicu</TableHead>
+                    </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                    {mockMeetActivityLogs.map((log) => (
+                        <TableRow key={log.id}>
+                        <TableCell className="font-medium whitespace-nowrap">{log.orderId}</TableCell>
+                        <TableCell>{log.activity}</TableCell>
+                        <TableCell className="whitespace-nowrap">{log.timestamp}</TableCell>
+                        <TableCell className="whitespace-nowrap"><Badge variant="secondary">{log.trigger}</Badge></TableCell>
+                        </TableRow>
+                    ))}
+                    </TableBody>
+                </Table>
+            </ResponsiveTableWrapper>
         </CardContent>
       </Card>
     </div>

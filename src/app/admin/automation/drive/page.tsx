@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -21,6 +20,7 @@ import { FolderSync, Save, TestTube2, Link as LinkIcon, FolderCog, KeyRound, Fil
 import { useToast } from "@/hooks/use-toast";
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
 import type { DriveActivityLog } from '@/lib/types';
+import { ResponsiveTableWrapper } from '@/components/ResponsiveTableWrapper';
 
 export default function DriveAutomationPage() {
   const { toast } = useToast();
@@ -243,7 +243,17 @@ export default function DriveAutomationPage() {
                 </div>
             </CardContent>
             <CardFooter>
-                <Button variant="outline" disabled><Save className="mr-2 h-4 w-4" /> Simpan Pengaturan (Simulasi)</Button>
+                <Button 
+                    variant="outline"
+                    onClick={() => {
+                        toast({
+                            title: "Pengaturan Disimpan!",
+                            description: "Template nama folder telah disimpan (simulasi)."
+                        })
+                    }}
+                >
+                    <Save className="mr-2 h-4 w-4" /> Simpan Pengaturan
+                </Button>
             </CardFooter>
           </Card>
 
@@ -288,34 +298,37 @@ export default function DriveAutomationPage() {
           <CardDescription>Riwayat aktivitas sinkronisasi folder yang berhasil.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Aktivitas</TableHead>
-                <TableHead>Timestamp</TableHead>
-                <TableHead>Tipe</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {activityLogs.map((log) => (
-                <TableRow key={log.id}>
-                  <TableCell className="font-medium">{log.orderId}</TableCell>
-                  <TableCell className="flex items-center gap-2">
-                    {log.activity}
-                    {log.user === 'System (Live Test)' && (
-                         <Button asChild variant="ghost" size="icon" className="h-6 w-6">
-                            <a href={`https://drive.google.com/drive/folders/${log.id}`} target="_blank" rel="noopener noreferrer"><LinkIcon className="h-3 w-3" /></a>
-                         </Button>
-                    )}
-                  </TableCell>
-                  <TableCell>{log.timestamp}</TableCell>
-                  <TableCell><Badge variant={log.user === 'System (Live Test)' ? 'default' : 'secondary'} className={log.user === 'System (Live Test)' ? 'bg-green-600' : ''}>{log.user}</Badge></TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+            <ResponsiveTableWrapper>
+                <Table>
+                    <TableHeader>
+                    <TableRow>
+                        <TableHead className="whitespace-nowrap">Order ID</TableHead>
+                        <TableHead className="min-w-[250px]">Aktivitas</TableHead>
+                        <TableHead className="whitespace-nowrap">Timestamp</TableHead>
+                        <TableHead className="whitespace-nowrap">Tipe</TableHead>
+                    </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                    {activityLogs.map((log) => (
+                        <TableRow key={log.id}>
+                        <TableCell className="font-medium whitespace-nowrap">{log.orderId}</TableCell>
+                        <TableCell className="flex items-center gap-2">
+                            {log.activity}
+                            {log.user === 'System (Live Test)' && (
+                                <Button asChild variant="ghost" size="icon" className="h-6 w-6">
+                                    <a href={`https://drive.google.com/drive/folders/${log.id}`} target="_blank" rel="noopener noreferrer"><LinkIcon className="h-3 w-3" /></a>
+                                </Button>
+                            )}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">{log.timestamp}</TableCell>
+                        <TableCell className="whitespace-nowrap"><Badge variant={log.user === 'System (Live Test)' ? 'default' : 'secondary'} className={log.user === 'System (Live Test)' ? 'bg-green-600' : ''}>{log.user}</Badge></TableCell>
+                        </TableRow>
+                    ))}
+                    </TableBody>
+                </Table>
+            </ResponsiveTableWrapper>
         </CardContent>
       </Card>
     </div>
   );
+}
