@@ -1,110 +1,145 @@
 'use server';
 
 import { analyzeRevisionRequest } from '../flows/analyze-revision-request';
-import { mockOrders, mockMessageTemplates } from '@/lib/data'; // Import data for simulation
+import { mockMessageTemplates } from '@/lib/data';
+import { adminDb } from '@/lib/firebase-admin';
+import type { PendingOrder, Order } from '@/lib/types';
+import { Timestamp } from 'firebase-admin/firestore';
 
 /**
  * @fileOverview The single source of truth for conversational bot logic.
- * This module determines WHAT to say, but does not send the message itself.
- *
- * - getTelegramResponse - Takes user input and returns the appropriate bot response string.
+ * This module determines WHAT to say and WHAT to do, but does not send the message itself.
  */
 
-// In a real app, this would be a database call.
-// For now, we simulate it.
-async function getOrderDetails(orderId: string) {
-    return mockOrders.find(o => o.kode_order === orderId) || null;
+// Fetches an order from the main `orders` collection
+async function getOrderDetails(orderId: string): Promise<Order | null> {
+    if (!adminDb) return null;
+    const orderDoc = await adminDb.collection('orders').doc(orderId).get();
+    return orderDoc.exists ? (orderDoc.data() as Order) : null;
 }
+
+// Fetches a pending order from the `pendingOrders` collection
+async function getPendingOrder(pendingOrderId: string): Promise<PendingOrder | null> {
+    if (!adminDb) return null;
+    const orderDoc = await adminDb.collection('pendingOrders').doc(pendingOrderId).get();
+    return orderDoc.exists ? (orderDoc.data() as PendingOrder) : null;
+}
+
+// Creates a new official order from a pending one
+async function createOfficialOrder(pendingOrderId: string, pendingOrder: PendingOrder, chatId: number): Promise<string> {
+    if (!adminDb) throw new Error('Firestore is not configured for backend operations.');
+    
+    const newOrderId = `#${String(Math.floor(1000 + Math.random() * 9000))}`;
+
+    const newOrder: Order = {
+        kode_order: newOrderId,
+        nama_klien: pendingOrder.customer.name,
+        customerTelegram: String(chatId),
+        status_pesanan: 'Menunggu Pembayaran',
+        tipe_pembayaran: pendingOrder.paymentMethod === 'dp' ? 'DP' : 'LUNAS',
+        total_harga: pendingOrder.totalPrice,
+        items: pendingOrder.cartItems,
+        pekan: 'W1', // Default to week 1 for now
+        budget: 'UMKM', // This needs a better mapping
+        jumlah_transfer: 0,
+        potongan_refund: 0,
+        jenis_potongan: '',
+        total_refund: 0,
+        status_refund: '',
+        log_aktivitas: [{ aksi: 'Pesanan dibuat melalui bot', oleh: 'sistem', waktu: Timestamp.now().toDate().toISOString() }],
+        timestamp: Timestamp.now().toDate().toISOString(),
+        revisionCount: 0,
+        paymentStatus: 'Belum Dibayar',
+    };
+
+    // Create the new order in the main collection
+    await adminDb.collection('orders').doc(newOrderId).set(newOrder);
+
+    // Optionally, delete the pending order
+    await adminDb.collection('pendingOrders').doc(pendingOrderId).delete();
+
+    return newOrderId;
+}
+
 
 export async function getTelegramResponse(text: string, chatId: number): Promise<string> {
     const lowerCaseText = text.toLowerCase();
     
-    // Command Keywords
-    const revisionKeywords = ['revisi', 'ubah', 'ganti', 'perbaiki', 'tolong perbaiki'];
-    const approvalKeywords = ['setuju', 'ok', 'oke', 'approve', 'lanjutkan', 'sip', 'sudah bagus'];
-    const cancelKeywords = ['batal', 'cancel', 'batalkan'];
-    const statusKeywords = ['status', 'gimana pesanan', 'cek pesanan'];
+    // --- Start Command Handling ---
+    if (lowerCaseText.startsWith('/start')) {
+        const payload = lowerCaseText.split(' ')[1];
 
-    // Simulate finding an order associated with this chat ID.
-    // In a real app, you would look up the chatId in your customer database.
-    const MOCK_ORDER_ID_FOR_CHAT = '#002'; // Let's pretend this chat is for order #002
+        if (payload && adminDb) {
+            // This is a checkout flow
+            const pendingOrder = await getPendingOrder(payload);
+            if (pendingOrder) {
+                const newOrderId = await createOfficialOrder(payload, pendingOrder, chatId);
+                // Now, get the confirmation message template
+                const template = mockMessageTemplates.find(t => t.id === 'payment_pending');
+                if (template) {
+                     const totalPrice = pendingOrder.paymentMethod === 'dp' ? pendingOrder.totalPrice / 2 : pendingOrder.totalPrice;
+                     return template.content
+                        .replace('{{customerName}}', pendingOrder.customer.name)
+                        .replace('{{orderId}}', newOrderId)
+                        .replace('{{totalPrice}}', new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(totalPrice));
+                }
+            }
+            return "Maaf, pesanan Anda tidak ditemukan atau sudah diproses. Silakan coba checkout lagi dari website.";
+        }
+        
+        // This is a generic start command
+        const template = mockMessageTemplates.find(t => t.id === 'welcome_start');
+        return template ? template.content : "Selamat datang!";
+    }
+    
+    // --- In-Conversation Command Handling ---
+    // In a real app, you would look this up based on chatId
+    const MOCK_ORDER_ID_FOR_CHAT = '#002'; 
     const order = await getOrderDetails(MOCK_ORDER_ID_FOR_CHAT);
 
-    // --- Command Handling ---
+    const revisionKeywords = ['revisi', 'ubah', 'ganti', 'perbaiki', 'tolong perbaiki'];
+    const approvalKeywords = ['setuju', 'ok', 'oke', 'approve', 'lanjutkan', 'sip', 'sudah bagus'];
+    const continueKeywords = ['/lanjutkan', '/bayar_aktivasi'];
 
-    // 1. Status Check
-    if (statusKeywords.some(keyword => lowerCaseText.includes(keyword))) {
-        const template = mockMessageTemplates.find(t => t.id === 'status_check_response');
-        if (!order || !template) return "Maaf, tidak ada pesanan aktif yang terhubung dengan chat ini.";
-        return template.content
-            .replace('{{customerName}}', order.nama_klien)
-            .replace('{{orderId}}', order.kode_order)
-            .replace('{{currentStatus}}', order.status_pesanan)
-            .replace('{{queuePosition}}', '3') // Simulated
-            .replace('{{totalInQueue}}', '10'); // Simulated
+
+    // Handle requests on an auto-completed order
+    if (order && order.status_pesanan === 'Selesai Otomatis (Tanpa Respon)') {
+        if (continueKeywords.some(keyword => lowerCaseText.includes(keyword))) {
+            const template = mockMessageTemplates.find(t => t.id === 'reactivate_offer');
+            return template ? template.content : "Untuk membuka kembali pesanan ini, ada biaya re-aktivasi sebesar Rp 50.000. Balas /bayar_aktivasi untuk lanjut.";
+        }
+        return `Pesanan ini sudah ditutup secara otomatis. Untuk melanjutkannya, balas dengan "/lanjutkan".`;
     }
 
-    // 2. Cancellation
-    if (cancelKeywords.some(keyword => lowerCaseText.includes(keyword))) {
-        if (!order) return "Maaf, tidak ada pesanan aktif yang bisa dibatalkan dari chat ini.";
-        
-        // Logic based on order status
-        if (['Menunggu Pengerjaan', 'Sedang Dikerjakan'].includes(order.status_pesanan)) {
-            const template = mockMessageTemplates.find(t => t.id === 'cancel_pre_design');
-            return template ? template.content.replace('{{orderId}}', order.kode_order) : "Pembatalan diterima (pra-desain).";
-        }
-        if (['Menunggu Respon Klien', 'Sedang Direvisi', 'Eskalasi'].includes(order.status_pesanan)) {
-            const template = mockMessageTemplates.find(t => t.id === 'cancel_post_design');
-            return template ? template.content.replace('{{orderId}}', order.kode_order) : "Pembatalan diterima (pasca-desain).";
-        }
-        return `Pesanan Anda dengan status "${order.status_pesanan}" tidak dapat dibatalkan melalui bot. Silakan hubungi admin.`;
-    }
 
-    // 3. Revision
     if (revisionKeywords.some(keyword => lowerCaseText.includes(keyword))) {
-        if (!order) return "Maaf, tidak ada pesanan yang bisa direvisi dari chat ini.";
+        if (!order) return "Maaf, tidak ada pesanan aktif yang bisa direvisi dari chat ini.";
         if (order.status_pesanan !== 'Menunggu Respon Klien') {
             return `Anda hanya bisa meminta revisi saat status pesanan adalah "Menunggu Respon Klien". Status saat ini: "${order.status_pesanan}".`;
         }
         
-        // Revision Limit Check
         if (order.revisionCount >= 2) {
-             const template = mockMessageTemplates.find(t => t.id === 'offer_gmeet');
+             const template = mockMessageTemplates.find(t => t.id === 'gmeet_offer');
              return template ? template.content.replace('{{orderId}}', order.kode_order) : "Anda telah mencapai batas revisi. Kami akan menawarkan jadwal G-Meet.";
         }
         
-        // AI Analysis
         try {
             const analysis = await analyzeRevisionRequest({ requestText: text });
-            
-            if (analysis.classification === 'simple_revision') {
-                const template = mockMessageTemplates.find(t => t.id === 'revision_in_progress');
-                return template ? template.content.replace('{{customerName}}', order.nama_klien).replace('{{orderId}}', order.kode_order) : "Revisi diterima.";
-            } else { // scope_creep
-                return `⚠️ *Potensi Perubahan Lingkup Kerja Terdeteksi!*\n\nPermintaan Anda: "*${text.substring(0, 50)}...*" sepertinya memerlukan tambahan di luar brief awal.\n\nTim kami akan meninjau permintaan ini terlebih dahulu dan akan segera menghubungi Anda kembali. Terima kasih atas pengertiannya.\n\n*(AI-Analysis: Tambahan brief)*`;
-            }
+            return analysis.classification === 'simple_revision'
+                ? `Revisi untuk pesanan \`${order.kode_order}\` diterima dan akan segera diproses.`
+                : `⚠️ *Potensi Perubahan Lingkup Kerja Terdeteksi!*\n\nTim kami akan meninjau permintaan revisi Anda untuk pesanan \`${order.kode_order}\` dan akan segera menghubungi Anda. Terima kasih.`;
         } catch (error) {
-            console.error("Revision analysis AI failed:", error);
-            return 'Terima kasih atas feedback Anda. Tim kami akan meninjaunya secara manual dan segera menghubungi Anda.';
+            return 'Terima kasih atas feedback Anda. Tim kami akan meninjaunya secara manual.';
         }
     }
     
-    // 4. Approval
     if (approvalKeywords.some(keyword => lowerCaseText.includes(keyword))) {
         if (!order) return "Terima kasih atas konfirmasinya!";
         if (order.status_pesanan !== 'Menunggu Respon Klien') {
              return `Terima kasih atas konfirmasinya. Status pesanan Anda saat ini adalah "${order.status_pesanan}".`;
         }
-        const template = mockMessageTemplates.find(t => t.id === 'order_completed');
-        return template ? template.content.replace('{{customerName}}', order.nama_klien).replace('{{orderId}}', order.kode_order) : "Pesanan selesai!";
+        return `✅ Siap! Pesanan \`${order.kode_order}\` kami anggap selesai. Terima kasih telah menggunakan jasa kami!`;
     }
 
-    // 5. Start command
-    if (lowerCaseText === '/start') {
-      const template = mockMessageTemplates.find(t => t.id === 'welcome_start');
-      return template ? template.content : "Selamat datang!";
-    }
-    
-    // Fallback
-    return `Maaf, saya belum mengerti maksud Anda. \n\n- Balas dengan "Revisi: [catatan Anda]" untuk meminta perbaikan.\n- Balas dengan "Setuju" untuk menyetujui desain.\n- Balas dengan "/status" untuk mengecek pesanan.`;
+    return `Maaf, saya belum mengerti. Balas dengan "Revisi: [catatan Anda]" atau "Setuju".`;
 }

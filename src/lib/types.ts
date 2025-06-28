@@ -44,9 +44,12 @@ export type OrderStatus =
   | 'Sedang Direvisi'
   | 'Eskalasi'
   | 'Menunggu Jadwal Meeting'
-  | 'Menunggu Proses Refund'
   | 'Selesai'
-  | 'Dibatalkan';
+  | 'Dibatalkan'
+  | 'Menunggu Proses Refund'
+  | 'Selesai Otomatis (Tanpa Respon)'
+  | 'Menunggu Pembayaran Re-Aktivasi'
+  | 'Sedang Direvisi (Jalur Ekspres)';
 
 export type Order = {
   kode_order: string;

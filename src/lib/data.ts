@@ -290,6 +290,7 @@ export const allOrderStatusesCategorized: { label: string; statuses: OrderStatus
             'Sedang Dikerjakan',
             'Menunggu Respon Klien',
             'Sedang Direvisi',
+            'Sedang Direvisi (Jalur Ekspres)',
         ],
     },
     {
@@ -299,6 +300,7 @@ export const allOrderStatusesCategorized: { label: string; statuses: OrderStatus
             'Eskalasi',
             'Menunggu Jadwal Meeting',
             'Menunggu Proses Refund',
+            'Menunggu Pembayaran Re-Aktivasi',
         ],
     },
     {
@@ -306,6 +308,7 @@ export const allOrderStatusesCategorized: { label: string; statuses: OrderStatus
         statuses: [
             'Selesai',
             'Dibatalkan',
+            'Selesai Otomatis (Tanpa Respon)',
         ],
     },
 ];
@@ -470,7 +473,7 @@ export const mockMeetActivityLogs: MeetActivityLog[] = [
 ];
 
 export const mockMessageTemplates: MessageTemplate[] = [
-    {
+  {
     id: 'welcome_start',
     description: 'Balasan saat pengguna mengirim /start tanpa payload.',
     content: 'Selamat datang di Urgent Studio Bot! 🤖\n\nUntuk memesan, silakan kembali ke website kami, isi keranjang Anda, dan klik tombol "Selesaikan via Telegram".',
@@ -489,39 +492,15 @@ export const mockMessageTemplates: MessageTemplate[] = [
     lastUpdated: '2024-05-25 11:30 AM',
   },
   {
-    id: 'gmeet_offer',
-    description: 'Pesan yang menawarkan G-Meet setelah 2x revisi.',
-    content: 'Kami melihat Anda telah melakukan 2x revisi untuk pesanan `{{orderId}}`. Untuk memastikan revisi ke-3 lebih efektif, kami ingin mengundang Anda ke sesi revisi langsung via Google Meet (durasi 2 jam).\n\nSilakan balas dengan "/jadwal" untuk memilih slot waktu yang tersedia.',
-    lastUpdated: '2024-06-01 11:10 AM',
+    id: 'auto_complete_notification',
+    description: 'Pesan saat pesanan ditutup otomatis karena tidak ada respon.',
+    content: '🔔 *Informasi Pesanan*\n\nHalo {{customerName}}, karena tidak ada respon selama lebih dari 3 hari, pesanan Anda `{{orderId}}` telah kami selesaikan secara otomatis. File terakhir dapat diakses di:\n{{driveUrl}}\n\nJika Anda masih memerlukan revisi, Anda dapat membuka kembali pesanan ini dengan biaya re-aktivasi. Balas dengan "/lanjutkan" untuk info lebih lanjut.',
+    lastUpdated: '2024-06-03 10:00 AM',
   },
   {
-    id: 'gmeet_schedule_info',
-    description: 'Pesan yang menampilkan jadwal G-Meet yang tersedia.',
-    content: 'Berikut adalah jadwal meeting yang tersedia untuk Anda:\n\n- `JADWAL01`: Sabtu, 22 Juni - 10:00 WIB\n- `JADWAL02`: Sabtu, 22 Juni - 14:00 WIB\n- `JADWAL03`: Minggu, 23 Juni - 10:00 WIB\n\nBalas dengan `/pilih_jadwal [ID JADWAL]` (contoh: `/pilih_jadwal JADWAL01`) untuk memesan slot.',
-    lastUpdated: '2024-06-02 09:10 AM',
+    id: 'reactivate_offer',
+    description: 'Menawarkan opsi re-aktivasi untuk pesanan yang sudah ditutup.',
+    content: '🔁 *Re-aktivasi Pesanan*\n\nPesanan ini sudah ditutup. Untuk melanjutkannya, Anda perlu membayar biaya re-aktivasi & prioritas jalur ekspres sebesar *Rp 50.000*.\n\nIni akan menempatkan revisi Anda di antrian terdepan.\n\nBalas "/bayar_aktivasi" untuk melanjutkan.',
+    lastUpdated: '2024-06-03 10:05 AM',
   },
-  {
-    id: 'cancel_confirm_request',
-    description: 'Pesan untuk mengkonfirmasi pembatalan dan meminta feedback.',
-    content: '⚠️ *Konfirmasi Pembatalan*\n\nKami menerima permintaan pembatalan untuk pesanan Anda. Apakah Anda yakin ingin melanjutkan?\n\nJika ya, kami mohon kesediaan Anda untuk memberikan masukan agar kami bisa menjadi lebih baik. Balas dengan format berikut:\n\n`/konfirmasi_batal BINTANG:[1-5] ALASAN:[Alasan singkat Anda]`\n\nContoh:\n`/konfirmasi_batal BINTANG:2 ALASAN:Desain tidak sesuai ekspektasi`',
-    lastUpdated: '2024-06-02 09:15 AM',
-  },
-  {
-    id: 'cancel_feedback_received',
-    description: 'Pesan balasan setelah klien memberikan feedback pembatalan.',
-    content: 'Terima kasih banyak atas waktu dan masukan yang Anda berikan. Kami sangat menghargainya.\n\nPermintaan pembatalan Anda telah kami catat dan akan segera diproses oleh tim kami. Kami akan menghubungi Anda lagi setelah proses refund selesai.',
-    lastUpdated: '2024-06-02 09:20 AM',
-  },
-  {
-    id: 'cancel_owner_notification',
-    description: 'Pesan notifikasi yang dikirim ke Owner saat ada pembatalan.',
-    content: '🔴 *PERMINTAAN PEMBATALAN & REFUND*\n\n*Order ID:* `{{orderId}}`\n*Klien:* {{customerName}}\n*Rating:* {{rating}}/5 ⭐️\n*Alasan:* {{reason}}\n\n*Status saat ini:* {{currentStatus}}\n*Jumlah Refund:* *{{refundAmount}}*\n\nMohon segera proses refund dan selesaikan di panel admin.',
-    lastUpdated: '2024-06-02 09:25 AM',
-  },
-  {
-    id: 'refund_processed_notification',
-    description: 'Pesan yang dikirim ke klien setelah Owner memproses refund.',
-    content: '✅ *Proses Refund Selesai*\n\nHalo {{customerName}},\n\nProses refund untuk pesanan `{{orderId}}` telah kami selesaikan. Berikut adalah detailnya:\n\n*Jumlah Refund:* {{refundAmount}}\n*Bukti Transfer:* {{proofUrl}}\n\nTerima kasih atas pengertiannya. Kami berharap dapat melayani Anda lebih baik di lain kesempatan.',
-    lastUpdated: '2024-06-02 09:30 AM',
-  }
 ];
