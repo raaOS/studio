@@ -13,7 +13,7 @@ import type { Order } from '@/lib/types';
 
 // Logic and data for Dashboard
 const getDashboardStats = (orders: Order[]) => {
-  const pesananMasuk = orders.filter(o => o.status_pesanan === 'Masuk Antrian').length;
+  const pesananMasuk = orders.filter(o => o.status_pesanan === 'Menunggu Pengerjaan').length;
   const antrianAktif = orders.filter(o => ['Sedang Dikerjakan', 'Sedang Direvisi'].includes(o.status_pesanan)).length;
   const selesaiBulanIni = orders.filter(o => o.status_pesanan === 'Selesai').length;
 
@@ -225,25 +225,25 @@ const AnalyticsTabContent = () => {
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4 text-sm">
-                                <div className="flex justify-between items-center">
+                                <div className="flex justify-between items-center gap-4">
                                     <span>UMKM</span>
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 flex-1 max-w-40">
                                         <span className="font-semibold">5.2%</span>
-                                        <div className="w-full max-w-32 h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '70%'}}></div></div>
+                                        <div className="w-full h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '70%'}}></div></div>
                                     </div>
                                 </div>
-                                <div className="flex justify-between items-center">
+                                <div className="flex justify-between items-center gap-4">
                                     <span>E-Comm</span>
-                                     <div className="flex items-center gap-2">
+                                     <div className="flex items-center gap-2 flex-1 max-w-40">
                                         <span className="font-semibold">3.1%</span>
-                                        <div className="w-full max-w-32 h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '50%'}}></div></div>
+                                        <div className="w-full h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '50%'}}></div></div>
                                     </div>
                                 </div>
-                                <div className="flex justify-between items-center">
+                                <div className="flex justify-between items-center gap-4">
                                     <span>Kaki Lima</span>
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 flex-1 max-w-40">
                                         <span className="font-semibold">2.5%</span>
-                                        <div className="w-full max-w-32 h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '40%'}}></div></div>
+                                        <div className="w-full h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '40%'}}></div></div>
                                     </div>
                                 </div>
                             </div>
@@ -295,3 +295,5 @@ export default function DashboardAndAnalyticsPage() {
     </div>
   );
 }
+
+    
