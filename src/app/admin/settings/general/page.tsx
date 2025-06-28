@@ -1,14 +1,15 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, Check, CheckCircle } from 'lucide-react';
+import { AlertTriangle, Check, CheckCircle, Save } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-const weeklyPlanningData = [
+const initialWeeklyData = [
   { week: 'W1', target: 5, actual: 5, status: 'Full' },
   { week: 'W2', target: 5, actual: 3, status: 'Available' },
   { week: 'W3', target: 5, actual: 0, status: 'Open' },
@@ -16,6 +17,20 @@ const weeklyPlanningData = [
 ];
 
 export default function GeneralSettingsPage() {
+  const { toast } = useToast();
+  const [weeklyLimit, setWeeklyLimit] = useState(5);
+  const [monthlyLimit, setMonthlyLimit] = useState(20);
+  const [emergencyBuffer, setEmergencyBuffer] = useState(2);
+  const [weeklyPlanning, setWeeklyPlanning] = useState(initialWeeklyData);
+
+  const handleSaveChanges = () => {
+    const settings = { weeklyLimit, monthlyLimit, emergencyBuffer };
+    console.log("Saving settings (simulation):", settings);
+    toast({
+      title: "Pengaturan Disimpan (Simulasi)",
+      description: "Dalam aplikasi nyata, pengaturan ini akan disimpan ke database.",
+    });
+  };
 
   const getStatusBadge = (status: string, slots: number) => {
     switch (status) {
@@ -38,7 +53,10 @@ export default function GeneralSettingsPage() {
             <p className="text-muted-foreground">Atur batas pesanan dan kelola antrian kerja mingguan Anda.</p>
         </div>
         <div className="flex gap-2 flex-shrink-0">
-            <Button>Simpan Batas</Button>
+            <Button onClick={handleSaveChanges}>
+              <Save className="mr-2 h-4 w-4" />
+              Simpan Batas (Simulasi)
+            </Button>
         </div>
       </div>
 
@@ -52,15 +70,30 @@ export default function GeneralSettingsPage() {
                 <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-2">
                         <Label htmlFor="weekly-limit">Limit Mingguan</Label>
-                        <Input id="weekly-limit" type="number" defaultValue="5" />
+                        <Input 
+                          id="weekly-limit" 
+                          type="number" 
+                          value={weeklyLimit}
+                          onChange={(e) => setWeeklyLimit(Number(e.target.value))}
+                        />
                     </div>
                      <div className="space-y-2">
                         <Label htmlFor="monthly-limit">Limit Bulanan</Label>
-                        <Input id="monthly-limit" type="number" defaultValue="20" />
+                        <Input 
+                          id="monthly-limit" 
+                          type="number" 
+                          value={monthlyLimit}
+                          onChange={(e) => setMonthlyLimit(Number(e.target.value))}
+                        />
                     </div>
                      <div className="space-y-2">
                         <Label htmlFor="emergency-buffer">Buffer Darurat</Label>
-                        <Input id="emergency-buffer" type="number" defaultValue="2" />
+                        <Input 
+                          id="emergency-buffer" 
+                          type="number" 
+                          value={emergencyBuffer}
+                          onChange={(e) => setEmergencyBuffer(Number(e.target.value))}
+                        />
                     </div>
                 </CardContent>
             </Card>
@@ -71,7 +104,7 @@ export default function GeneralSettingsPage() {
                     <CardDescription>Rencanakan dan pantau target kapasitas mingguan Anda.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {weeklyPlanningData.map((item) => (
+                  {weeklyPlanning.map((item) => (
                     <Card key={item.week}>
                       <CardContent className="p-3 grid grid-cols-2 sm:grid-cols-4 gap-2 items-center text-sm">
                         <p className="font-bold">{item.week}</p>
@@ -91,10 +124,10 @@ export default function GeneralSettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div>
-                        <Label>Minggu Ini (3/5)</Label>
+                        <Label>Minggu Ini (3/{weeklyLimit})</Label>
                     </div>
                     <div>
-                         <Label>Bulan Ini (12/20)</Label>
+                         <Label>Bulan Ini (12/{monthlyLimit})</Label>
                     </div>
                 </CardContent>
                  <CardFooter>
