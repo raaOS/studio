@@ -68,42 +68,44 @@ export default function AdminBannersPage() {
 
       <Card>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="min-w-[200px]">Nama</TableHead>
-                <TableHead className="whitespace-nowrap">Posisi</TableHead>
-                <TableHead className="whitespace-nowrap">Periode</TableHead>
-                <TableHead className="whitespace-nowrap">Status</TableHead>
-                <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mockBanners.length > 0 ? (
-                mockBanners.map((banner: Banner) => (
-                  <TableRow key={banner.id}>
-                    <TableCell className="font-medium">{banner.name}</TableCell>
-                    <TableCell className="whitespace-nowrap">{banner.position}</TableCell>
-                    <TableCell className="whitespace-nowrap">{banner.period}</TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      <Badge variant="outline" className={cn("capitalize", getStatusClass(banner.status))}>
-                        {banner.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right space-x-2 whitespace-nowrap">
-                       <Button size="sm" variant="outline">Edit</Button>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[200px]">Nama</TableHead>
+                  <TableHead className="whitespace-nowrap">Posisi</TableHead>
+                  <TableHead className="whitespace-nowrap">Periode</TableHead>
+                  <TableHead className="whitespace-nowrap">Status</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {mockBanners.length > 0 ? (
+                  mockBanners.map((banner: Banner) => (
+                    <TableRow key={banner.id}>
+                      <TableCell className="font-medium">{banner.name}</TableCell>
+                      <TableCell className="whitespace-nowrap">{banner.position}</TableCell>
+                      <TableCell className="whitespace-nowrap">{banner.period}</TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        <Badge variant="outline" className={cn("capitalize", getStatusClass(banner.status))}>
+                          {banner.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right space-x-2 whitespace-nowrap">
+                        <Button size="sm" variant="outline">Edit</Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center h-24">
+                      Belum ada banner yang dibuat.
                     </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center h-24">
-                    Belum ada banner yang dibuat.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

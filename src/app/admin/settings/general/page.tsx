@@ -131,28 +131,30 @@ const MessagingTab = () => {
             </div>
         </CardHeader>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="whitespace-nowrap">Template ID</TableHead>
-                <TableHead className="min-w-[250px]">Deskripsi</TableHead>
-                <TableHead className="whitespace-nowrap">Terakhir Diubah</TableHead>
-                <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mockMessageTemplates.map((template) => (
-                <TableRow key={template.id}>
-                  <TableCell className="font-mono text-xs whitespace-nowrap">{template.id}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{template.description}</TableCell>
-                  <TableCell className="whitespace-nowrap">{template.lastUpdated}</TableCell>
-                  <TableCell className="text-right whitespace-nowrap">
-                    <Button size="sm" variant="outline" onClick={() => handleEditTemplate(template)}>Edit</Button>
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="whitespace-nowrap">Template ID</TableHead>
+                  <TableHead className="min-w-[250px]">Deskripsi</TableHead>
+                  <TableHead className="whitespace-nowrap">Terakhir Diubah</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {mockMessageTemplates.map((template) => (
+                  <TableRow key={template.id}>
+                    <TableCell className="font-mono text-xs whitespace-nowrap">{template.id}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground">{template.description}</TableCell>
+                    <TableCell className="whitespace-nowrap">{template.lastUpdated}</TableCell>
+                    <TableCell className="text-right whitespace-nowrap">
+                      <Button size="sm" variant="outline" onClick={() => handleEditTemplate(template)}>Edit</Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
       <MessageTemplateFormDialog
@@ -217,7 +219,8 @@ const CapacityTab = () => {
                     <CardTitle>Perencanaan Kapasitas Mingguan</CardTitle>
                     <CardDescription>Rencanakan dan pantau target kapasitas mingguan Anda.</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -238,6 +241,7 @@ const CapacityTab = () => {
                         ))}
                         </TableBody>
                     </Table>
+                  </div>
                 </CardContent>
             </Card>
         </div>
