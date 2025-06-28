@@ -16,10 +16,10 @@ import { sendTelegramUpdate } from '@/ai/flows/telegram-bot-integration';
 import { useToast } from '@/hooks/use-toast';
 
 export default function OrderDetailPage() {
-  const params = useParams();
+  const { orderId: orderIdParam } = useParams();
   const { toast } = useToast();
   
-  const orderId = params.orderId as string;
+  const orderId = Array.isArray(orderIdParam) ? orderIdParam[0] : orderIdParam;
   
   const order: Order | null = useMemo(() => {
     if (!orderId) return null;
