@@ -35,7 +35,7 @@ export async function getTelegramResponse(text: string, chatId: number): Promise
 
     // 3. Check for a simple /start command.
     if (lowerCaseText === '/start') {
-      return `Selamat datang di Urgent Studio Bot! 🤖\n\nUntuk memesan, silakan kembali ke website kami, isi keranjang Anda, dan klik tombol "Selesaikan via Telegram".`;
+      return `Selamat datang di Urgent Studio Bot! 🤖\n\nSaya akan mengirimkan notifikasi penting seputar pesanan Anda di sini.\n\n*Chat ID Anda:* \`${chatId}\`\n\nSilakan gunakan Chat ID ini di panel admin jika Anda adalah admin, atau berikan kepada kami jika diminta.`;
     }
     
     // 4. Fallback for any other message.

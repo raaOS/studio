@@ -24,11 +24,10 @@ import {
   Sparkles,
   CircleDollarSign,
   Paintbrush,
-  Heart,
-  Briefcase,
   Wallet,
   BrainCircuit,
-  PercentCircle
+  PercentCircle,
+  Bot
 } from 'lucide-react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/AdminHeader';
@@ -46,7 +45,7 @@ export default function AdminLayout({
               {/* RUANG OWNER */}
               <SidebarGroup>
                   <SidebarGroupLabel className="flex items-center gap-2">
-                    <Briefcase />
+                    <BrainCircuit />
                     RUANG OWNER
                   </SidebarGroupLabel>
                   <SidebarMenu>
@@ -146,8 +145,8 @@ export default function AdminLayout({
               {/* RUANG OTAK (SISTEM) */}
               <SidebarGroup>
                 <SidebarGroupLabel className="flex items-center gap-2">
-                  <BrainCircuit />
-                  RUANG OTAK (SISTEM)
+                  <Sparkles />
+                  RUANG SISTEM
                 </SidebarGroupLabel>
                   <SidebarMenu>
                     <SidebarMenuItem>
@@ -171,6 +170,14 @@ export default function AdminLayout({
                         <Link href="/admin/automation/telegram">
                           <Send />
                           Telegram
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="/admin/simulasi">
+                          <Bot />
+                          Simulasi Bot
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
