@@ -9,4 +9,3 @@ import '@/ai/flows/create-drive-folder.ts';
 import '@/ai/flows/verify-telegram-bot.ts';
 import '@/ai/flows/simulate-telegram-response.ts';
 import '@/ai/logic/bot-logic.ts';
-import '@/ai/flows/brief-assistant.ts';
