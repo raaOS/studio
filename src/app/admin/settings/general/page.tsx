@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -8,10 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { mockMessageTemplates, budgetItems } from '@/lib/data';
-import { PlusCircle, Edit, AlertTriangle, Check, CheckCircle } from 'lucide-react';
-import { MessageTemplateFormDialog } from '@/components/MessageTemplateFormDialog';
-import type { MessageTemplate, BudgetItem } from '@/lib/types';
+import { budgetItems } from '@/lib/data';
+import { Edit, AlertTriangle, Check, CheckCircle } from 'lucide-react';
+import type { BudgetItem } from '@/lib/types';
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
@@ -93,67 +91,6 @@ const BudgetsTab = () => {
         </>
     );
 }
-
-const MessagingTab = () => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState<MessageTemplate | null>(null);
-
-  const handleCreateTemplate = () => {
-    setSelectedTemplate(null);
-    setIsDialogOpen(true);
-  };
-  
-  const handleEditTemplate = (template: MessageTemplate) => {
-    setSelectedTemplate(template);
-    setIsDialogOpen(true);
-  };
-
-  return (
-    <>
-      <Card>
-        <CardHeader>
-            <div className="flex justify-between items-center">
-                <div>
-                    <CardTitle>Template Pesan Bot</CardTitle>
-                    <CardDescription>Kelola semua pesan otomatis yang dikirim oleh bot Telegram.</CardDescription>
-                </div>
-                <Button onClick={handleCreateTemplate}>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Buat Template Baru
-                </Button>
-            </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {mockMessageTemplates.length > 0 ? (
-            mockMessageTemplates.map((template) => (
-              <Card key={template.id}>
-                <CardContent className="p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-sm">
-                  <div>
-                    <p className="font-mono text-xs font-bold">{template.id}</p>
-                    <p className="text-muted-foreground">{template.description}</p>
-                  </div>
-                  <div className="flex items-center gap-4 w-full sm:w-auto">
-                    <p className="text-muted-foreground whitespace-nowrap">Diubah: {template.lastUpdated}</p>
-                    <Button size="sm" variant="outline" onClick={() => handleEditTemplate(template)} className="ml-auto">Edit</Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          ) : (
-            <div className="text-center text-muted-foreground py-12">
-              <p>Belum ada template pesan yang dibuat.</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-      <MessageTemplateFormDialog
-        template={selectedTemplate}
-        isOpen={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-      />
-    </>
-  );
-};
 
 const CapacityTab = () => {
   const weeklyPlanningData = [
@@ -254,16 +191,12 @@ export default function GeneralSettingsPage() {
       </div>
 
        <Tabs defaultValue="budgets" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="budgets">Tampilan Budget</TabsTrigger>
-          <TabsTrigger value="messaging">Pesan Bot</TabsTrigger>
           <TabsTrigger value="capacity">Kapasitas</TabsTrigger>
         </TabsList>
         <TabsContent value="budgets" className="mt-4">
             <BudgetsTab />
-        </TabsContent>
-        <TabsContent value="messaging" className="mt-4">
-            <MessagingTab />
         </TabsContent>
         <TabsContent value="capacity" className="mt-4">
             <CapacityTab />

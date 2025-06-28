@@ -1,6 +1,6 @@
 'use client';
 
-// Imports from both original files
+// Imports from both original files AND new ones for messaging tab
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,12 +12,16 @@ import { useToast } from "@/hooks/use-toast";
 import { verifyTelegramBot } from '@/ai/flows/verify-telegram-bot';
 import { sendTelegramUpdate } from '@/ai/flows/telegram-bot-integration';
 import { simulateTelegramResponse } from '@/ai/flows/simulate-telegram-response';
-import { Bot, CheckCircle, XCircle, Loader2, Send, Copy, AlertTriangle, User } from 'lucide-react';
+import { Bot, CheckCircle, XCircle, Loader2, Send, Copy, AlertTriangle, User, PlusCircle } from 'lucide-react';
 import type { VerifyTelegramBotOutput } from '@/ai/flows/verify-telegram-bot';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { mockMessageTemplates } from '@/lib/data';
+import { MessageTemplateFormDialog } from '@/components/MessageTemplateFormDialog';
+import type { MessageTemplate } from '@/lib/types';
+
 
 // --- Simulation Tab Component ---
 interface Message {
@@ -328,6 +332,69 @@ const SettingsTab = () => {
     )
 }
 
+// --- Messaging Tab Component (NEW) ---
+const MessagingTab = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<MessageTemplate | null>(null);
+
+  const handleCreateTemplate = () => {
+    setSelectedTemplate(null);
+    setIsDialogOpen(true);
+  };
+  
+  const handleEditTemplate = (template: MessageTemplate) => {
+    setSelectedTemplate(template);
+    setIsDialogOpen(true);
+  };
+
+  return (
+    <>
+      <Card>
+        <CardHeader>
+            <div className="flex justify-between items-center">
+                <div>
+                    <CardTitle>Template Pesan Bot</CardTitle>
+                    <CardDescription>Kelola semua pesan otomatis yang dikirim oleh bot Telegram.</CardDescription>
+                </div>
+                <Button onClick={handleCreateTemplate}>
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Buat Template Baru
+                </Button>
+            </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {mockMessageTemplates.length > 0 ? (
+            mockMessageTemplates.map((template) => (
+              <Card key={template.id}>
+                <CardContent className="p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-sm">
+                  <div>
+                    <p className="font-mono text-xs font-bold">{template.id}</p>
+                    <p className="text-muted-foreground">{template.description}</p>
+                  </div>
+                  <div className="flex items-center gap-4 w-full sm:w-auto">
+                    <p className="text-muted-foreground whitespace-nowrap">Diubah: {template.lastUpdated}</p>
+                    <Button size="sm" variant="outline" onClick={() => handleEditTemplate(template)} className="ml-auto">Edit</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <div className="text-center text-muted-foreground py-12">
+              <p>Belum ada template pesan yang dibuat.</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+      <MessageTemplateFormDialog
+        template={selectedTemplate}
+        isOpen={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+      />
+    </>
+  );
+};
+
+
 // --- Main Page Component ---
 export default function TelegramAutomationPage() {
     return (
@@ -337,15 +404,19 @@ export default function TelegramAutomationPage() {
                 <p className="text-muted-foreground">Kelola koneksi bot, pengaturan, dan uji coba respons dari satu tempat terpusat.</p>
             </div>
             <Tabs defaultValue="settings" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="settings">Pengaturan & Verifikasi</TabsTrigger>
-                <TabsTrigger value="simulation">Simulasi Respons</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="settings">Pengaturan & Verifikasi</TabsTrigger>
+                  <TabsTrigger value="simulation">Simulasi Respons</TabsTrigger>
+                  <TabsTrigger value="messaging">Template Pesan</TabsTrigger>
                 </TabsList>
                 <TabsContent value="settings" className="mt-6">
                     <SettingsTab />
                 </TabsContent>
                 <TabsContent value="simulation" className="mt-6">
                     <SimulationTab />
+                </TabsContent>
+                <TabsContent value="messaging" className="mt-6">
+                    <MessagingTab />
                 </TabsContent>
             </Tabs>
         </div>
