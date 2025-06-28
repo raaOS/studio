@@ -35,16 +35,18 @@ export type Customer = {
 };
 
 export type OrderStatus =
-  | 'Menunggu Pembayaran' // Klien belum bayar
-  | 'Menunggu Pengerjaan' // Sudah bayar, masuk antrian
-  | 'Sedang Dikerjakan'   // Desainer sedang bekerja
-  | 'Menunggu Respon Klien' // Pratinjau terkirim, menunggu feedback
-  | 'Sedang Direvisi'     // Klien minta revisi
-  | 'Eskalasi'            // Butuh tinjauan owner (scope creep, dll)
-  | 'Selesai'             // Disetujui klien
-  | 'Dibatalkan';         // Dibatalkan karena berbagai alasan
+  | 'Menunggu Pembayaran'
+  | 'Menunggu Pengerjaan'
+  | 'Sedang Dikerjakan'
+  | 'Menunggu Respon Klien'
+  | 'Sedang Direvisi'
+  | 'Eskalasi'
+  | 'Menunggu Jadwal Meeting'
+  | 'Selesai'
+  | 'Dibatalkan (Pra-Desain)'
+  | 'Dibatalkan (Pasca-Desain)'
+  | 'Ditutup (Tanpa Refund)';
 
-// Struktur data baru sesuai spesifikasi
 export type Order = {
   kode_order: string;
   nama_klien: string;
@@ -62,6 +64,7 @@ export type Order = {
     waktu: string;
   }[];
   timestamp: string;
+  revisionCount: number;
 
   // Fields tambahan yang diperlukan oleh UI
   customerTelegram: string;

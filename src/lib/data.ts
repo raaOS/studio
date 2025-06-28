@@ -283,27 +283,32 @@ export const services: Service[] = [
 ];
 
 export const allOrderStatusesCategorized: { label: string; statuses: OrderStatus[] }[] = [
-  {
-      label: 'Antrian & Proses',
-      statuses: [
-          'Menunggu Pembayaran',
-          'Menunggu Pengerjaan',
-          'Sedang Dikerjakan',
-          'Menunggu Respon Klien',
-          'Sedang Direvisi',
-      ],
-  },
-  {
-      label: 'Status Akhir',
-      statuses: [
-          'Selesai',
-          'Dibatalkan',
-      ],
-  },
-  {
-      label: 'Perlu Tinjauan',
-      statuses: ['Eskalasi'],
-  },
+    {
+        label: 'Proses Aktif',
+        statuses: [
+            'Menunggu Pengerjaan',
+            'Sedang Dikerjakan',
+            'Menunggu Respon Klien',
+            'Sedang Direvisi',
+        ],
+    },
+    {
+        label: 'Membutuhkan Tindakan',
+        statuses: [
+            'Menunggu Pembayaran',
+            'Eskalasi',
+            'Menunggu Jadwal Meeting',
+        ],
+    },
+    {
+        label: 'Status Final',
+        statuses: [
+            'Selesai',
+            'Dibatalkan (Pra-Desain)',
+            'Dibatalkan (Pasca-Desain)',
+            'Ditutup (Tanpa Refund)',
+        ],
+    },
 ];
 
 export const mockOrders: Order[] = [];
@@ -432,32 +437,6 @@ export const mockBanners: Banner[] = [
     content: 'Buat konten media sosial Anda lebih menarik dengan desain profesional.',
     href: '#catalog-section'
   },
-  {
-    id: 'b4',
-    name: 'Kupon Bulan Depan',
-    position: 'Info Card',
-    period: 'Ongoing',
-    status: 'Aktif',
-    type: 'Text',
-    icon: 'Gift',
-    image: 'https://placehold.co/400x400.png',
-    dataAiHint: 'coupon gift',
-    content: 'Siap-siap! Bulan depan akan ada kupon spesial untuk pelanggan setia. Pastikan Anda sudah terdaftar di program loyalitas kami.',
-    href: '#'
-  },
-  {
-    id: 'b5',
-    name: 'Promo Akhir Pekan',
-    position: 'Info Card',
-    period: 'Weekend',
-    status: 'Aktif',
-    type: 'Text',
-    icon: 'Percent',
-    image: 'https://placehold.co/400x400.png',
-    dataAiHint: 'special offer',
-    content: 'Dapatkan diskon tambahan 10% untuk semua desain konten media sosial setiap akhir pekan. Hubungi kami untuk info lebih lanjut!',
-    href: '#'
-  }
 ];
 
 export const mockAdminUsers: AdminUser[] = [
@@ -477,42 +456,18 @@ export const mockAdminUsers: AdminUser[] = [
     status: 'Active',
     avatar: 'https://placehold.co/40x40.png'
   },
-  {
-    id: 'user-3',
-    name: 'Marketer Pro',
-    email: 'marketing@designflow.com',
-    role: 'Marketing',
-    status: 'Active',
-    avatar: 'https://placehold.co/40x40.png'
-  },
-  {
-    id: 'user-4',
-    name: 'User Nonaktif',
-    email: 'nonaktif@designflow.com',
-    role: 'Designer',
-    status: 'Inactive',
-    avatar: 'https://placehold.co/40x40.png'
-  }
 ];
 
 export const mockDriveActivityLogs: DriveActivityLog[] = [
   { id: 'd1', orderId: '#002', activity: 'Folder Created', timestamp: '2024-05-22 10:05 AM', user: 'System' },
-  { id: 'd2', orderId: '#002', activity: 'File Uploaded: initial_brief.pdf', timestamp: '2024-05-22 10:06 AM', user: 'System' },
-  { id: 'd3', orderId: '#003', activity: 'Folder Created', timestamp: '2024-05-23 09:00 AM', user: 'System' },
-  { id: 'd4', orderId: '#004', activity: 'Folder Created', timestamp: '2024-05-24 11:30 AM', user: 'System' },
-  { id: 'd5', orderId: '#004', activity: 'File Uploaded: final_assets.zip', timestamp: '2024-05-25 04:15 PM', user: 'Admin' },
 ];
 
 export const mockCalendarActivityLogs: CalendarActivityLog[] = [
   { id: 'c1', orderId: '#002', activity: 'Event Created: "Deadline: Social Media Post..."', timestamp: '2024-05-22 10:10 AM', trigger: 'Order Status Change' },
-  { id: 'c2', orderId: '#003', activity: 'Event Created: "Deadline: Packaging Design..."', timestamp: '2024-05-23 09:05 AM', trigger: 'Order Status Change' },
-  { id: 'c3', orderId: '#003', activity: 'Event Created: "Meeting: DesignFlow - Bob..."', timestamp: '2024-05-23 09:30 AM', trigger: 'Manual Scheduling' },
-  { id: 'c4', orderId: '#004', activity: 'Event Created: "Deadline: Banner/Spanduk..."', timestamp: '2024-05-24 11:35 AM', trigger: 'Order Status Change' },
 ];
 
 export const mockMeetActivityLogs: MeetActivityLog[] = [
   { id: 'm1', orderId: '#003', activity: 'Meeting Scheduled: "Konsultasi Revisi..."', timestamp: '2024-05-23 10:00 AM', trigger: 'Revisi > 2x' },
-  { id: 'm2', orderId: '#001', activity: 'Meeting Scheduled: "Kickoff Meeting..."', timestamp: '2024-05-20 11:00 AM', trigger: 'Pesanan Baru' },
 ];
 
 export const mockMessageTemplates: MessageTemplate[] = [
@@ -543,25 +498,31 @@ export const mockMessageTemplates: MessageTemplate[] = [
   {
     id: 'preview_ready',
     description: 'Pesan yang dikirim saat pratinjau siap dan status diubah menjadi "Menunggu Respon Klien".',
-    content: '🎨 *Pratinjau Desain Siap!* 🎨\n\nHalo {{customerName}},\n\nKabar baik! Pratinjau untuk pesanan `{{orderId}}` sudah siap.\n\nSilakan cek hasilnya di folder Google Drive Anda:\n{{driveUrl}}',
+    content: '🎨 *Pratinjau Desain Siap!* 🎨\n\nHalo {{customerName}},\n\nKabar baik! Pratinjau untuk pesanan `{{orderId}}` sudah siap.\n\nSilakan cek hasilnya di folder Google Drive Anda:\n{{driveUrl}}\n\nBalas pesan ini dengan "Setuju" untuk menyetujui atau "Revisi: [catatan Anda]" untuk meminta perbaikan.',
     lastUpdated: '2024-05-25 11:30 AM',
   },
   {
-    id: 'order_completed',
-    description: 'Pesan yang dikirim saat pesanan telah diselesaikan oleh klien.',
-    content: '🎉 *Pesanan Selesai!*\n\nHalo {{customerName}},\n\nSenang sekali pesanan Anda `{{orderId}}` telah selesai! Terima kasih telah mempercayakan kebutuhan desain Anda kepada kami.\n\nKami menantikan kolaborasi berikutnya! Jangan lupa berikan kami ulasan ya. ⭐',
-    lastUpdated: '2024-05-26 10:10 AM',
+    id: 'cancel_pre_design',
+    description: 'Balasan saat klien membatalkan SEBELUM pratinjau pertama dikirim.',
+    content: 'Permintaan pembatalan untuk pesanan `{{orderId}}` telah diterima. Karena pengerjaan belum dimulai, Anda berhak atas refund 90% dari total pembayaran atau 80% dari DP yang telah dibayarkan. Tim finance kami akan segera memprosesnya.',
+    lastUpdated: '2024-06-01 11:00 AM',
+  },
+    {
+    id: 'cancel_post_design',
+    description: 'Balasan saat klien membatalkan SETELAH pratinjau pertama dikirim.',
+    content: 'Permintaan pembatalan untuk pesanan `{{orderId}}` telah diterima. Karena pengerjaan desain telah dilakukan, sesuai kebijakan kami, Anda berhak atas refund 50% dari total pembayaran (jika lunas) atau DP Anda akan hangus.',
+    lastUpdated: '2024-06-01 11:05 AM',
   },
   {
-    id: 'awaiting_client_response',
-    description: 'Pesan pengingat jika klien belum merespon pratinjau dalam waktu tertentu.',
-    content: '👋 *Menunggu Respon Anda*\n\nHalo {{customerName}}, kami hanya ingin mengingatkan bahwa pratinjau untuk pesanan `{{orderId}}` sedang menunggu feedback dari Anda. Silakan balas pesan pratinjau sebelumnya dengan "Setuju" atau permintaan revisi Anda.',
-    lastUpdated: '2024-05-28 14:00 PM',
+    id: 'offer_gmeet',
+    description: 'Pesan yang menawarkan G-Meet setelah 2x revisi.',
+    content: 'Kami melihat Anda telah melakukan 2x revisi untuk pesanan `{{orderId}}`. Untuk memastikan revisi ke-3 lebih efektif, kami ingin mengundang Anda ke sesi revisi langsung via Google Meet (durasi 2 jam).\n\nSilakan balas dengan "/jadwal" untuk memilih slot waktu yang tersedia.',
+    lastUpdated: '2024-06-01 11:10 AM',
   },
-  {
-    id: 'revision_in_progress',
-    description: 'Pesan konfirmasi bahwa permintaan revisi sedang dikerjakan.',
-    content: '✍️ *Revisi Diterima*\n\nBaik, {{customerName}}. Permintaan revisi Anda untuk pesanan `{{orderId}}` telah kami catat dan sedang dikerjakan oleh tim desainer kami. Kami akan segera kembali dengan hasil terbarunya.',
-    lastUpdated: '2024-05-28 14:05 PM',
-  },
+   {
+    id: 'status_check_response',
+    description: 'Balasan bot saat pengguna menanyakan status pesanan mereka.',
+    content: 'Halo {{customerName}}! Berikut status terbaru untuk pesanan `{{orderId}}`:\n\n*Status Saat Ini:* {{currentStatus}}\n*Antrian Pengerjaan:* Posisi ke-{{queuePosition}} dari {{totalInQueue}}.\n\nKami akan segera memberi tahu Anda jika ada pembaruan lebih lanjut. Terima kasih atas kesabaran Anda!',
+    lastUpdated: '2024-06-01 11:15 AM',
+  }
 ];
