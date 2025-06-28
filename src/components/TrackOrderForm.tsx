@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -8,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, Search, PackageCheck, XCircle } from 'lucide-react';
 import { mockOrders } from '@/lib/data';
 import type { Order, OrderStatus } from '@/lib/types';
-import { cn } from '@/lib/utils';
+import { cn, getOrderStatusClass } from '@/lib/utils';
 
 export function TrackOrderForm() {
   const [orderIdInput, setOrderIdInput] = useState('');
@@ -34,20 +35,6 @@ export function TrackOrderForm() {
       }
       setIsLoading(false);
     }, 1000);
-  };
-
- const getStatusClass = (status: OrderStatus) => {
-    switch (status) {
-      case 'Menunggu Pembayaran': return 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30';
-      case 'Menunggu Pengerjaan': return 'bg-gray-500/20 text-gray-700 border-gray-500/30';
-      case 'Sedang Dikerjakan': return 'bg-blue-500/20 text-blue-700 border-blue-500/30';
-      case 'Menunggu Respon Klien': return 'bg-amber-500/20 text-amber-700 border-amber-500/30';
-      case 'Sedang Direvisi': return 'bg-indigo-500/20 text-indigo-700 border-indigo-500/30';
-      case 'Selesai': return 'bg-green-500/20 text-green-700 border-green-500/30';
-      case 'Dibatalkan': return 'bg-red-500/20 text-red-700 border-red-500/30';
-      case 'Eskalasi': return 'bg-purple-500/20 text-purple-700 border-purple-500/30 font-bold';
-      default: return 'bg-gray-500/20 text-gray-700 border-gray-500/30';
-    }
   };
 
   return (
@@ -111,7 +98,7 @@ export function TrackOrderForm() {
                 </div>
                 <div>
                     <p className="text-sm text-muted-foreground">Status Saat Ini</p>
-                    <Badge variant="outline" className={cn("capitalize text-base mt-1", getStatusClass(foundOrder.status_pesanan))}>
+                    <Badge variant="outline" className={cn("capitalize text-base mt-1", getOrderStatusClass(foundOrder.status_pesanan))}>
                         {foundOrder.status_pesanan}
                     </Badge>
                 </div>

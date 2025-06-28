@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useMemo, useState, useEffect } from 'react';
@@ -8,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { formatRupiah, cn } from '@/lib/utils';
+import { formatRupiah, cn, getOrderStatusSolidClass } from '@/lib/utils';
 import type { Order, OrderStatus } from '@/lib/types';
 import { MessageSquare, Send, Folder, Calendar, Video, History, FolderSync, Loader2 } from 'lucide-react';
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
@@ -132,20 +133,6 @@ export default function OrderDetailPage() {
     }
 };
 
-  const getStatusClass = (status: OrderStatus) => {
-    switch (status) {
-      case 'Menunggu Pembayaran': return 'bg-yellow-500 hover:bg-yellow-500/90 text-yellow-50';
-      case 'Menunggu Pengerjaan': return 'bg-gray-500 hover:bg-gray-500/90 text-gray-50';
-      case 'Sedang Dikerjakan': return 'bg-blue-500 hover:bg-blue-500/90 text-blue-50';
-      case 'Menunggu Respon Klien': return 'bg-amber-500 hover:bg-amber-500/90 text-amber-50';
-      case 'Sedang Direvisi': return 'bg-indigo-500 hover:bg-indigo-500/90 text-indigo-50';
-      case 'Selesai': return 'bg-green-500 hover:bg-green-500/90 text-green-50';
-      case 'Dibatalkan': return 'bg-red-500 hover:bg-red-500/90 text-red-50';
-      case 'Eskalasi': return 'bg-purple-600 hover:bg-purple-600/90 text-purple-50 font-bold';
-      default: return 'bg-gray-500 hover:bg-gray-500/90 text-gray-50';
-    }
-  };
-
   return (
     <div className="space-y-6">
         <Card>
@@ -157,7 +144,7 @@ export default function OrderDetailPage() {
                             Budget: {order.budget} | Total: {formatRupiah(order.total_harga)} ({order.tipe_pembayaran}) | Pekan: {order.pekan}
                         </CardDescription>
                     </div>
-                    <Badge className={cn("capitalize w-fit mt-2 md:mt-0", getStatusClass(currentStatus))}>{currentStatus}</Badge>
+                    <Badge className={cn("capitalize w-fit mt-2 md:mt-0", getOrderStatusSolidClass(currentStatus))}>{currentStatus}</Badge>
                 </div>
             </CardHeader>
         </Card>

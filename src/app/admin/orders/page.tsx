@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useMemo } from 'react';
@@ -8,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { mockOrders, allOrderStatusesCategorized, mockCustomers } from '@/lib/data';
-import { cn } from '@/lib/utils';
+import { cn, getOrderStatusClass } from '@/lib/utils';
 import type { OrderStatus } from '@/lib/types';
 import { Folder } from 'lucide-react';
 
@@ -39,20 +40,6 @@ export default function AdminOrdersPage() {
     setFilters(prev => ({ ...prev, search: e.target.value }));
   };
   
-  const getStatusClass = (status: OrderStatus) => {
-    switch (status) {
-      case 'Menunggu Pembayaran': return 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30';
-      case 'Menunggu Pengerjaan': return 'bg-gray-500/20 text-gray-700 border-gray-500/30';
-      case 'Sedang Dikerjakan': return 'bg-blue-500/20 text-blue-700 border-blue-500/30';
-      case 'Menunggu Respon Klien': return 'bg-amber-500/20 text-amber-700 border-amber-500/30';
-      case 'Sedang Direvisi': return 'bg-indigo-500/20 text-indigo-700 border-indigo-500/30';
-      case 'Selesai': return 'bg-green-500/20 text-green-700 border-green-500/30';
-      case 'Dibatalkan': return 'bg-red-500/20 text-red-700 border-red-500/30';
-      case 'Eskalasi': return 'bg-purple-500/20 text-purple-700 border-purple-500/30 font-bold';
-      default: return 'bg-gray-500/20 text-gray-700 border-gray-500/30';
-    }
-  };
-
   const getCustomerId = (customerName: string) => {
     return mockCustomers.find(c => c.name === customerName)?.id || '';
   };
@@ -109,7 +96,7 @@ export default function AdminOrdersPage() {
                         <CardTitle className="text-lg">{order.kode_order}</CardTitle>
                         <p className="text-sm text-muted-foreground">{order.nama_klien}</p>
                     </div>
-                    <Badge variant="outline" className={cn("capitalize text-right", getStatusClass(order.status_pesanan))}>
+                    <Badge variant="outline" className={cn("capitalize text-right", getOrderStatusClass(order.status_pesanan))}>
                         {order.status_pesanan}
                     </Badge>
                 </CardHeader>

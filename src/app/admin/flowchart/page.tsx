@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn, getOrderStatusClass } from '@/lib/utils';
 import { User, Shield, GitFork, Workflow, Check, X, RefreshCw, AlertTriangle, Play, Hourglass, Wallet, FileCheck, CircleDollarSign, CalendarClock, MessageCircleQuestion, FileX } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
@@ -52,12 +52,15 @@ const BranchPath = ({ title, icon, color, children }: { title: string, icon: Rea
     </div>
 );
 
-const CancellationPoint = ({ children }: { children: React.ReactNode }) => (
+const CancellationPoint = ({ children, status }: { children: React.ReactNode, status: "Dibatalkan (Pra-Desain)" | "Dibatalkan (Pasca-Desain)" }) => (
      <div className="relative my-4">
         <div className="absolute -left-[35px] top-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-100 text-red-800">
             <X className="h-4 w-4" />
         </div>
-        <div className="text-sm text-muted-foreground">{children}</div>
+        <div className="text-sm text-muted-foreground space-y-2">
+            <div>{children}</div>
+            <Badge variant="outline" className={getOrderStatusClass(status)}>{status}</Badge>
+        </div>
     </div>
 );
 
@@ -78,27 +81,27 @@ export default function FlowchartPage() {
             <div className="space-y-6">
                 <FlowStep title="Pesanan Dibuat & Pembayaran" pj="Pelanggan & Sistem" icon={Wallet} color="bg-yellow-100 text-yellow-800">
                     <p>Pelanggan menyelesaikan checkout di website dan diarahkan ke bot Telegram untuk menyelesaikan pembayaran.</p>
-                    <div className="mt-2"><Badge variant="outline">Status: Menunggu Pembayaran</Badge></div>
+                    <div className="mt-2"><Badge variant="outline" className={getOrderStatusClass('Menunggu Pembayaran')}>Status: Menunggu Pembayaran</Badge></div>
                 </FlowStep>
                 
                 <FlowStep title="Pembayaran Diterima" pj="Admin Finance" icon={FileCheck} color="bg-green-100 text-green-800">
                     <p>Admin memvalidasi pembayaran secara manual. Sistem mengubah status pesanan dan memasukkannya ke antrian.</p>
-                    <div className="mt-2"><Badge variant="outline">Status: Menunggu Pengerjaan</Badge></div>
-                    <CancellationPoint>
-                        Klien bisa membatalkan di sini. <Badge variant="destructive">Status: Dibatalkan (Pra-Desain)</Badge> dengan refund 90% (Lunas) / 80% dari DP.
+                    <div className="mt-2"><Badge variant="outline" className={getOrderStatusClass('Menunggu Pengerjaan')}>Status: Menunggu Pengerjaan</Badge></div>
+                    <CancellationPoint status="Dibatalkan (Pra-Desain)">
+                        Klien bisa membatalkan di sini dengan refund 90% (Lunas) atau 80% dari DP.
                     </CancellationPoint>
                 </FlowStep>
 
                 <FlowStep title="Pengerjaan Desain Dimulai" pj="Desainer" icon={Play} color="bg-blue-100 text-blue-800">
                     <p>Desainer memilih pesanan dari antrian dan mengubah status. Bot memberi notifikasi ke pelanggan.</p>
-                    <div className="mt-2"><Badge variant="outline">Status: Sedang Dikerjakan</Badge></div>
+                    <div className="mt-2"><Badge variant="outline" className={getOrderStatusClass('Sedang Dikerjakan')}>Status: Sedang Dikerjakan</Badge></div>
                 </FlowStep>
                 
                 <FlowStep title="Pratinjau Terkirim" pj="Desainer & Sistem" icon={Hourglass} color="bg-sky-100 text-sky-800">
                      <p>Desainer mengunggah pratinjau dan mengubah status. Bot mengirimkan link pratinjau ke pelanggan. Revision count = 0.</p>
-                     <div className="mt-2"><Badge variant="outline">Status: Menunggu Respon Klien</Badge></div>
-                     <CancellationPoint>
-                        Klien bisa membatalkan di sini. <Badge variant="destructive">Status: Dibatalkan (Pasca-Desain)</Badge> dengan refund 50% (Lunas) / DP hangus.
+                     <div className="mt-2"><Badge variant="outline" className={getOrderStatusClass('Menunggu Respon Klien')}>Status: Menunggu Respon Klien</Badge></div>
+                     <CancellationPoint status="Dibatalkan (Pasca-Desain)">
+                        Klien bisa membatalkan di sini dengan refund 50% (Lunas) atau DP hangus.
                     </CancellationPoint>
                 </FlowStep>
 
@@ -108,21 +111,21 @@ export default function FlowchartPage() {
                     <BranchPath title="Revisi Wajar" icon={RefreshCw} color="bg-indigo-100 text-indigo-800">
                         <FlowStep title="Revisi Diproses" pj="Bot & Desainer" icon={RefreshCw} color="bg-indigo-100 text-indigo-800">
                             <p>AI mengklasifikasikan sebagai revisi wajar. Bot mengubah status, revision count +1, dan notifikasi ke desainer. Alur kembali ke "Pengerjaan Desain".</p>
-                            <div className="mt-2"><Badge variant="outline">Status: Sedang Direvisi</Badge></div>
+                            <div className="mt-2"><Badge variant="outline" className={getOrderStatusClass('Sedang Direvisi')}>Status: Sedang Direvisi</Badge></div>
                         </FlowStep>
                     </BranchPath>
 
                     <BranchPath title="Scope Creep" icon={AlertTriangle} color="bg-rose-100 text-rose-800">
                         <FlowStep title="Eskalasi ke Owner" pj="Bot & Owner" icon={Shield} color="bg-rose-100 text-rose-800">
                             <p>AI mendeteksi permintaan di luar lingkup. Bot mengubah status dan memberi notifikasi kepada Owner untuk peninjauan manual.</p>
-                            <div className="mt-2"><Badge variant="destructive">Status: Eskalasi</Badge></div>
+                            <div className="mt-2"><Badge variant="outline" className={getOrderStatusClass('Eskalasi')}>Status: Eskalasi</Badge></div>
                         </FlowStep>
                     </BranchPath>
 
                      <BranchPath title="Persetujuan" icon={Check} color="bg-green-100 text-green-800">
                         <FlowStep title="Pesanan Selesai" pj="Bot" icon={FileCheck} color="bg-green-100 text-green-800" end>
                             <p>Bot mendeteksi kata kunci "setuju" dan mengubah status. Pesanan dianggap tuntas.</p>
-                            <div className="mt-2"><Badge variant="destructive">Status Final: Selesai</Badge></div>
+                            <div className="mt-2"><Badge variant="outline" className={getOrderStatusClass('Selesai')}>Status Final: Selesai</Badge></div>
                         </FlowStep>
                     </BranchPath>
                 </FlowBranch>
@@ -133,21 +136,21 @@ export default function FlowchartPage() {
                     <BranchPath title="Minta Revisi Lagi" icon={MessageCircleQuestion} color="bg-orange-100 text-orange-800">
                          <FlowStep title="Tawarkan Google Meet" pj="Bot" icon={CalendarClock} color="bg-orange-100 text-orange-800">
                             <p>Bot menolak revisi via teks dan secara otomatis menawarkan jadwal meeting via G-Meet untuk diskusi langsung.</p>
-                            <div className="mt-2"><Badge variant="destructive">Status: Menunggu Jadwal Meeting</Badge></div>
+                            <div className="mt-2"><Badge variant="outline" className={getOrderStatusClass('Menunggu Jadwal Meeting')}>Status: Menunggu Jadwal Meeting</Badge></div>
                         </FlowStep>
                     </BranchPath>
                     
                      <BranchPath title="Persetujuan" icon={Check} color="bg-green-100 text-green-800">
                         <FlowStep title="Pesanan Selesai" pj="Bot" icon={FileCheck} color="bg-green-100 text-green-800" end>
                             <p>Bot mendeteksi kata kunci "setuju" dan mengubah status. Pesanan dianggap tuntas.</p>
-                             <div className="mt-2"><Badge variant="destructive">Status Final: Selesai</Badge></div>
+                             <div className="mt-2"><Badge variant="outline" className={getOrderStatusClass('Selesai')}>Status Final: Selesai</Badge></div>
                         </FlowStep>
                     </BranchPath>
 
                     <BranchPath title="Batal Setelah 2x Revisi" icon={CircleDollarSign} color="bg-gray-100 text-gray-800">
                          <FlowStep title="Pesanan Ditutup" pj="Sistem" icon={FileX} color="bg-gray-100 text-gray-800" end>
                             <p>Jika klien membatalkan setelah 2x revisi, pesanan ditutup tanpa pengembalian dana.</p>
-                            <div className="mt-2"><Badge variant="destructive">Status Final: Ditutup (Tanpa Refund)</Badge></div>
+                            <div className="mt-2"><Badge variant="outline" className={getOrderStatusClass('Ditutup (Tanpa Refund)')}>Status Final: Ditutup (Tanpa Refund)</Badge></div>
                         </FlowStep>
                     </BranchPath>
                 </FlowBranch>
