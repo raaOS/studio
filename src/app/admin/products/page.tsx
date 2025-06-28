@@ -17,14 +17,16 @@ export default function AdminProductsPage() {
   const [selectedProduct, setSelectedProduct] = useState<Service | null>(null);
   const [filters, setFilters] = useState({ search: '', category: 'all' });
   const { toast } = useToast();
+  
+  const [allServices, setAllServices] = useState<Service[]>(services);
 
   const filteredServices = useMemo(() => {
-    return services.filter(service => {
+    return allServices.filter(service => {
       const searchMatch = service.name.toLowerCase().includes(filters.search.toLowerCase());
-      const categoryMatch = filters.category === 'all' || service.category === category.id;
+      const categoryMatch = filters.category === 'all' || service.category === filters.category;
       return searchMatch && categoryMatch;
     });
-  }, [filters]);
+  }, [filters, allServices]);
 
   const handleAddProduct = () => {
     setSelectedProduct(null);
@@ -37,11 +39,29 @@ export default function AdminProductsPage() {
   };
 
   const handleDeleteProduct = (service: Service) => {
+    setAllServices(prevServices => prevServices.filter(p => p.id !== service.id));
     toast({
-      title: 'Simulasi Hapus Produk',
-      description: `Produk "${service.name}" telah dihapus (simulasi).`,
+      title: 'Produk Dihapus!',
+      description: `Produk "${service.name}" telah dihapus.`,
       variant: 'destructive',
     });
+  };
+  
+  const handleSaveProduct = (productData: Service) => {
+    setAllServices(prevServices => {
+        const isEditing = prevServices.some(p => p.id === productData.id);
+        if (isEditing) {
+            return prevServices.map(p => p.id === productData.id ? productData : p);
+        } else {
+            return [productData, ...prevServices];
+        }
+    });
+
+    toast({
+      title: `Produk ${selectedProduct ? 'Diperbarui' : 'Dibuat'}!`,
+      description: `Produk "${productData.name}" telah disimpan.`,
+    });
+    setIsDialogOpen(false);
   };
 
   const getCategoryName = (categoryId: string) => {
@@ -124,6 +144,7 @@ export default function AdminProductsPage() {
         product={selectedProduct}
         isOpen={isDialogOpen}
         onOpenChange={setIsDialogOpen}
+        onSave={handleSaveProduct}
       />
     </>
   );

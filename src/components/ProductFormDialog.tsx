@@ -1,4 +1,3 @@
-
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -22,7 +21,6 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/hooks/use-toast"
 import type { Service } from "@/lib/types"
 import { useEffect } from "react"
 import {
@@ -59,6 +57,7 @@ interface ProductFormDialogProps {
   product: Service | null
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
+  onSave: (product: Service) => void;
 }
 
 const defaultTierImages = {
@@ -67,9 +66,7 @@ const defaultTierImages = {
     'e-comm': "https://placehold.co/128x128/e2e8f0/1e293b.png",
 };
 
-export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductFormDialogProps) {
-  const { toast } = useToast()
-
+export function ProductFormDialog({ product, isOpen, onOpenChange, onSave }: ProductFormDialogProps) {
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
@@ -107,15 +104,7 @@ export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductForm
 
 
   function onSubmit(data: ProductFormValues) {
-    // In a real app, you'd send this data to your database/API
-    console.log("Product data submitted:", data);
-    
-    toast({
-      title: `Produk ${product ? 'Diperbarui' : 'Dibuat'}!`,
-      description: `(Simulasi) Produk "${data.name}" telah disimpan.`,
-    })
-
-    onOpenChange(false);
+    onSave(data as Service);
   }
 
   return (
@@ -124,7 +113,7 @@ export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductForm
         <DialogHeader>
           <DialogTitle>{product ? 'Edit Produk' : 'Tambah Produk Baru'}</DialogTitle>
           <DialogDescription>
-            Isi detail produk di bawah ini. Perubahan belum akan tersimpan permanen.
+            Isi detail produk di bawah ini. Perubahan akan langsung terlihat di daftar produk.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -136,7 +125,7 @@ export function ProductFormDialog({ product, isOpen, onOpenChange }: ProductForm
                 <FormItem>
                   <FormLabel>Nama Produk</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh: Desain Logo Premium" {...field} />
+                    <Input placeholder="Contoh: Logo Premium" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
