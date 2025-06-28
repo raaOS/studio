@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export type BudgetTier = 'kaki-lima' | 'umkm' | 'e-comm';
 
 export type BudgetItem = {
@@ -42,10 +44,9 @@ export type OrderStatus =
   | 'Sedang Direvisi'
   | 'Eskalasi'
   | 'Menunggu Jadwal Meeting'
+  | 'Menunggu Proses Refund'
   | 'Selesai'
-  | 'Dibatalkan (Pra-Desain)'
-  | 'Dibatalkan (Pasca-Desain)'
-  | 'Ditutup (Tanpa Refund)';
+  | 'Dibatalkan';
 
 export type Order = {
   kode_order: string;
@@ -57,7 +58,7 @@ export type Order = {
   potongan_refund: number;
   jenis_potongan: string;
   total_refund: number;
-  status_refund: 'Sudah' | 'Belum' | '';
+  status_refund: 'Belum' | 'Sudah' | '';
   log_aktivitas: {
     aksi: string;
     oleh: 'klien' | 'owner' | 'desainer' | 'sistem';
@@ -65,8 +66,6 @@ export type Order = {
   }[];
   timestamp: string;
   revisionCount: number;
-
-  // Fields tambahan yang diperlukan oleh UI
   customerTelegram: string;
   items: {
     name: string;
@@ -78,8 +77,12 @@ export type Order = {
   pekan: 'W1' | 'W2' | 'W3' | 'W4';
   driveFolderUrl?: string;
   paymentStatus: string;
+  cancellationDetails?: {
+    reason: string;
+    rating: number;
+    timestamp: string;
+  };
 };
-
 
 export type Promo = {
   id: string;
@@ -166,4 +169,13 @@ export type MessageTemplate = {
   description: string;
   content: string;
   lastUpdated: string;
+};
+
+// Represents the data structure saved to Firestore when a user checks out
+export type PendingOrder = {
+  customer: Customer;
+  cartItems: Omit<CartItem, 'image'>[]; // Don't need the image in the DB
+  totalPrice: number;
+  paymentMethod: 'dp' | 'lunas';
+  createdAt: Timestamp;
 };

@@ -1,16 +1,17 @@
+
 'use client';
 
 import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { PlusCircle } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { PlusCircle, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { formatRupiah } from '@/lib/utils';
 import { mockOrders } from '@/lib/data';
 
 export default function AdminRefundsPage() {
-  const refunds = mockOrders.filter(order => order.total_refund > 0);
+  const refunds = mockOrders.filter(order => ['Menunggu Proses Refund', 'Dibatalkan'].includes(order.status_pesanan));
 
   return (
     <div className="space-y-6">
@@ -27,41 +28,55 @@ export default function AdminRefundsPage() {
       
       <Card>
         <CardHeader>
-            <CardTitle>Daftar Refund</CardTitle>
+            <CardTitle>Daftar Permintaan Refund</CardTitle>
             <CardDescription>Riwayat pengembalian dana yang sedang diproses atau sudah selesai.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {refunds.length > 0 ? (
             refunds.map((refund) => (
-              <Card key={refund.kode_order}>
-                <CardContent className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4 items-center">
-                  <div>
-                    <p className="font-semibold text-muted-foreground">Order ID</p>
-                    <Link href={`/admin/orders/${refund.kode_order}`} className="text-primary hover:underline font-bold">
-                        {refund.kode_order}
-                    </Link>
-                    <p className="text-xs text-muted-foreground">{refund.nama_klien}</p>
-                  </div>
-                   <div>
-                    <p className="font-semibold text-muted-foreground">Jumlah Refund</p>
-                    <p>{formatRupiah(refund.total_refund)}</p>
-                  </div>
-                   <div>
-                    <p className="font-semibold text-muted-foreground">Status</p>
-                    <Badge variant={refund.status_refund === 'Sudah' ? 'default' : 'secondary'} className={refund.status_refund === 'Sudah' ? 'bg-green-600' : ''}>
-                        {refund.status_refund}
-                    </Badge>
-                  </div>
-                  <div className="col-span-2 md:col-span-1 flex justify-end">
-                    {refund.status_refund === 'Belum' && <Button size="sm" variant="outline">Tandai Sudah Ditransfer</Button>}
-                  </div>
+              <Card key={refund.kode_order} className={refund.status_pesanan === 'Menunggu Proses Refund' ? 'border-destructive' : ''}>
+                 <CardHeader className="p-4 pb-2">
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <CardTitle className="text-lg">
+                                <Link href={`/admin/orders/${refund.kode_order}`} className="text-primary hover:underline">
+                                    {refund.kode_order}
+                                </Link>
+                            </CardTitle>
+                            <CardDescription>{refund.nama_klien}</CardDescription>
+                        </div>
+                         <Badge variant={refund.status_pesanan === 'Menunggu Proses Refund' ? 'destructive' : 'secondary'}>
+                            {refund.status_pesanan}
+                        </Badge>
+                    </div>
+                </CardHeader>
+                <CardContent className="p-4 pt-2">
+                    {refund.cancellationDetails && (
+                        <blockquote className="mt-2 border-l-2 pl-4 italic text-sm">
+                            <div className="flex items-center gap-1">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                    <Star key={i} className={`h-4 w-4 ${i < refund.cancellationDetails!.rating ? 'text-yellow-400 fill-yellow-400' : 'text-muted-foreground'}`} />
+                                ))}
+                            </div>
+                            "{refund.cancellationDetails.reason}"
+                        </blockquote>
+                    )}
                 </CardContent>
+                <CardFooter className="p-4 pt-0 flex justify-between items-center">
+                  <div>
+                    <span className="text-sm text-muted-foreground">Jumlah Refund: </span>
+                    <span className="font-bold">{formatRupiah(refund.total_refund)}</span>
+                  </div>
+                  {refund.status_pesanan === 'Menunggu Proses Refund' && <Button size="sm">Selesaikan Refund</Button>}
+                </CardFooter>
               </Card>
             ))
           ) : (
-            <div className="text-center text-muted-foreground py-12">
-              <p>Belum ada data refund.</p>
-            </div>
+             <Card>
+                <CardContent className="py-12 text-center text-muted-foreground">
+                    <p>Belum ada data refund.</p>
+                </CardContent>
+             </Card>
           )}
         </CardContent>
       </Card>

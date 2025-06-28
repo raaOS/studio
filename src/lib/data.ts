@@ -298,15 +298,14 @@ export const allOrderStatusesCategorized: { label: string; statuses: OrderStatus
             'Menunggu Pembayaran',
             'Eskalasi',
             'Menunggu Jadwal Meeting',
+            'Menunggu Proses Refund',
         ],
     },
     {
         label: 'Status Final',
         statuses: [
             'Selesai',
-            'Dibatalkan (Pra-Desain)',
-            'Dibatalkan (Pasca-Desain)',
-            'Ditutup (Tanpa Refund)',
+            'Dibatalkan',
         ],
     },
 ];
@@ -471,58 +470,58 @@ export const mockMeetActivityLogs: MeetActivityLog[] = [
 ];
 
 export const mockMessageTemplates: MessageTemplate[] = [
-  {
+    {
     id: 'welcome_start',
-    description: 'Pesan balasan saat pengguna baru mengirim /start tanpa payload pesanan.',
+    description: 'Balasan saat pengguna mengirim /start tanpa payload.',
     content: 'Selamat datang di Urgent Studio Bot! 🤖\n\nUntuk memesan, silakan kembali ke website kami, isi keranjang Anda, dan klik tombol "Selesaikan via Telegram".',
-    lastUpdated: '2024-05-20 09:00 AM',
+    lastUpdated: '2024-06-02 09:00 AM',
   },
   {
-    id: 'order_confirmation',
-    description: 'Pesan yang dikirim saat pesanan baru berhasil diterima oleh bot.',
-    content: '✅ *Pesanan Anda Diterima!*\n\n*Order ID:* `{{orderId}}`\n*Nama:* {{customerName}}\n\nTerima kasih! Tim kami akan segera menghubungi Anda untuk konfirmasi pembayaran.',
-    lastUpdated: '2024-05-25 10:00 AM',
-  },
-   {
     id: 'payment_pending',
-    description: 'Pesan yang dikirim setelah checkout, meminta pembayaran (jika diperlukan).',
-    content: '⏳ *Menunggu Pembayaran*\n\nHalo {{customerName}},\n\nPesanan Anda `{{orderId}}` telah kami terima. Total tagihan Anda adalah *{{totalPrice}}*.\n\nSilakan lakukan pembayaran ke rekening berikut:\n**BCA: 1234567890 (a/n Urgent Studio)**\n\nSetelah melakukan pembayaran, pesanan Anda akan otomatis masuk ke antrian pengerjaan. Terima kasih!',
-    lastUpdated: '2024-05-26 10:00 AM',
-  },
-  {
-    id: 'order_queued',
-    description: 'Pesan yang dikirim setelah pembayaran terkonfirmasi dan pesanan masuk antrian.',
-    content: '👍 *Pembayaran Diterima & Masuk Antrian*\n\nHalo {{customerName}},\n\nPembayaran untuk pesanan `{{orderId}}` telah kami konfirmasi. Pesanan Anda sekarang resmi masuk ke dalam antrian pengerjaan.\n\nKami akan memberi tahu Anda lagi setelah pratinjau desain pertama siap.',
-    lastUpdated: '2024-05-26 10:05 AM',
+    description: 'Pesan yang dikirim setelah checkout, meminta pembayaran.',
+    content: '⏳ *Menunggu Pembayaran*\n\nHalo {{customerName}},\n\nPesanan Anda `{{orderId}}` telah kami terima. Total tagihan Anda adalah *{{totalPrice}}*.\n\nSilakan lakukan pembayaran ke rekening berikut:\n**BCA: 1234567890 (a/n Urgent Studio)**\n\nSetelah transfer, mohon balas pesan ini dengan "sudah bayar" untuk kami proses.',
+    lastUpdated: '2024-06-02 09:05 AM',
   },
   {
     id: 'preview_ready',
-    description: 'Pesan yang dikirim saat pratinjau siap dan status diubah menjadi "Menunggu Respon Klien".',
+    description: 'Pesan saat pratinjau siap & status menjadi "Menunggu Respon Klien".',
     content: '🎨 *Pratinjau Desain Siap!* 🎨\n\nHalo {{customerName}},\n\nKabar baik! Pratinjau untuk pesanan `{{orderId}}` sudah siap.\n\nSilakan cek hasilnya di folder Google Drive Anda:\n{{driveUrl}}\n\nBalas pesan ini dengan "Setuju" untuk menyetujui atau "Revisi: [catatan Anda]" untuk meminta perbaikan.',
     lastUpdated: '2024-05-25 11:30 AM',
   },
   {
-    id: 'cancel_pre_design',
-    description: 'Balasan saat klien membatalkan SEBELUM pratinjau pertama dikirim.',
-    content: 'Permintaan pembatalan untuk pesanan `{{orderId}}` telah diterima. Karena pengerjaan belum dimulai, Anda berhak atas refund 90% dari total pembayaran atau 80% dari DP yang telah dibayarkan. Tim finance kami akan segera memprosesnya.',
-    lastUpdated: '2024-06-01 11:00 AM',
-  },
-    {
-    id: 'cancel_post_design',
-    description: 'Balasan saat klien membatalkan SETELAH pratinjau pertama dikirim.',
-    content: 'Permintaan pembatalan untuk pesanan `{{orderId}}` telah diterima. Karena pengerjaan desain telah dilakukan, sesuai kebijakan kami, Anda berhak atas refund 50% dari total pembayaran (jika lunas) atau DP Anda akan hangus.',
-    lastUpdated: '2024-06-01 11:05 AM',
-  },
-  {
-    id: 'offer_gmeet',
+    id: 'gmeet_offer',
     description: 'Pesan yang menawarkan G-Meet setelah 2x revisi.',
     content: 'Kami melihat Anda telah melakukan 2x revisi untuk pesanan `{{orderId}}`. Untuk memastikan revisi ke-3 lebih efektif, kami ingin mengundang Anda ke sesi revisi langsung via Google Meet (durasi 2 jam).\n\nSilakan balas dengan "/jadwal" untuk memilih slot waktu yang tersedia.',
     lastUpdated: '2024-06-01 11:10 AM',
   },
-   {
-    id: 'status_check_response',
-    description: 'Balasan bot saat pengguna menanyakan status pesanan mereka.',
-    content: 'Halo {{customerName}}! Berikut status terbaru untuk pesanan `{{orderId}}`:\n\n*Status Saat Ini:* {{currentStatus}}\n*Antrian Pengerjaan:* Posisi ke-{{queuePosition}} dari {{totalInQueue}}.\n\nKami akan segera memberi tahu Anda jika ada pembaruan lebih lanjut. Terima kasih atas kesabaran Anda!',
-    lastUpdated: '2024-06-01 11:15 AM',
+  {
+    id: 'gmeet_schedule_info',
+    description: 'Pesan yang menampilkan jadwal G-Meet yang tersedia.',
+    content: 'Berikut adalah jadwal meeting yang tersedia untuk Anda:\n\n- `JADWAL01`: Sabtu, 22 Juni - 10:00 WIB\n- `JADWAL02`: Sabtu, 22 Juni - 14:00 WIB\n- `JADWAL03`: Minggu, 23 Juni - 10:00 WIB\n\nBalas dengan `/pilih_jadwal [ID JADWAL]` (contoh: `/pilih_jadwal JADWAL01`) untuk memesan slot.',
+    lastUpdated: '2024-06-02 09:10 AM',
+  },
+  {
+    id: 'cancel_confirm_request',
+    description: 'Pesan untuk mengkonfirmasi pembatalan dan meminta feedback.',
+    content: '⚠️ *Konfirmasi Pembatalan*\n\nKami menerima permintaan pembatalan untuk pesanan Anda. Apakah Anda yakin ingin melanjutkan?\n\nJika ya, kami mohon kesediaan Anda untuk memberikan masukan agar kami bisa menjadi lebih baik. Balas dengan format berikut:\n\n`/konfirmasi_batal BINTANG:[1-5] ALASAN:[Alasan singkat Anda]`\n\nContoh:\n`/konfirmasi_batal BINTANG:2 ALASAN:Desain tidak sesuai ekspektasi`',
+    lastUpdated: '2024-06-02 09:15 AM',
+  },
+  {
+    id: 'cancel_feedback_received',
+    description: 'Pesan balasan setelah klien memberikan feedback pembatalan.',
+    content: 'Terima kasih banyak atas waktu dan masukan yang Anda berikan. Kami sangat menghargainya.\n\nPermintaan pembatalan Anda telah kami catat dan akan segera diproses oleh tim kami. Kami akan menghubungi Anda lagi setelah proses refund selesai.',
+    lastUpdated: '2024-06-02 09:20 AM',
+  },
+  {
+    id: 'cancel_owner_notification',
+    description: 'Pesan notifikasi yang dikirim ke Owner saat ada pembatalan.',
+    content: '🔴 *PERMINTAAN PEMBATALAN & REFUND*\n\n*Order ID:* `{{orderId}}`\n*Klien:* {{customerName}}\n*Rating:* {{rating}}/5 ⭐️\n*Alasan:* {{reason}}\n\n*Status saat ini:* {{currentStatus}}\n*Jumlah Refund:* *{{refundAmount}}*\n\nMohon segera proses refund dan selesaikan di panel admin.',
+    lastUpdated: '2024-06-02 09:25 AM',
+  },
+  {
+    id: 'refund_processed_notification',
+    description: 'Pesan yang dikirim ke klien setelah Owner memproses refund.',
+    content: '✅ *Proses Refund Selesai*\n\nHalo {{customerName}},\n\nProses refund untuk pesanan `{{orderId}}` telah kami selesaikan. Berikut adalah detailnya:\n\n*Jumlah Refund:* {{refundAmount}}\n*Bukti Transfer:* {{proofUrl}}\n\nTerima kasih atas pengertiannya. Kami berharap dapat melayani Anda lebih baik di lain kesempatan.',
+    lastUpdated: '2024-06-02 09:30 AM',
   }
 ];
