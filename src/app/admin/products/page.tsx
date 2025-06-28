@@ -1,23 +1,14 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { services, mockCategories } from '@/lib/data';
 import { formatRupiah } from '@/lib/utils';
-import { PlusCircle, MoreHorizontal } from 'lucide-react';
 import type { Service } from '@/lib/types';
+import { PlusCircle } from 'lucide-react';
 import { ProductFormDialog } from '@/components/ProductFormDialog';
 import { useToast } from '@/hooks/use-toast';
 
@@ -30,11 +21,11 @@ export default function AdminProductsPage() {
   const filteredServices = useMemo(() => {
     return services.filter(service => {
       const searchMatch = service.name.toLowerCase().includes(filters.search.toLowerCase());
-      const categoryMatch = filters.category === 'all' || service.category === filters.category;
+      const categoryMatch = filters.category === 'all' || service.category === category.id;
       return searchMatch && categoryMatch;
     });
   }, [filters]);
-  
+
   const handleAddProduct = () => {
     setSelectedProduct(null);
     setIsDialogOpen(true);
@@ -46,17 +37,16 @@ export default function AdminProductsPage() {
   };
 
   const handleDeleteProduct = (service: Service) => {
-    console.log("Delete product:", service);
     toast({
       title: 'Simulasi Hapus Produk',
       description: `Produk "${service.name}" telah dihapus (simulasi).`,
       variant: 'destructive',
     });
-  }
-  
+  };
+
   const getCategoryName = (categoryId: string) => {
     return mockCategories.find(c => c.id === categoryId)?.name || categoryId;
-  }
+  };
 
   return (
     <>
@@ -98,58 +88,38 @@ export default function AdminProductsPage() {
             </Select>
           </CardContent>
         </Card>
-        
-        <Card>
-          <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[50px] text-center">Aksi</TableHead>
-                  <TableHead>Nama Produk</TableHead>
-                  <TableHead>Kategori</TableHead>
-                  <TableHead>Kaki Lima</TableHead>
-                  <TableHead>UMKM</TableHead>
-                  <TableHead>E-Comm</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredServices.length > 0 ? (
-                  filteredServices.map((service: Service) => (
-                    <TableRow key={service.id}>
-                      <TableCell className="text-center">
-                         <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="icon">
-                                      <MoreHorizontal className="h-4 w-4" />
-                                      <span className="sr-only">Aksi untuk {service.name}</span>
-                                  </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                  <DropdownMenuItem onSelect={() => handleEditProduct(service)}>Edit</DropdownMenuItem>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem className="text-destructive focus:bg-destructive/30" onSelect={() => handleDeleteProduct(service)}>Hapus</DropdownMenuItem>
-                              </DropdownMenuContent>
-                          </DropdownMenu>
-                      </TableCell>
-                      <TableCell className="font-medium">{service.name}</TableCell>
-                      <TableCell className="whitespace-nowrap">{getCategoryName(service.category)}</TableCell>
-                      <TableCell className="whitespace-nowrap">{formatRupiah(service.prices['kaki-lima'])}</TableCell>
-                      <TableCell className="whitespace-nowrap">{formatRupiah(service.prices['umkm'])}</TableCell>
-                      <TableCell className="whitespace-nowrap">{formatRupiah(service.prices['e-comm'])}</TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center h-24">
-                      Belum ada produk yang cocok dengan filter Anda.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+
+        {filteredServices.length > 0 ? (
+          <div className="space-y-4">
+            {filteredServices.map(service => (
+              <Card key={service.id}>
+                <CardContent className="p-4 grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-4">
+                  <div className="space-y-1">
+                    <h3 className="font-bold text-lg">{service.name}</h3>
+                    <p className="text-sm text-muted-foreground">Kategori: {getCategoryName(service.category)}</p>
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm pt-2">
+                      <span>Kaki Lima: <span className="font-semibold">{formatRupiah(service.prices['kaki-lima'])}</span></span>
+                      <span>UMKM: <span className="font-semibold">{formatRupiah(service.prices['umkm'])}</span></span>
+                      <span>E-Comm: <span className="font-semibold">{formatRupiah(service.prices['e-comm'])}</span></span>
+                    </div>
+                  </div>
+                  <div className="flex sm:flex-col gap-2 justify-start sm:justify-center sm:items-end">
+                    <Button size="sm" onClick={() => handleEditProduct(service)}>Edit</Button>
+                    <Button size="sm" variant="destructive" onClick={() => handleDeleteProduct(service)}>Hapus</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <Card>
+            <CardContent className="py-12 text-center text-muted-foreground">
+              <p>Belum ada produk yang cocok dengan filter Anda.</p>
+            </CardContent>
+          </Card>
+        )}
       </div>
+
       <ProductFormDialog 
         product={selectedProduct}
         isOpen={isDialogOpen}

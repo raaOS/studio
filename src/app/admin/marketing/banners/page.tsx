@@ -2,17 +2,9 @@
 
 import React from 'react';
 import Image from 'next/image';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { mockBanners } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { PlusCircle } from 'lucide-react';
@@ -67,43 +59,32 @@ export default function AdminBannersPage() {
       )}
 
       <Card>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="min-w-[200px]">Nama</TableHead>
-                <TableHead className="whitespace-nowrap">Posisi</TableHead>
-                <TableHead className="whitespace-nowrap">Periode</TableHead>
-                <TableHead className="whitespace-nowrap">Status</TableHead>
-                <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mockBanners.length > 0 ? (
-                mockBanners.map((banner: Banner) => (
-                  <TableRow key={banner.id}>
-                    <TableCell className="font-medium">{banner.name}</TableCell>
-                    <TableCell className="whitespace-nowrap">{banner.position}</TableCell>
-                    <TableCell className="whitespace-nowrap">{banner.period}</TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      <Badge variant="outline" className={cn("capitalize", getStatusClass(banner.status))}>
-                        {banner.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right space-x-2 whitespace-nowrap">
-                      <Button size="sm" variant="outline">Edit</Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center h-24">
-                    Belum ada banner yang dibuat.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+        <CardHeader>
+          <CardTitle>Daftar Banner</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {mockBanners.length > 0 ? (
+            mockBanners.map((banner: Banner) => (
+              <Card key={banner.id}>
+                <CardContent className="p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-sm">
+                  <div>
+                    <p className="font-bold">{banner.name}</p>
+                    <p className="text-muted-foreground">Posisi: {banner.position} | Periode: {banner.period}</p>
+                  </div>
+                  <div className="flex items-center gap-4 w-full sm:w-auto">
+                    <Badge variant="outline" className={cn("capitalize", getStatusClass(banner.status))}>
+                      {banner.status}
+                    </Badge>
+                    <Button size="sm" variant="outline" className="ml-auto">Edit</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+             <div className="text-center text-muted-foreground py-12">
+              <p>Belum ada banner yang dibuat.</p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

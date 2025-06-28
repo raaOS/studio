@@ -1,14 +1,6 @@
 'use client';
 
 import React from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -28,46 +20,32 @@ const PromosTab = () => {
   };
 
   return (
-    <Card>
-      <CardContent className="p-0">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="min-w-[200px]">Produk</TableHead>
-              <TableHead className="whitespace-nowrap">Promo</TableHead>
-              <TableHead className="whitespace-nowrap">Periode</TableHead>
-              <TableHead className="whitespace-nowrap">Status</TableHead>
-              <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {mockPromos.length > 0 ? (
-              mockPromos.map(promo => (
-                <TableRow key={promo.id}>
-                  <TableCell className="font-medium">{promo.productName}</TableCell>
-                  <TableCell className="whitespace-nowrap">{promo.promoText}</TableCell>
-                  <TableCell className="whitespace-nowrap">{promo.period}</TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    <Badge variant="outline" className={cn("capitalize", getStatusClass(promo.status))}>
+    <div className="space-y-4">
+      {mockPromos.length > 0 ? (
+        mockPromos.map(promo => (
+          <Card key={promo.id}>
+             <CardContent className="p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-sm">
+                <div>
+                  <p className="font-bold">{promo.productName}</p>
+                  <p className="text-muted-foreground">Promo: {promo.promoText} | Periode: {promo.period}</p>
+                </div>
+                <div className="flex items-center gap-4 w-full sm:w-auto">
+                   <Badge variant="outline" className={cn("capitalize", getStatusClass(promo.status))}>
                       {promo.status}
                     </Badge>
-                  </TableCell>
-                  <TableCell className="text-right space-x-2 whitespace-nowrap">
-                    <Button size="sm" variant="outline">Edit</Button>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">
-                  Belum ada promo yang dibuat.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+                  <Button size="sm" variant="outline" className="ml-auto">Edit</Button>
+                </div>
+              </CardContent>
+          </Card>
+        ))
+      ) : (
+         <Card>
+            <CardContent className="py-12 text-center text-muted-foreground">
+              <p>Belum ada promo yang dibuat.</p>
+            </CardContent>
+          </Card>
+      )}
+    </div>
   );
 };
 
@@ -82,48 +60,32 @@ const CouponsTab = () => {
     };
 
     return (
-        <Card>
-            <CardContent className="p-0">
-              <Table>
-                  <TableHeader>
-                  <TableRow>
-                      <TableHead className="whitespace-nowrap">Kode</TableHead>
-                      <TableHead className="whitespace-nowrap">Diskon</TableHead>
-                      <TableHead className="whitespace-nowrap">Usage</TableHead>
-                      <TableHead className="whitespace-nowrap">Periode</TableHead>
-                      <TableHead className="whitespace-nowrap">Status</TableHead>
-                      <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
-                  </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                  {mockCoupons.length > 0 ? (
-                      mockCoupons.map(coupon => (
-                      <TableRow key={coupon.id}>
-                          <TableCell className="font-medium whitespace-nowrap">{coupon.code}</TableCell>
-                          <TableCell className="whitespace-nowrap">{coupon.discount}</TableCell>
-                          <TableCell className="whitespace-nowrap">{coupon.usage}</TableCell>
-                          <TableCell className="whitespace-nowrap">{coupon.period}</TableCell>
-                          <TableCell className="whitespace-nowrap">
-                          <Badge variant="outline" className={cn("capitalize", getStatusClass(coupon.status))}>
-                              {coupon.status}
-                          </Badge>
-                          </TableCell>
-                          <TableCell className="text-right space-x-2 whitespace-nowrap">
-                          <Button size="sm" variant="outline">Edit</Button>
-                          </TableCell>
-                      </TableRow>
-                      ))
-                  ) : (
-                      <TableRow>
-                      <TableCell colSpan={6} className="text-center h-24">
-                          Belum ada kupon yang dibuat.
-                      </TableCell>
-                      </TableRow>
-                  )}
-                  </TableBody>
-              </Table>
-            </CardContent>
-        </Card>
+       <div className="space-y-4">
+        {mockCoupons.length > 0 ? (
+            mockCoupons.map(coupon => (
+              <Card key={coupon.id}>
+                <CardContent className="p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-sm">
+                    <div>
+                        <p className="font-mono font-bold text-base">{coupon.code}</p>
+                        <p className="text-muted-foreground">Diskon: {coupon.discount} | Usage: {coupon.usage} | Periode: {coupon.period}</p>
+                    </div>
+                    <div className="flex items-center gap-4 w-full sm:w-auto">
+                        <Badge variant="outline" className={cn("capitalize", getStatusClass(coupon.status))}>
+                          {coupon.status}
+                        </Badge>
+                       <Button size="sm" variant="outline" className="ml-auto">Edit</Button>
+                    </div>
+                  </CardContent>
+              </Card>
+            ))
+        ) : (
+            <Card>
+                <CardContent className="py-12 text-center text-muted-foreground">
+                <p>Belum ada kupon yang dibuat.</p>
+                </CardContent>
+            </Card>
+        )}
+      </div>
     );
 };
 

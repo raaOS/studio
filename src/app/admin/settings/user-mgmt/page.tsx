@@ -1,18 +1,10 @@
 'use client';
 
 import React from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { mockAdminUsers } from '@/lib/data';
 import { cn } from '@/lib/utils';
@@ -42,52 +34,41 @@ export default function AdminUserManagementPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-            <h1 className="text-2xl md:text-3xl font-bold font-headline">User Management</h1>
+            <h1 className="text-2xl md:text-3xl font-bold font-headline">Manajemen User</h1>
             <p className="text-muted-foreground">Kelola pengguna dan peran di panel admin.</p>
         </div>
         <Button>
           <PlusCircle className="mr-2 h-4 w-4" />
-          Add User
+          Tambah User
         </Button>
       </div>
       
       <Card>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="min-w-[250px]">User</TableHead>
-                <TableHead className="whitespace-nowrap">Role</TableHead>
-                <TableHead className="whitespace-nowrap">Status</TableHead>
-                <TableHead className="text-right whitespace-nowrap">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mockAdminUsers.length > 0 ? (
-                mockAdminUsers.map((user: AdminUser) => (
-                  <TableRow key={user.id}>
-                    <TableCell className="font-medium">
-                        <div className="flex items-center gap-3">
-                            <Avatar>
-                                <AvatarImage src={user.avatar} alt={user.name} data-ai-hint="user avatar" />
-                                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <p className="whitespace-normal">{user.name}</p>
-                                <p className="text-sm text-muted-foreground">{user.email}</p>
-                            </div>
+        <CardHeader>
+          <CardTitle>Daftar User</CardTitle>
+          <CardDescription>Total {mockAdminUsers.length} user terdaftar.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {mockAdminUsers.length > 0 ? (
+            mockAdminUsers.map((user: AdminUser) => (
+              <Card key={user.id}>
+                <CardContent className="p-3 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                        <Avatar>
+                            <AvatarImage src={user.avatar} alt={user.name} data-ai-hint="user avatar" />
+                            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                            <p className="font-semibold">{user.name}</p>
+                            <p className="text-sm text-muted-foreground">{user.email}</p>
                         </div>
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap">
+                    </div>
+                    <div className="flex items-center gap-4">
                         <Badge variant="outline" className={cn(getRoleClass(user.role))}>{user.role}</Badge>
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      <Badge variant="outline" className={cn("capitalize", getStatusClass(user.status))}>
-                        {user.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right whitespace-nowrap">
-                      <DropdownMenu>
+                        <Badge variant="outline" className={cn("capitalize", getStatusClass(user.status))}>
+                            {user.status}
+                        </Badge>
+                       <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" size="icon">
                                     <MoreHorizontal className="h-4 w-4" />
@@ -99,18 +80,15 @@ export default function AdminUserManagementPage() {
                                 <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={4} className="text-center h-24">
-                    No users found.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                    </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <div className="text-center text-muted-foreground py-12">
+              <p>Tidak ada user yang ditemukan.</p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

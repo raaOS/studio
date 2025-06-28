@@ -2,17 +2,9 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { mockOrders } from '@/lib/data';
@@ -80,58 +72,49 @@ export default function AdminPaymentsPage() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="whitespace-nowrap">Kode</TableHead>
-                <TableHead className="min-w-[200px]">Nama</TableHead>
-                <TableHead className="whitespace-nowrap">Dibayar</TableHead>
-                <TableHead className="whitespace-nowrap">Total Order</TableHead>
-                <TableHead className="whitespace-nowrap">Status Bayar</TableHead>
-                <TableHead className="whitespace-nowrap">Tanggal</TableHead>
-                <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredOrders.length > 0 ? (
-                filteredOrders.map(order => (
-                  <TableRow key={order.kode_order}>
-                    <TableCell className="font-medium whitespace-nowrap">
-                      <Link href={`/admin/orders/${order.kode_order}`} className="text-primary hover:underline">
+      <div className="space-y-4">
+        {filteredOrders.length > 0 ? (
+          filteredOrders.map(order => (
+            <Card key={order.kode_order}>
+              <CardHeader className="flex flex-row items-start justify-between gap-4 p-4">
+                <div>
+                  <CardTitle className="text-lg">
+                     <Link href={`/admin/orders/${order.kode_order}`} className="text-primary hover:underline">
                         {order.kode_order}
                       </Link>
-                    </TableCell>
-                    <TableCell>{order.nama_klien}</TableCell>
-                    <TableCell className="whitespace-nowrap">{formatRupiah(order.jumlah_transfer)}</TableCell>
-                    <TableCell className="whitespace-nowrap">{formatRupiah(order.total_harga)}</TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      <Badge variant="outline" className={cn("capitalize", getStatusClass(order.paymentStatus))}>
-                        {order.paymentStatus}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap">{new Date(order.timestamp).toLocaleDateString('id-ID')}</TableCell>
-                    <TableCell className="text-right space-x-2 whitespace-nowrap">
-                       {order.paymentStatus !== 'Lunas' && order.paymentStatus !== 'Batal' && <Button size="sm" variant="default">Validasi</Button>}
-                       {order.paymentStatus === 'Belum Lunas' && <Button size="sm" variant="outline">Ingatkan</Button>}
-                       <Button asChild size="sm" variant="ghost">
-                          <Link href={`/admin/orders/${order.kode_order}`}>Detail</Link>
-                       </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center h-24">
-                    Tidak ada data pembayaran yang sesuai dengan filter.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground">{order.nama_klien}</p>
+                </div>
+                 <Badge variant="outline" className={cn("capitalize", getStatusClass(order.paymentStatus))}>
+                    {order.paymentStatus}
+                  </Badge>
+              </CardHeader>
+              <CardContent className="p-4 pt-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="grid grid-cols-2 gap-4 text-sm w-full sm:w-auto">
+                  <div>
+                    <p className="font-semibold text-muted-foreground">Dibayar</p>
+                    <p>{formatRupiah(order.jumlah_transfer)}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-muted-foreground">Total</p>
+                    <p>{formatRupiah(order.total_harga)}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                    {order.paymentStatus !== 'Lunas' && order.paymentStatus !== 'Batal' && <Button size="sm" variant="default" className="w-full sm:w-auto">Validasi</Button>}
+                    {order.paymentStatus === 'Belum Lunas' && <Button size="sm" variant="outline" className="w-full sm:w-auto">Ingatkan</Button>}
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <Card>
+            <CardContent className="py-12 text-center text-muted-foreground">
+              <p>Tidak ada data pembayaran yang sesuai dengan filter.</p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }

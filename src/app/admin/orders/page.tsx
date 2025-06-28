@@ -2,17 +2,9 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { mockOrders, allOrderStatusesCategorized, mockCustomers } from '@/lib/data';
@@ -113,67 +105,46 @@ export default function AdminOrdersPage() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="whitespace-nowrap">Kode</TableHead>
-                <TableHead className="min-w-[200px]">Nama</TableHead>
-                <TableHead className="whitespace-nowrap">Budget</TableHead>
-                <TableHead className="whitespace-nowrap">Status</TableHead>
-                <TableHead className="whitespace-nowrap">Drive</TableHead>
-                <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredOrders.length > 0 ? (
-                filteredOrders.map(order => (
-                  <TableRow key={order.kode_order}>
-                    <TableCell className="font-medium whitespace-nowrap">{order.kode_order}</TableCell>
-                    <TableCell>
-                       <Link href={`/admin/customers/${getCustomerId(order.nama_klien)}`} className="hover:underline text-primary">
-                        {order.nama_klien}
-                      </Link>
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap">{order.budget}</TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      <Badge variant="outline" className={cn("capitalize", getStatusClass(order.status_pesanan))}>
+      <div className="space-y-4">
+        {filteredOrders.length > 0 ? (
+          filteredOrders.map(order => (
+            <Card key={order.kode_order}>
+                <CardHeader className="flex flex-row items-start justify-between gap-4 p-4">
+                    <div>
+                        <CardTitle className="text-lg">{order.kode_order}</CardTitle>
+                        <p className="text-sm text-muted-foreground">{order.nama_klien}</p>
+                    </div>
+                    <Badge variant="outline" className={cn("capitalize text-right", getStatusClass(order.status_pesanan))}>
                         {order.status_pesanan}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {order.driveFolderUrl && (
-                        <Button asChild variant="ghost" size="icon">
-                          <a href={order.driveFolderUrl} target="_blank" rel="noopener noreferrer" title="Buka Folder Drive">
-                            <Folder className="h-4 w-4" />
-                          </a>
+                    </Badge>
+                </CardHeader>
+                <CardContent className="p-4 pt-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="text-sm text-muted-foreground">
+                        Budget: <span className="font-semibold text-foreground">{order.budget}</span> | Pekan: <span className="font-semibold text-foreground">{order.pekan}</span>
+                    </div>
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                        {order.driveFolderUrl && (
+                            <Button asChild variant="ghost" size="icon" className="h-8 w-8">
+                                <a href={order.driveFolderUrl} target="_blank" rel="noopener noreferrer" title="Buka Folder Drive">
+                                    <Folder className="h-4 w-4" />
+                                </a>
+                            </Button>
+                        )}
+                        <Button asChild size="sm" className="w-full sm:w-auto">
+                            <Link href={`/admin/orders/${order.kode_order}`}>Lihat Detail</Link>
                         </Button>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right space-x-2 whitespace-nowrap">
-                       {order.status_pesanan === 'Masuk Antrian' && <Button size="sm" variant="default">Mulai</Button>}
-                       {order.status_pesanan === 'Sedang Dikerjakan' && <Button size="sm" variant="default">Pratinjau</Button>}
-                       {order.status_pesanan === 'Sedang Direvisi' && <Button size="sm" variant="default">Update</Button>}
-                       {order.status_pesanan === 'Menunggu Respon Klien' && <Button size="sm" variant="outline">Kirim Pengingat</Button>}
-                       {order.status_pesanan === 'Perlu Tinjauan Owner' && <Button size="sm" variant="destructive">Tinjau</Button>}
-                       <Button asChild size="sm" variant="ghost">
-                          <Link href={`/admin/orders/${order.kode_order}`}>Detail</Link>
-                       </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center h-24">
-                    Tidak ada pesanan yang sesuai dengan filter.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+                    </div>
+                </CardContent>
+            </Card>
+          ))
+        ) : (
+          <Card>
+            <CardContent className="py-12 text-center text-muted-foreground">
+              <p>Tidak ada pesanan yang sesuai dengan filter.</p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }

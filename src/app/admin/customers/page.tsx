@@ -2,14 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -25,52 +17,46 @@ const CustomersListTab = () => (
         <CardTitle>Daftar Pelanggan</CardTitle>
         <CardDescription>Lihat dan kelola semua data pelanggan Anda.</CardDescription>
     </CardHeader>
-    <CardContent className="p-0">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="min-w-[250px]">Pelanggan</TableHead>
-            <TableHead className="whitespace-nowrap">Lifetime Value (LTV)</TableHead>
-            <TableHead className="whitespace-nowrap">Total Pesanan</TableHead>
-            <TableHead className="whitespace-nowrap">Order Terakhir</TableHead>
-            <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {mockCustomers.length > 0 ? (
-            mockCustomers.map((customer: CustomerProfile) => (
-              <TableRow key={customer.id}>
-                <TableCell className="font-medium">
-                    <div className="flex items-center gap-3">
-                        <Avatar>
-                            <AvatarImage src={customer.avatar} alt={customer.name} data-ai-hint="user avatar" />
-                            <AvatarFallback>{customer.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <p className="whitespace-normal">{customer.name}</p>
-                            <p className="text-sm text-muted-foreground">{customer.email}</p>
-                        </div>
-                    </div>
-                </TableCell>
-                <TableCell className="whitespace-nowrap">{formatRupiah(customer.ltv)}</TableCell>
-                <TableCell className="whitespace-nowrap">{customer.totalOrders}</TableCell>
-                <TableCell className="whitespace-nowrap">{customer.lastOrderDate}</TableCell>
-                <TableCell className="text-right whitespace-nowrap">
-                  <Button asChild size="sm" variant="outline">
-                      <Link href={`/admin/customers/${customer.id}`}>Lihat Detail</Link>
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={5} className="text-center h-24">
-                Belum ada data pelanggan.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+    <CardContent className="space-y-4">
+      {mockCustomers.length > 0 ? (
+        mockCustomers.map((customer: CustomerProfile) => (
+          <Card key={customer.id}>
+            <CardContent className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <Avatar>
+                    <AvatarImage src={customer.avatar} alt={customer.name} data-ai-hint="user avatar" />
+                    <AvatarFallback>{customer.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div>
+                    <p className="font-bold">{customer.name}</p>
+                    <p className="text-sm text-muted-foreground">{customer.email}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 sm:flex sm:items-center gap-4 text-sm w-full sm:w-auto">
+                <div>
+                  <p className="font-semibold text-muted-foreground">LTV</p>
+                  <p>{formatRupiah(customer.ltv)}</p>
+                </div>
+                 <div>
+                  <p className="font-semibold text-muted-foreground">Total Pesanan</p>
+                  <p>{customer.totalOrders}</p>
+                </div>
+                 <div>
+                  <p className="font-semibold text-muted-foreground">Terakhir Pesan</p>
+                  <p>{customer.lastOrderDate}</p>
+                </div>
+              </div>
+              <Button asChild size="sm" variant="outline" className="w-full sm:w-auto mt-2 sm:mt-0">
+                  <Link href={`/admin/customers/${customer.id}`}>Lihat Detail</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ))
+      ) : (
+        <div className="text-center text-muted-foreground py-12">
+          <p>Belum ada data pelanggan.</p>
+        </div>
+      )}
     </CardContent>
   </Card>
 );

@@ -1,17 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -130,29 +121,27 @@ const MessagingTab = () => {
                 </Button>
             </div>
         </CardHeader>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="whitespace-nowrap">Template ID</TableHead>
-                <TableHead className="min-w-[250px]">Deskripsi</TableHead>
-                <TableHead className="whitespace-nowrap">Terakhir Diubah</TableHead>
-                <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mockMessageTemplates.map((template) => (
-                <TableRow key={template.id}>
-                  <TableCell className="font-mono text-xs whitespace-nowrap">{template.id}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{template.description}</TableCell>
-                  <TableCell className="whitespace-nowrap">{template.lastUpdated}</TableCell>
-                  <TableCell className="text-right whitespace-nowrap">
-                    <Button size="sm" variant="outline" onClick={() => handleEditTemplate(template)}>Edit</Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <CardContent className="space-y-4">
+          {mockMessageTemplates.length > 0 ? (
+            mockMessageTemplates.map((template) => (
+              <Card key={template.id}>
+                <CardContent className="p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-sm">
+                  <div>
+                    <p className="font-mono text-xs font-bold">{template.id}</p>
+                    <p className="text-muted-foreground">{template.description}</p>
+                  </div>
+                  <div className="flex items-center gap-4 w-full sm:w-auto">
+                    <p className="text-muted-foreground whitespace-nowrap">Diubah: {template.lastUpdated}</p>
+                    <Button size="sm" variant="outline" onClick={() => handleEditTemplate(template)} className="ml-auto">Edit</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <div className="text-center text-muted-foreground py-12">
+              <p>Belum ada template pesan yang dibuat.</p>
+            </div>
+          )}
         </CardContent>
       </Card>
       <MessageTemplateFormDialog
@@ -217,27 +206,17 @@ const CapacityTab = () => {
                     <CardTitle>Perencanaan Kapasitas Mingguan</CardTitle>
                     <CardDescription>Rencanakan dan pantau target kapasitas mingguan Anda.</CardDescription>
                 </CardHeader>
-                <CardContent className="p-0">
-                  <Table>
-                      <TableHeader>
-                          <TableRow>
-                              <TableHead className="whitespace-nowrap">Minggu</TableHead>
-                              <TableHead className="whitespace-nowrap">Target</TableHead>
-                              <TableHead className="whitespace-nowrap">Aktual</TableHead>
-                              <TableHead className="whitespace-nowrap">Status</TableHead>
-                          </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                      {weeklyPlanningData.map((item) => (
-                          <TableRow key={item.week}>
-                              <TableCell className="font-medium whitespace-nowrap">{item.week}</TableCell>
-                              <TableCell className="whitespace-nowrap">{item.target}</TableCell>
-                              <TableCell className="whitespace-nowrap">{item.actual}</TableCell>
-                              <TableCell className="whitespace-nowrap">{getStatusBadge(item.status, item.target - item.actual)}</TableCell>
-                          </TableRow>
-                      ))}
-                      </TableBody>
-                  </Table>
+                <CardContent className="space-y-4">
+                  {weeklyPlanningData.map((item) => (
+                    <Card key={item.week}>
+                      <CardContent className="p-3 grid grid-cols-4 gap-2 items-center text-sm">
+                        <p className="font-bold">{item.week}</p>
+                        <p><span className="text-muted-foreground">Target:</span> {item.target}</p>
+                        <p><span className="text-muted-foreground">Aktual:</span> {item.actual}</p>
+                        <div>{getStatusBadge(item.status, item.target - item.actual)}</div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </CardContent>
             </Card>
         </div>
