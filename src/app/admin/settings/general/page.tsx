@@ -1,111 +1,28 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { budgetItems } from '@/lib/data';
-import { Edit, AlertTriangle, Check, CheckCircle } from 'lucide-react';
-import type { BudgetItem } from '@/lib/types';
-import { useToast } from "@/hooks/use-toast";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { AlertTriangle, Check, CheckCircle } from 'lucide-react';
 
+const weeklyPlanningData = [
+  { week: 'W1', target: 5, actual: 5, status: 'Full' },
+  { week: 'W2', target: 5, actual: 3, status: 'Available' },
+  { week: 'W3', target: 5, actual: 0, status: 'Open' },
+  { week: 'W4', target: 5, actual: 0, status: 'Open' },
+];
 
-const BudgetsTab = () => {
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedBudget, setSelectedBudget] = useState<BudgetItem | null>(null);
-    const [editableBudget, setEditableBudget] = useState<BudgetItem | null>(null);
-    const { toast } = useToast();
-
-    const handleEditClick = (budget: BudgetItem) => {
-        setSelectedBudget(budget);
-        setEditableBudget({ ...budget });
-        setIsDialogOpen(true);
-    };
-
-    const handleSaveChanges = () => {
-        if (!editableBudget) return;
-        console.log("Saving changes for:", editableBudget);
-        toast({
-            title: "Perubahan Disimpan (Simulasi)",
-            description: `Detail untuk budget "${editableBudget.title}" telah diperbarui.`,
-        });
-        setIsDialogOpen(false);
-        setSelectedBudget(null);
-    };
-    
-    const handleFieldChange = (field: keyof Omit<BudgetItem, 'id'>, value: string) => {
-        if(editableBudget) {
-            setEditableBudget({ ...editableBudget, [field]: value });
-        }
-    }
-
-    return (
-        <>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {budgetItems.map((budget) => (
-            <Card key={budget.id}>
-                <CardHeader>
-                    <CardTitle>{budget.title}</CardTitle>
-                    <CardDescription>{budget.description}</CardDescription>
-                </CardHeader>
-                <CardFooter>
-                     <Button variant="outline" className="w-full" onClick={() => handleEditClick(budget)}>
-                        <Edit className="mr-2 h-4 w-4" /> Edit
-                    </Button>
-                </CardFooter>
-            </Card>
-            ))}
-        </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Edit Budget: {selectedBudget?.title}</DialogTitle>
-                </DialogHeader>
-                {editableBudget && (
-                    <div className="space-y-4 py-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="title">Judul</Label>
-                            <Input id="title" value={editableBudget.title} onChange={(e) => handleFieldChange('title', e.target.value)} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="description">Deskripsi</Label>
-                            <Textarea id="description" value={editableBudget.description} onChange={(e) => handleFieldChange('description', e.target.value)} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="image">URL Gambar</Label>
-                            <Input id="image" value={editableBudget.image} onChange={(e) => handleFieldChange('image', e.target.value)} />
-                        </div>
-                    </div>
-                )}
-                <DialogFooter>
-                    <Button variant="ghost" onClick={() => setIsDialogOpen(false)}>Batal</Button>
-                    <Button onClick={handleSaveChanges}>Simpan Perubahan</Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-        </>
-    );
-}
-
-const CapacityTab = () => {
-  const weeklyPlanningData = [
-    { week: 'W1', target: 5, actual: 5, status: 'Full' },
-    { week: 'W2', target: 5, actual: 3, status: 'Available' },
-    { week: 'W3', target: 5, actual: 0, status: 'Open' },
-    { week: 'W4', target: 5, actual: 0, status: 'Open' },
-  ];
+export default function GeneralSettingsPage() {
 
   const getStatusBadge = (status: string, slots: number) => {
     switch (status) {
       case 'Full':
         return <Badge variant="destructive"><Check className="mr-1 h-3 w-3" /> Full</Badge>;
       case 'Available':
-        return <Badge variant="outline"><AlertTriangle className="mr-1 h-3 w-3" /> Available ({slots} slot)</Badge>;
+        return <Badge variant="outline"><AlertTriangle className="mr-1 h-3 w-3" /> Sisa {slots} slot</Badge>;
       case 'Open':
         return <Badge variant="secondary"><CheckCircle className="mr-1 h-3 w-3" /> Open</Badge>;
       default:
@@ -114,12 +31,23 @@ const CapacityTab = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+    <div className="space-y-8">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+            <h1 className="text-2xl md:text-3xl font-bold font-headline">Pengaturan Kapasitas</h1>
+            <p className="text-muted-foreground">Atur batas pesanan dan kelola antrian kerja mingguan Anda.</p>
+        </div>
+        <div className="flex gap-2 flex-shrink-0">
+            <Button>Simpan Batas</Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-2 space-y-8">
             <Card>
                 <CardHeader>
                     <CardTitle>Batas Pesanan</CardTitle>
-                    <CardDescription>Atur batas pesanan mingguan, bulanan, dan slot darurat.</CardDescription>
+                    <CardDescription>Atur batas pesanan mingguan, bulanan, dan slot darurat untuk mencegah kelebihan beban kerja.</CardDescription>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-2">
@@ -135,9 +63,6 @@ const CapacityTab = () => {
                         <Input id="emergency-buffer" type="number" defaultValue="2" />
                     </div>
                 </CardContent>
-                <CardFooter>
-                    <Button>Simpan Batas</Button>
-                </CardFooter>
             </Card>
             
             <Card>
@@ -148,7 +73,7 @@ const CapacityTab = () => {
                 <CardContent className="space-y-4">
                   {weeklyPlanningData.map((item) => (
                     <Card key={item.week}>
-                      <CardContent className="p-3 grid grid-cols-4 gap-2 items-center text-sm">
+                      <CardContent className="p-3 grid grid-cols-2 sm:grid-cols-4 gap-2 items-center text-sm">
                         <p className="font-bold">{item.week}</p>
                         <p><span className="text-muted-foreground">Target:</span> {item.target}</p>
                         <p><span className="text-muted-foreground">Aktual:</span> {item.actual}</p>
@@ -164,7 +89,7 @@ const CapacityTab = () => {
                 <CardHeader>
                     <CardTitle>Status Kapasitas Saat Ini</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-4">
                     <div>
                         <Label>Minggu Ini (3/5)</Label>
                     </div>
@@ -173,36 +98,11 @@ const CapacityTab = () => {
                     </div>
                 </CardContent>
                  <CardFooter>
-                    <Button variant="secondary" className="w-full">Reset Counter</Button>
+                    <Button variant="secondary" className="w-full">Reset Counter Mingguan</Button>
                 </CardFooter>
             </Card>
         </div>
-    </div>
-  );
-};
-
-
-export default function GeneralSettingsPage() {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl md:text-3xl font-bold font-headline">Pengaturan Umum</h1>
-        <p className="text-muted-foreground">Kelola pengaturan inti aplikasi Anda dari satu tempat.</p>
       </div>
-
-       <Tabs defaultValue="budgets" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="budgets">Tampilan Budget</TabsTrigger>
-          <TabsTrigger value="capacity">Kapasitas</TabsTrigger>
-        </TabsList>
-        <TabsContent value="budgets" className="mt-4">
-            <BudgetsTab />
-        </TabsContent>
-        <TabsContent value="capacity" className="mt-4">
-            <CapacityTab />
-        </TabsContent>
-      </Tabs>
-      
     </div>
   );
 }

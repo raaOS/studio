@@ -16,7 +16,6 @@ import {
   Archive,
   ImageIcon,
   Users,
-  Settings,
   Wrench,
   LineChart,
   UserCog,
@@ -27,7 +26,8 @@ import {
   Wallet,
   BrainCircuit,
   PercentCircle,
-  Bot
+  Bot,
+  BarChart3
 } from 'lucide-react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/AdminHeader';
@@ -142,7 +142,7 @@ export default function AdminLayout({
 
               <SidebarSeparator />
 
-              {/* RUANG OTAK (SISTEM) */}
+              {/* RUANG SISTEM */}
               <SidebarGroup>
                 <SidebarGroupLabel className="flex items-center gap-2">
                   <Sparkles />
@@ -152,8 +152,8 @@ export default function AdminLayout({
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
                         <Link href="/admin/settings/general">
-                          <Settings />
-                          Pengaturan Umum
+                          <BarChart3 />
+                          Pengaturan Kapasitas
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
