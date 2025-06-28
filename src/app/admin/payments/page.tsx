@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useMemo } from 'react';
@@ -86,13 +85,13 @@ export default function AdminPaymentsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Kode</TableHead>
-                <TableHead>Nama</TableHead>
-                <TableHead>Dibayar</TableHead>
-                <TableHead>Total Order</TableHead>
-                <TableHead>Status Bayar</TableHead>
-                <TableHead>Tanggal</TableHead>
-                <TableHead className="text-right">Aksi</TableHead>
+                <TableHead className="whitespace-nowrap">Kode</TableHead>
+                <TableHead className="min-w-[200px]">Nama</TableHead>
+                <TableHead className="whitespace-nowrap">Dibayar</TableHead>
+                <TableHead className="whitespace-nowrap">Total Order</TableHead>
+                <TableHead className="whitespace-nowrap">Status Bayar</TableHead>
+                <TableHead className="whitespace-nowrap">Tanggal</TableHead>
+                <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -113,9 +112,9 @@ export default function AdminPaymentsPage() {
                       </Badge>
                     </TableCell>
                     <TableCell>{new Date(order.timestamp).toLocaleDateString('id-ID')}</TableCell>
-                    <TableCell className="text-right space-x-2">
-                       {order.paymentStatus !== 'Lunas' && order.paymentStatus !== 'Batal' && <Button size="sm" variant="default">Validasi Pembayaran</Button>}
-                       {order.paymentStatus === 'Belum Lunas' && <Button size="sm" variant="outline">Kirim Pengingat</Button>}
+                    <TableCell className="text-right space-x-2 whitespace-nowrap">
+                       {order.paymentStatus !== 'Lunas' && order.paymentStatus !== 'Batal' && <Button size="sm" variant="default">Validasi</Button>}
+                       {order.paymentStatus === 'Belum Lunas' && <Button size="sm" variant="outline">Ingatkan</Button>}
                        <Button asChild size="sm" variant="ghost">
                           <Link href={`/admin/orders/${order.kode_order}`}>Detail</Link>
                        </Button>

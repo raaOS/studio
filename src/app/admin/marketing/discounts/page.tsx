@@ -33,11 +33,11 @@ const PromosTab = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Produk</TableHead>
-              <TableHead>Promo</TableHead>
-              <TableHead>Periode</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Aksi</TableHead>
+              <TableHead className="min-w-[200px]">Produk</TableHead>
+              <TableHead className="whitespace-nowrap">Promo</TableHead>
+              <TableHead className="whitespace-nowrap">Periode</TableHead>
+              <TableHead className="whitespace-nowrap">Status</TableHead>
+              <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -87,12 +87,12 @@ const CouponsTab = () => {
             <Table>
                 <TableHeader>
                 <TableRow>
-                    <TableHead>Kode</TableHead>
-                    <TableHead>Diskon</TableHead>
-                    <TableHead>Usage</TableHead>
-                    <TableHead>Periode</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Aksi</TableHead>
+                    <TableHead className="whitespace-nowrap">Kode</TableHead>
+                    <TableHead className="whitespace-nowrap">Diskon</TableHead>
+                    <TableHead className="whitespace-nowrap">Usage</TableHead>
+                    <TableHead className="whitespace-nowrap">Periode</TableHead>
+                    <TableHead className="whitespace-nowrap">Status</TableHead>
+                    <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
                 </TableRow>
                 </TableHeader>
                 <TableBody>

@@ -42,12 +42,12 @@ export default function AdminRefundsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Nama Klien</TableHead>
-                <TableHead>Jumlah Refund</TableHead>
-                <TableHead>Jenis Potongan</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Aksi</TableHead>
+                <TableHead className="whitespace-nowrap">Order ID</TableHead>
+                <TableHead className="min-w-[200px]">Nama Klien</TableHead>
+                <TableHead className="whitespace-nowrap">Jumlah Refund</TableHead>
+                <TableHead className="whitespace-nowrap">Jenis Potongan</TableHead>
+                <TableHead className="whitespace-nowrap">Status</TableHead>
+                <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -67,7 +67,7 @@ export default function AdminRefundsPage() {
                             {refund.status_refund}
                         </Badge>
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right whitespace-nowrap">
                        {refund.status_refund === 'Belum' && <Button size="sm" variant="outline">Tandai Sudah Ditransfer</Button>}
                     </TableCell>
                   </TableRow>

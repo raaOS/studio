@@ -71,11 +71,11 @@ export default function AdminBannersPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nama</TableHead>
-                <TableHead>Posisi</TableHead>
-                <TableHead>Periode</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Aksi</TableHead>
+                <TableHead className="min-w-[200px]">Nama</TableHead>
+                <TableHead className="whitespace-nowrap">Posisi</TableHead>
+                <TableHead className="whitespace-nowrap">Periode</TableHead>
+                <TableHead className="whitespace-nowrap">Status</TableHead>
+                <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

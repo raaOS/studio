@@ -14,10 +14,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Switch } from '@/components/ui/switch';
 import { mockDriveActivityLogs, mockCalendarActivityLogs, mockMeetActivityLogs } from '@/lib/data';
-import { FolderSync, Save, TestTube2, Link as LinkIcon, FolderCog, KeyRound, FileJson, FolderInput, Lightbulb, UserPlus, Power, Flame, CheckCircle, Video, CalendarDays, CalendarClock, Clock } from 'lucide-react';
+import { FolderSync, Save, TestTube2, Link as LinkIcon, FolderCog, CheckCircle, Video, CalendarDays, CalendarClock, Clock } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
 import type { DriveActivityLog } from '@/lib/types';
@@ -154,10 +153,10 @@ const DriveTab = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Aktivitas</TableHead>
-                <TableHead>Timestamp</TableHead>
-                <TableHead>Tipe</TableHead>
+                <TableHead className="whitespace-nowrap">Order ID</TableHead>
+                <TableHead className="min-w-[250px]">Aktivitas</TableHead>
+                <TableHead className="whitespace-nowrap">Timestamp</TableHead>
+                <TableHead className="whitespace-nowrap">Tipe</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -266,10 +265,10 @@ const CalendarTab = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Aktivitas</TableHead>
-                <TableHead>Timestamp</TableHead>
-                <TableHead>Pemicu</TableHead>
+                <TableHead className="whitespace-nowrap">Order ID</TableHead>
+                <TableHead className="min-w-[250px]">Aktivitas</TableHead>
+                <TableHead className="whitespace-nowrap">Timestamp</TableHead>
+                <TableHead className="whitespace-nowrap">Pemicu</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -370,10 +369,10 @@ const MeetTab = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Aktivitas</TableHead>
-                <TableHead>Timestamp</TableHead>
-                <TableHead>Pemicu</TableHead>
+                <TableHead className="whitespace-nowrap">Order ID</TableHead>
+                <TableHead className="min-w-[250px]">Aktivitas</TableHead>
+                <TableHead className="whitespace-nowrap">Timestamp</TableHead>
+                <TableHead className="whitespace-nowrap">Pemicu</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

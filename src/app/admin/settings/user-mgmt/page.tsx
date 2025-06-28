@@ -56,10 +56,10 @@ export default function AdminUserManagementPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>User</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="min-w-[250px]">User</TableHead>
+                <TableHead className="whitespace-nowrap">Role</TableHead>
+                <TableHead className="whitespace-nowrap">Status</TableHead>
+                <TableHead className="text-right whitespace-nowrap">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -73,7 +73,7 @@ export default function AdminUserManagementPage() {
                                 <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                             </Avatar>
                             <div>
-                                <p>{user.name}</p>
+                                <p className="whitespace-normal">{user.name}</p>
                                 <p className="text-sm text-muted-foreground">{user.email}</p>
                             </div>
                         </div>

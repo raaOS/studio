@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Line, LineChart, ResponsiveContainer } from "recharts";
+import { Line, LineChart } from "recharts";
 import { TrendingUp, ArrowDown, Users, ShoppingCart, DollarSign, Percent, Inbox, Loader2, CheckCircle } from 'lucide-react';
 import { formatRupiah } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -169,9 +169,9 @@ const AnalyticsTabContent = () => {
                 <CardContent>
                     <ChartContainer config={chartConfig} className="h-[300px] w-full">
                         <LineChart data={revenueData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                            <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
-                            <YAxis 
+                            <cartesianGrid strokeDasharray="3 3" vertical={false} />
+                            <xAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
+                            <yAxis 
                             tickFormatter={(value) => `${(value as number) / 1000000} Jt`}
                             tickLine={false}
                             axisLine={false}
@@ -229,21 +229,21 @@ const AnalyticsTabContent = () => {
                                     <span>UMKM</span>
                                     <div className="flex items-center gap-2">
                                         <span className="font-semibold">5.2%</span>
-                                        <div className="w-32 h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '70%'}}></div></div>
+                                        <div className="w-full sm:w-32 h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '70%'}}></div></div>
                                     </div>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span>E-Comm</span>
-                                    <div className="flex items-center gap-2">
+                                     <div className="flex items-center gap-2">
                                         <span className="font-semibold">3.1%</span>
-                                        <div className="w-32 h-2 bg-primary rounded-full" style={{width: '50%'}}></div>
+                                        <div className="w-full sm:w-32 h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '50%'}}></div></div>
                                     </div>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span>Kaki Lima</span>
                                     <div className="flex items-center gap-2">
                                         <span className="font-semibold">2.5%</span>
-                                        <div className="w-32 h-2 bg-primary rounded-full" style={{width: '40%'}}></div>
+                                        <div className="w-full sm:w-32 h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '40%'}}></div></div>
                                     </div>
                                 </div>
                             </div>

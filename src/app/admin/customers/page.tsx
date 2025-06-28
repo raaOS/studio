@@ -29,11 +29,11 @@ const CustomersListTab = () => (
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Pelanggan</TableHead>
-            <TableHead>Lifetime Value (LTV)</TableHead>
-            <TableHead>Total Pesanan</TableHead>
-            <TableHead>Order Terakhir</TableHead>
-            <TableHead className="text-right">Aksi</TableHead>
+            <TableHead className="min-w-[250px]">Pelanggan</TableHead>
+            <TableHead className="whitespace-nowrap">Lifetime Value (LTV)</TableHead>
+            <TableHead className="whitespace-nowrap">Total Pesanan</TableHead>
+            <TableHead className="whitespace-nowrap">Order Terakhir</TableHead>
+            <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -47,7 +47,7 @@ const CustomersListTab = () => (
                             <AvatarFallback>{customer.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div>
-                            <p>{customer.name}</p>
+                            <p className="whitespace-normal">{customer.name}</p>
                             <p className="text-sm text-muted-foreground">{customer.email}</p>
                         </div>
                     </div>

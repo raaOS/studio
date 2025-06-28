@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -134,10 +134,10 @@ const MessagingTab = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Template ID</TableHead>
-                <TableHead>Deskripsi</TableHead>
-                <TableHead>Terakhir Diubah</TableHead>
-                <TableHead className="text-right">Aksi</TableHead>
+                <TableHead className="whitespace-nowrap">Template ID</TableHead>
+                <TableHead className="min-w-[250px]">Deskripsi</TableHead>
+                <TableHead className="whitespace-nowrap">Terakhir Diubah</TableHead>
+                <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -221,10 +221,10 @@ const CapacityTab = () => {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Minggu</TableHead>
-                                <TableHead>Target</TableHead>
-                                <TableHead>Aktual</TableHead>
-                                <TableHead>Status</TableHead>
+                                <TableHead className="whitespace-nowrap">Minggu</TableHead>
+                                <TableHead className="whitespace-nowrap">Target</TableHead>
+                                <TableHead className="whitespace-nowrap">Aktual</TableHead>
+                                <TableHead className="whitespace-nowrap">Status</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -273,7 +273,7 @@ export default function GeneralSettingsPage() {
       </div>
 
        <Tabs defaultValue="budgets" className="w-full">
-        <TabsList>
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="budgets">Tampilan Budget</TabsTrigger>
           <TabsTrigger value="messaging">Pesan Bot</TabsTrigger>
           <TabsTrigger value="capacity">Kapasitas</TabsTrigger>

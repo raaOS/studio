@@ -126,12 +126,12 @@ export default function AdminOrdersPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Kode</TableHead>
-                <TableHead>Nama</TableHead>
-                <TableHead>Budget</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Drive</TableHead>
-                <TableHead className="text-right">Aksi</TableHead>
+                <TableHead className="whitespace-nowrap">Kode</TableHead>
+                <TableHead className="min-w-[200px]">Nama</TableHead>
+                <TableHead className="whitespace-nowrap">Budget</TableHead>
+                <TableHead className="whitespace-nowrap">Status</TableHead>
+                <TableHead className="whitespace-nowrap">Drive</TableHead>
+                <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -159,7 +159,7 @@ export default function AdminOrdersPage() {
                         </Button>
                       )}
                     </TableCell>
-                    <TableCell className="text-right space-x-2">
+                    <TableCell className="text-right space-x-2 whitespace-nowrap">
                        {order.status_pesanan === 'Masuk Antrian' && <Button size="sm" variant="default">Mulai</Button>}
                        {order.status_pesanan === 'Sedang Dikerjakan' && <Button size="sm" variant="default">Pratinjau</Button>}
                        {order.status_pesanan === 'Sedang Direvisi' && <Button size="sm" variant="default">Update</Button>}
