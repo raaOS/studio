@@ -1,9 +1,7 @@
-
 'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { mockCoupons } from "@/lib/data";
@@ -41,39 +39,35 @@ export function CouponInfoSection() {
 
     return (
         <section className="container mx-auto px-4 py-6 md:py-10">
-            <div className="grid grid-cols-1 md:max-w-2xl mx-auto gap-8">
+            <div className="grid grid-cols-1 md:max-w-4xl mx-auto gap-8">
                 {activeCoupons.map((coupon: Coupon) => (
-                     <Card key={coupon.id} className="overflow-hidden flex flex-col md:flex-row items-center shadow-lg h-full">
-                        <div className="w-full md:w-1/3 shrink-0">
+                    <div key={coupon.id} className="grid md:grid-cols-2 items-center gap-x-8 gap-y-6 p-6 rounded-lg border bg-card text-card-foreground shadow-sm">
+                        <div className="relative aspect-square w-full">
                             <Image
                                 src='https://placehold.co/400x400.png'
                                 alt={`Promo ${coupon.code}`}
-                                width={400}
-                                height={400}
-                                className="object-cover w-full h-48 md:h-full"
+                                fill
+                                className="object-cover rounded-md"
                                 data-ai-hint="coupon gift"
                             />
                         </div>
-                        <div className="p-6 flex-1 flex flex-col justify-center h-full w-full">
+
+                        <div className="flex flex-col justify-center h-full">
                             {coupon.code === 'NEWBIE20' && (
-                                <CardHeader className="p-0 mb-2">
-                                    <CardTitle>Spesial Pengguna Baru</CardTitle>
-                                </CardHeader>
+                                <h3 className="text-2xl font-headline font-bold mb-4">Spesial Pengguna Baru</h3>
                             )}
-                            <CardContent className="p-0">
-                                <div className="flex items-center justify-between rounded-lg border-2 border-dashed bg-muted p-3">
-                                    <p className="font-mono text-lg font-bold text-primary">{coupon.code}</p>
-                                    <Button size="sm" onClick={() => handleCopy(coupon.code)} className='shrink-0'>
-                                        {copiedCode === coupon.code ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                                        <span className="ml-2 hidden sm:inline">{copiedCode === coupon.code ? 'Disalin' : 'Salin Kupon'}</span>
-                                    </Button>
-                                </div>
-                                <p className="text-muted-foreground text-sm mt-2">
-                                    Gunakan kode ini saat checkout untuk mendapatkan diskon sebesar {coupon.discount}.
-                                </p>
-                            </CardContent>
+                            <div className="flex items-center justify-between rounded-lg border-2 border-dashed bg-muted p-3">
+                                <p className="font-mono text-lg font-bold text-primary">{coupon.code}</p>
+                                <Button size="sm" onClick={() => handleCopy(coupon.code)} className='shrink-0'>
+                                    {copiedCode === coupon.code ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                                    <span className="ml-2 hidden sm:inline">{copiedCode === coupon.code ? 'Disalin' : 'Salin Kupon'}</span>
+                                </Button>
+                            </div>
+                            <p className="text-muted-foreground text-sm mt-3">
+                                Gunakan kode ini saat checkout untuk mendapatkan diskon sebesar {coupon.discount}.
+                            </p>
                         </div>
-                    </Card>
+                    </div>
                 ))}
             </div>
         </section>
