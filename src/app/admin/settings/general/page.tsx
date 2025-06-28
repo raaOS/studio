@@ -22,6 +22,7 @@ import { MessageTemplateFormDialog } from '@/components/MessageTemplateFormDialo
 import type { MessageTemplate, BudgetItem } from '@/lib/types';
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ResponsiveTableWrapper } from '@/components/ResponsiveTableWrapper';
 
 
 const BudgetsTab = () => {
@@ -131,7 +132,7 @@ const MessagingTab = () => {
             </div>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
+          <ResponsiveTableWrapper>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -154,7 +155,7 @@ const MessagingTab = () => {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </ResponsiveTableWrapper>
         </CardContent>
       </Card>
       <MessageTemplateFormDialog
@@ -220,7 +221,7 @@ const CapacityTab = () => {
                     <CardDescription>Rencanakan dan pantau target kapasitas mingguan Anda.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <div className="overflow-x-auto">
+                  <ResponsiveTableWrapper>
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -241,7 +242,7 @@ const CapacityTab = () => {
                         ))}
                         </TableBody>
                     </Table>
-                  </div>
+                  </ResponsiveTableWrapper>
                 </CardContent>
             </Card>
         </div>

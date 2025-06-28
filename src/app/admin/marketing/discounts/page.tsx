@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { mockCoupons, mockPromos } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { PlusCircle } from 'lucide-react';
+import { ResponsiveTableWrapper } from '@/components/ResponsiveTableWrapper';
 
 const PromosTab = () => {
   const getStatusClass = (status: string) => {
@@ -30,7 +31,7 @@ const PromosTab = () => {
   return (
     <Card>
       <CardContent className="p-0">
-        <div className="overflow-x-auto">
+        <ResponsiveTableWrapper>
           <Table>
             <TableHeader>
               <TableRow>
@@ -67,7 +68,7 @@ const PromosTab = () => {
               )}
             </TableBody>
           </Table>
-        </div>
+        </ResponsiveTableWrapper>
       </CardContent>
     </Card>
   );
@@ -86,7 +87,7 @@ const CouponsTab = () => {
     return (
         <Card>
             <CardContent className="p-0">
-              <div className="overflow-x-auto">
+              <ResponsiveTableWrapper>
                 <Table>
                     <TableHeader>
                     <TableRow>
@@ -125,7 +126,7 @@ const CouponsTab = () => {
                     )}
                     </TableBody>
                 </Table>
-              </div>
+              </ResponsiveTableWrapper>
             </CardContent>
         </Card>
     );

@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { mockCalendarActivityLogs } from '@/lib/data';
 import { CheckCircle, CalendarDays, CalendarClock, Save } from 'lucide-react';
+import { ResponsiveTableWrapper } from '@/components/ResponsiveTableWrapper';
 
 export default function CalendarAutomationPage() {
   return (
@@ -112,26 +113,28 @@ export default function CalendarAutomationPage() {
           <CardDescription>Riwayat event yang dibuat dan diperbarui oleh sistem.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Aktivitas</TableHead>
-                <TableHead>Timestamp</TableHead>
-                <TableHead>Pemicu</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mockCalendarActivityLogs.map((log) => (
-                <TableRow key={log.id}>
-                  <TableCell className="font-medium">{log.orderId}</TableCell>
-                  <TableCell>{log.activity}</TableCell>
-                  <TableCell>{log.timestamp}</TableCell>
-                  <TableCell><Badge variant="secondary">{log.trigger}</Badge></TableCell>
+          <ResponsiveTableWrapper>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Order ID</TableHead>
+                  <TableHead>Aktivitas</TableHead>
+                  <TableHead>Timestamp</TableHead>
+                  <TableHead>Pemicu</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {mockCalendarActivityLogs.map((log) => (
+                  <TableRow key={log.id}>
+                    <TableCell className="font-medium">{log.orderId}</TableCell>
+                    <TableCell>{log.activity}</TableCell>
+                    <TableCell>{log.timestamp}</TableCell>
+                    <TableCell><Badge variant="secondary">{log.trigger}</Badge></TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </ResponsiveTableWrapper>
         </CardContent>
       </Card>
 

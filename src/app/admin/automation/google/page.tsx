@@ -21,6 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
 import type { DriveActivityLog } from '@/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ResponsiveTableWrapper } from '@/components/ResponsiveTableWrapper';
 
 
 const DriveTab = () => {
@@ -150,7 +151,7 @@ const DriveTab = () => {
           <CardDescription>Riwayat aktivitas sinkronisasi folder yang berhasil.</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
+          <ResponsiveTableWrapper>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -180,7 +181,7 @@ const DriveTab = () => {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </ResponsiveTableWrapper>
         </CardContent>
       </Card>
     </div>
@@ -266,7 +267,7 @@ const CalendarTab = () => {
           <CardTitle>Log Aktivitas Kalender</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
+          <ResponsiveTableWrapper>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -287,7 +288,7 @@ const CalendarTab = () => {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </ResponsiveTableWrapper>
         </CardContent>
       </Card>
     </div>
@@ -372,7 +373,7 @@ const MeetTab = () => {
           <CardTitle>Log Penjadwalan Meet</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
+          <ResponsiveTableWrapper>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -393,7 +394,7 @@ const MeetTab = () => {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </ResponsiveTableWrapper>
         </CardContent>
       </Card>
     </div>
