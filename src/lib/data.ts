@@ -542,7 +542,7 @@ export const mockMessageTemplates: MessageTemplate[] = [
   },
   {
     id: 'preview_ready',
-    description: 'Pesan yang dikirim saat desainer mengubah status menjadi "Siap Kirim Pratinjau".',
+    description: 'Pesan yang dikirim saat pratinjau siap dan status diubah menjadi "Menunggu Respon Klien".',
     content: '🎨 *Pratinjau Desain Siap!* 🎨\n\nHalo {{customerName}},\n\nKabar baik! Pratinjau untuk pesanan `{{orderId}}` sudah siap.\n\nSilakan cek hasilnya di folder Google Drive Anda:\n{{driveUrl}}',
     lastUpdated: '2024-05-25 11:30 AM',
   },

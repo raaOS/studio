@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { useParams, notFound } from 'next/navigation';
-import { mockOrders, allOrderStatusesCategorized } from '@/lib/data';
+import { mockOrders, allOrderStatusesCategorized, mockMessageTemplates } from '@/lib/data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -94,7 +94,14 @@ export default function OrderDetailPage() {
                 setIsSubmittingUpdate(false);
                 return;
             }
-            message = `🎨 *Pratinjau Desain Siap!* 🎨\n\nHalo ${order.nama_klien},\n\nKabar baik! Pratinjau pertama untuk pesanan \`${order.kode_order}\` sudah siap untuk Anda review.\n\nSilakan cek hasilnya di folder Google Drive Anda melalui link di bawah ini:\n${driveUrl}\n\nKami tunggu feedback atau permintaan revisi dari Anda. Terima kasih!`;
+            const template = mockMessageTemplates.find(t => t.id === 'preview_ready');
+            if (!template) {
+                throw new Error("Template 'preview_ready' tidak ditemukan. Mohon periksa file data.");
+            }
+            message = template.content
+                .replace('{{customerName}}', order.nama_klien)
+                .replace('{{orderId}}', order.kode_order)
+                .replace('{{driveUrl}}', driveUrl);
         } else {
             message = `🔔 *Update Pesanan Anda* 🔔\n\nHalo ${order.nama_klien},\nStatus pesanan Anda dengan ID \`${order.kode_order}\` telah diperbarui menjadi:\n\n*${currentStatus}*\n\nJika ada pertanyaan, jangan ragu untuk membalas pesan ini. Terima kasih!`;
         }
