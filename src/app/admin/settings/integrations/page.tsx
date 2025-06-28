@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -23,7 +24,7 @@ const integrations = [
     description: 'Buat folder project otomatis untuk setiap pesanan dan kelola file dengan mudah.',
     icon: Folder,
     connected: true,
-    href: '/admin/automation/drive',
+    href: '/admin/automation/google',
   },
   {
     id: 'google-meet',
@@ -31,7 +32,7 @@ const integrations = [
     description: 'Jadwalkan meeting konsultasi otomatis untuk customer dengan revisi berlebih.',
     icon: Video,
     connected: true,
-    href: '/admin/automation/meet',
+    href: '/admin/automation/google',
   },
   {
     id: 'google-calendar',
@@ -39,7 +40,7 @@ const integrations = [
     description: 'Sinkronkan jadwal meeting dan deadline project langsung ke kalender Anda.',
     icon: Calendar,
     connected: true,
-    href: '/admin/automation/calendar',
+    href: '/admin/automation/google',
   },
 ];
 
@@ -47,9 +48,18 @@ export default function AdminIntegrationsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl md:text-3xl font-bold font-headline">Kelola Integrasi</h1>
-        <p className="text-muted-foreground">Hubungkan Urgent Studio dengan layanan pihak ketiga untuk otomasi alur kerja Anda.</p>
+        <h1 className="text-2xl md:text-3xl font-bold font-headline">Kelola Integrasi & Deployment</h1>
+        <p className="text-muted-foreground">Hubungkan layanan pihak ketiga dan pahami langkah-langkah untuk mempublikasikan aplikasi Anda.</p>
       </div>
+      
+      <Alert variant="default" className="border-blue-500/50 text-blue-900 dark:text-blue-200 [&>svg]:text-blue-600">
+          <Info className="h-4 w-4" />
+          <AlertTitle className="text-blue-800 dark:text-blue-300">Informasi Biaya: Google AI (Genkit/Gemini)</AlertTitle>
+          <AlertDescription>
+              <p>Untuk saat ini, penggunaan fitur AI **sepenuhnya gratis**. Google AI menyediakan tingkat gratis (free tier) yang sangat besar, dan penggunaan aplikasi kita saat ini sangat jauh di bawah batas tersebut.</p>
+              <p className="mt-2">Biaya hanya akan berlaku jika lalu lintas aplikasi menjadi **sangat tinggi**. Anda memegang kendali penuh melalui kunci <strong>GEMINI_API_KEY</strong> di file <code>.env</code> Anda. Jika kunci tersebut tidak ada, semua fitur AI akan dinonaktifkan secara aman.</p>
+          </AlertDescription>
+      </Alert>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="md:col-span-2 border-primary">
