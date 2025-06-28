@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -13,7 +14,6 @@ import { useToast } from "@/hooks/use-toast";
 import { createOrderFolder } from '@/ai/flows/create-drive-folder';
 import type { DriveActivityLog } from '@/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ResponsiveTableWrapper } from '@/components/ResponsiveTableWrapper';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const DriveTab = () => {
@@ -153,35 +153,33 @@ const DriveTab = () => {
           <CardDescription>Riwayat aktivitas sinkronisasi folder yang berhasil.</CardDescription>
         </CardHeader>
         <CardContent>
-            <ResponsiveTableWrapper>
-                <Table>
-                    <TableHeader>
-                    <TableRow>
-                        <TableHead className="whitespace-nowrap">Order ID</TableHead>
-                        <TableHead className="min-w-[250px]">Aktivitas</TableHead>
-                        <TableHead className="whitespace-nowrap">Timestamp</TableHead>
-                        <TableHead className="whitespace-nowrap">Tipe</TableHead>
+            <Table>
+                <TableHeader>
+                <TableRow>
+                    <TableHead className="whitespace-nowrap">Order ID</TableHead>
+                    <TableHead className="min-w-[250px]">Aktivitas</TableHead>
+                    <TableHead className="whitespace-nowrap">Timestamp</TableHead>
+                    <TableHead className="whitespace-nowrap">Tipe</TableHead>
+                </TableRow>
+                </TableHeader>
+                <TableBody>
+                {activityLogs.map((log) => (
+                    <TableRow key={log.id}>
+                    <TableCell className="font-medium whitespace-nowrap">{log.orderId}</TableCell>
+                    <TableCell className="flex items-center gap-2">
+                        {log.activity}
+                        {log.user === 'System (Live Test)' && (
+                            <Button asChild variant="ghost" size="icon" className="h-6 w-6">
+                                <a href={`https://drive.google.com/drive/folders/${log.id}`} target="_blank" rel="noopener noreferrer"><LinkIcon className="h-3 w-3" /></a>
+                            </Button>
+                        )}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">{log.timestamp}</TableCell>
+                    <TableCell className="whitespace-nowrap"><Badge variant={log.user === 'System (Live Test)' ? 'default' : 'secondary'} className={log.user === 'System (Live Test)' ? 'bg-green-600' : ''}>{log.user}</Badge></TableCell>
                     </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                    {activityLogs.map((log) => (
-                        <TableRow key={log.id}>
-                        <TableCell className="font-medium whitespace-nowrap">{log.orderId}</TableCell>
-                        <TableCell className="flex items-center gap-2">
-                            {log.activity}
-                            {log.user === 'System (Live Test)' && (
-                                <Button asChild variant="ghost" size="icon" className="h-6 w-6">
-                                    <a href={`https://drive.google.com/drive/folders/${log.id}`} target="_blank" rel="noopener noreferrer"><LinkIcon className="h-3 w-3" /></a>
-                                </Button>
-                            )}
-                        </TableCell>
-                        <TableCell className="whitespace-nowrap">{log.timestamp}</TableCell>
-                        <TableCell className="whitespace-nowrap"><Badge variant={log.user === 'System (Live Test)' ? 'default' : 'secondary'} className={log.user === 'System (Live Test)' ? 'bg-green-600' : ''}>{log.user}</Badge></TableCell>
-                        </TableRow>
-                    ))}
-                    </TableBody>
-                </Table>
-            </ResponsiveTableWrapper>
+                ))}
+                </TableBody>
+            </Table>
         </CardContent>
       </Card>
     </div>
@@ -267,28 +265,26 @@ const CalendarTab = () => {
           <CardTitle>Log Aktivitas Kalender</CardTitle>
         </CardHeader>
         <CardContent>
-            <ResponsiveTableWrapper>
-                <Table>
-                    <TableHeader>
-                    <TableRow>
-                        <TableHead className="whitespace-nowrap">Order ID</TableHead>
-                        <TableHead className="min-w-[250px]">Aktivitas</TableHead>
-                        <TableHead className="whitespace-nowrap">Timestamp</TableHead>
-                        <TableHead className="whitespace-nowrap">Pemicu</TableHead>
+            <Table>
+                <TableHeader>
+                <TableRow>
+                    <TableHead className="whitespace-nowrap">Order ID</TableHead>
+                    <TableHead className="min-w-[250px]">Aktivitas</TableHead>
+                    <TableHead className="whitespace-nowrap">Timestamp</TableHead>
+                    <TableHead className="whitespace-nowrap">Pemicu</TableHead>
+                </TableRow>
+                </TableHeader>
+                <TableBody>
+                {mockCalendarActivityLogs.map((log) => (
+                    <TableRow key={log.id}>
+                    <TableCell className="font-medium whitespace-nowrap">{log.orderId}</TableCell>
+                    <TableCell>{log.activity}</TableCell>
+                    <TableCell className="whitespace-nowrap">{log.timestamp}</TableCell>
+                    <TableCell className="whitespace-nowrap"><Badge variant="secondary">{log.trigger}</Badge></TableCell>
                     </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                    {mockCalendarActivityLogs.map((log) => (
-                        <TableRow key={log.id}>
-                        <TableCell className="font-medium whitespace-nowrap">{log.orderId}</TableCell>
-                        <TableCell>{log.activity}</TableCell>
-                        <TableCell className="whitespace-nowrap">{log.timestamp}</TableCell>
-                        <TableCell className="whitespace-nowrap"><Badge variant="secondary">{log.trigger}</Badge></TableCell>
-                        </TableRow>
-                    ))}
-                    </TableBody>
-                </Table>
-            </ResponsiveTableWrapper>
+                ))}
+                </TableBody>
+            </Table>
         </CardContent>
       </Card>
     </div>
@@ -373,28 +369,26 @@ const MeetTab = () => {
           <CardTitle>Log Penjadwalan Meet</CardTitle>
         </CardHeader>
         <CardContent>
-            <ResponsiveTableWrapper>
-                <Table>
-                    <TableHeader>
-                    <TableRow>
-                        <TableHead className="whitespace-nowrap">Order ID</TableHead>
-                        <TableHead className="min-w-[250px]">Aktivitas</TableHead>
-                        <TableHead className="whitespace-nowrap">Timestamp</TableHead>
-                        <TableHead className="whitespace-nowrap">Pemicu</TableHead>
+            <Table>
+                <TableHeader>
+                <TableRow>
+                    <TableHead className="whitespace-nowrap">Order ID</TableHead>
+                    <TableHead className="min-w-[250px]">Aktivitas</TableHead>
+                    <TableHead className="whitespace-nowrap">Timestamp</TableHead>
+                    <TableHead className="whitespace-nowrap">Pemicu</TableHead>
+                </TableRow>
+                </TableHeader>
+                <TableBody>
+                {mockMeetActivityLogs.map((log) => (
+                    <TableRow key={log.id}>
+                    <TableCell className="font-medium whitespace-nowrap">{log.orderId}</TableCell>
+                    <TableCell>{log.activity}</TableCell>
+                    <TableCell className="whitespace-nowrap">{log.timestamp}</TableCell>
+                    <TableCell className="whitespace-nowrap"><Badge variant="secondary">{log.trigger}</Badge></TableCell>
                     </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                    {mockMeetActivityLogs.map((log) => (
-                        <TableRow key={log.id}>
-                        <TableCell className="font-medium whitespace-nowrap">{log.orderId}</TableCell>
-                        <TableCell>{log.activity}</TableCell>
-                        <TableCell className="whitespace-nowrap">{log.timestamp}</TableCell>
-                        <TableCell className="whitespace-nowrap"><Badge variant="secondary">{log.trigger}</Badge></TableCell>
-                        </TableRow>
-                    ))}
-                    </TableBody>
-                </Table>
-            </ResponsiveTableWrapper>
+                ))}
+                </TableBody>
+            </Table>
         </CardContent>
       </Card>
     </div>
