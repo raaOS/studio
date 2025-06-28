@@ -175,14 +175,6 @@ export default function AdminLayout({
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <Link href="/admin/simulasi">
-                          <Bot />
-                          Simulasi Bot
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
                         <Link href="/admin/settings/user-mgmt">
                           <UserCog />
                           Manajemen User
