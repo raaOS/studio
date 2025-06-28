@@ -104,24 +104,19 @@ export default function AdminProductsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="whitespace-nowrap">Nama Produk</TableHead>
+                  <TableHead className="w-[50px] text-center">Aksi</TableHead>
+                  <TableHead>Nama Produk</TableHead>
                   <TableHead>Kategori</TableHead>
                   <TableHead>Kaki Lima</TableHead>
                   <TableHead>UMKM</TableHead>
                   <TableHead>E-Comm</TableHead>
-                  <TableHead className="text-right">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredServices.length > 0 ? (
                   filteredServices.map((service: Service) => (
                     <TableRow key={service.id}>
-                      <TableCell className="font-medium whitespace-nowrap">{service.name}</TableCell>
-                      <TableCell>{getCategoryName(service.category)}</TableCell>
-                      <TableCell>{formatRupiah(service.prices['kaki-lima'])}</TableCell>
-                      <TableCell>{formatRupiah(service.prices['umkm'])}</TableCell>
-                      <TableCell>{formatRupiah(service.prices['e-comm'])}</TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="text-center">
                          <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                   <Button variant="ghost" size="icon">
@@ -136,6 +131,11 @@ export default function AdminProductsPage() {
                               </DropdownMenuContent>
                           </DropdownMenu>
                       </TableCell>
+                      <TableCell className="font-medium">{service.name}</TableCell>
+                      <TableCell>{getCategoryName(service.category)}</TableCell>
+                      <TableCell>{formatRupiah(service.prices['kaki-lima'])}</TableCell>
+                      <TableCell>{formatRupiah(service.prices['umkm'])}</TableCell>
+                      <TableCell>{formatRupiah(service.prices['e-comm'])}</TableCell>
                     </TableRow>
                   ))
                 ) : (
