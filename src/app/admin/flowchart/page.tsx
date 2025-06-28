@@ -3,9 +3,9 @@
 
 import React from 'react';
 import { cn, getOrderStatusClass } from '@/lib/utils';
-import { User, Shield, GitFork, Workflow, Check, X, RefreshCw, AlertTriangle, Play, Hourglass, Wallet, FileCheck, CircleDollarSign, CalendarClock, MessageCircleQuestion, Bot as BotIcon, MessageSquareWarning, Star, Receipt } from 'lucide-react';
+import { User, Shield, GitFork, Workflow, Check, X, RefreshCw, AlertTriangle, Play, Hourglass, Wallet, FileCheck, CircleDollarSign, CalendarClock, MessageCircleQuestion, Bot as BotIcon, MessageSquareWarning, Star, Receipt, FileX } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import type { OrderStatus } from '@/lib/types';
 
@@ -36,18 +36,16 @@ const ChatSimulation = ({ messages }: { messages: { from: 'user' | 'bot', text: 
   </div>
 );
 
-const StatusBadgeWithPopover = ({ status, isFinal = false }: { status: OrderStatus, isFinal?: boolean }) => {
+const StatusBadgeWithDialog = ({ status, isFinal = false }: { status: OrderStatus, isFinal?: boolean }) => {
   const simulationMap: Partial<Record<OrderStatus, {from: 'user' | 'bot', text: string}[]>> = {
     'Menunggu Pembayaran': [{ from: 'bot', text: 'Pesanan #DSN-1234 diterima. Silakan lakukan pembayaran Rp 150.000 untuk melanjutkan.' }],
-    'Menunggu Pengerjaan': [{ from: 'bot', text: 'Pembayaran untuk #DSN-1234 diterima. Pesanan Anda masuk antrian.' }],
+    'Menunggu Pengerjaan': [{ from: 'user', text: 'sudah bayar'}, { from: 'bot', text: 'Pembayaran untuk #DSN-1234 diterima. Pesanan Anda masuk antrian.' }],
     'Sedang Dikerjakan': [{ from: 'bot', text: 'Pesanan #DSN-1234 mulai dikerjakan oleh tim desainer kami!' }],
     'Menunggu Respon Klien': [{ from: 'bot', text: 'Pratinjau untuk #DSN-1234 siap! Balas "Setuju" atau "Revisi: [catatan]".' }],
     'Sedang Direvisi': [{ from: 'user', text: 'Revisi: Tolong ganti warna background jadi lebih gelap ya.' }, { from: 'bot', text: 'Baik, permintaan revisi diterima. Kami akan segera proses.' }],
     'Selesai': [{ from: 'user', text: 'Oke, sudah bagus. Aku setuju.' }, { from: 'bot', text: 'Siap! Pesanan #DSN-1234 kami anggap selesai. Terima kasih!' }],
     'Eskalasi': [{ from: 'user', text: 'Revisi: Selain logo, tolong buatkan juga desain kartu namanya ya.' }, { from: 'bot', text: '⚠️ Potensi Perubahan Lingkup Kerja Terdeteksi! Tim kami akan meninjau permintaan ini.' }],
     'Menunggu Jadwal Meeting': [{ from: 'user', text: 'Revisi lagi dong, font-nya ganti.' }, { from: 'bot', text: 'Anda telah mencapai batas revisi. Kami akan menawarkan jadwal G-Meet untuk diskusi lebih lanjut.' }],
-    'Menunggu Proses Refund': [{ from: 'user', text: '/konfirmasi_batal BINTANG:2 ALASAN:Desain tidak sesuai' }, { from: 'bot', text: 'Terima kasih atas masukan Anda. Permintaan pembatalan sedang kami proses.' }],
-    'Dibatalkan': [{from: 'bot', text: 'Proses refund untuk pesanan #DSN-1234 telah kami selesaikan. Terima kasih.'}],
   };
   
   const messages = simulationMap[status];
@@ -63,16 +61,22 @@ const StatusBadgeWithPopover = ({ status, isFinal = false }: { status: OrderStat
   }
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <Dialog>
+      <DialogTrigger asChild>
         {badgeContent}
-      </PopoverTrigger>
-      <PopoverContent className="w-80 p-0" side="right" align="start">
-        <ChatSimulation messages={messages} />
-      </PopoverContent>
-    </Popover>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md p-4">
+        <DialogHeader>
+          <DialogTitle>Contoh Percakapan: {status}</DialogTitle>
+        </DialogHeader>
+        <div className="mt-4">
+          <ChatSimulation messages={messages} />
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
+
 
 // --- Flowchart UI Components ---
 const FlowStep = ({ title, pj, icon, color, children, end = false }: { title: string, pj: string, icon: React.ElementType, color: string, children: React.ReactNode, end?: boolean }) => (
@@ -138,63 +142,68 @@ export default function FlowchartPage() {
             <div className="space-y-6">
                 <FlowStep title="Pesanan Dibuat & Pembayaran" pj="Pelanggan & Sistem" icon={Wallet} color="bg-yellow-100 text-yellow-800">
                     <p>Pelanggan checkout di website, bot mengirim tagihan pembayaran.</p>
-                    <div className="mt-2"><StatusBadgeWithPopover status='Menunggu Pembayaran' /></div>
+                    <div className="mt-2"><StatusBadgeWithDialog status='Menunggu Pembayaran' /></div>
                 </FlowStep>
                 
                 <FlowStep title="Pembayaran Divalidasi" pj="Admin Finance" icon={FileCheck} color="bg-green-100 text-green-800">
                     <p>Admin memvalidasi pembayaran manual. Sistem mengubah status pesanan.</p>
-                    <div className="mt-2"><StatusBadgeWithPopover status='Menunggu Pengerjaan' /></div>
+                    <div className="mt-2"><StatusBadgeWithDialog status='Menunggu Pengerjaan' /></div>
                 </FlowStep>
 
                 <FlowStep title="Pengerjaan Desain Dimulai" pj="Desainer" icon={Play} color="bg-blue-100 text-blue-800">
                     <p>Desainer mengubah status. Bot memberi notifikasi ke pelanggan.</p>
-                    <div className="mt-2"><StatusBadgeWithPopover status='Sedang Dikerjakan' /></div>
+                    <div className="mt-2"><StatusBadgeWithDialog status='Sedang Dikerjakan' /></div>
                 </FlowStep>
                 
                 <FlowStep title="Pratinjau Terkirim" pj="Desainer & Sistem" icon={Hourglass} color="bg-sky-100 text-sky-800">
                      <p>Bot mengirimkan link pratinjau. `revisionCount` dimulai dari 0.</p>
-                     <div className="mt-2"><StatusBadgeWithPopover status='Menunggu Respon Klien' /></div>
+                     <div className="mt-2"><StatusBadgeWithDialog status='Menunggu Respon Klien' /></div>
                 </FlowStep>
                 
                 <FlowDecision text="Bagaimana Respon Klien?" />
+
                 <FlowBranch>
                     <BranchPath title="✅ Persetujuan" icon={Check} color="bg-green-100 text-green-800">
                         <FlowStep title="Pesanan Selesai" pj="Bot" icon={FileCheck} color="bg-green-100 text-green-800" end>
                             <p>Bot mendeteksi kata kunci "setuju" dan menuntaskan pesanan.</p>
-                            <div className="mt-2"><StatusBadgeWithPopover status='Selesai' isFinal={true} /></div>
+                            <div className="mt-2"><StatusBadgeWithDialog status='Selesai' isFinal={true} /></div>
                         </FlowStep>
                     </BranchPath>
                     
                     <BranchPath title="✏️ Revisi" icon={RefreshCw} color="bg-indigo-100 text-indigo-800">
                         <FlowStep title="Revisi Diproses (Ke 1 & 2)" pj="Bot & Desainer" icon={RefreshCw} color="bg-indigo-100 text-indigo-800">
                             <p>AI mengklasifikasikan sebagai revisi wajar. `revisionCount` +1. Alur kembali ke "Pengerjaan Desain".</p>
-                            <div className="mt-2"><StatusBadgeWithPopover status='Sedang Direvisi' /></div>
+                            <div className="mt-2"><StatusBadgeWithDialog status='Sedang Direvisi' /></div>
                         </FlowStep>
                         
-                        <FlowStep title="Revisi ke-3 Ditolak" pj="Bot" icon={CalendarClock} color="bg-orange-100 text-orange-800">
+                        <FlowStep title="Revisi ke-3 Ditolak" pj="Bot" icon={CalendarClock} color="bg-orange-100 text-orange-800" end>
                             <p>Setelah 2x revisi (`revisionCount` >= 2), bot akan menolak revisi via teks dan menawarkan G-Meet.</p>
-                            <div className="mt-2"><StatusBadgeWithPopover status='Menunggu Jadwal Meeting' /></div>
+                            <div className="mt-2"><StatusBadgeWithDialog status='Menunggu Jadwal Meeting' /></div>
                         </FlowStep>
                     </BranchPath>
 
                     <BranchPath title="⚠️ Scope Creep" icon={AlertTriangle} color="bg-rose-100 text-rose-800">
                         <FlowStep title="Eskalasi ke Owner" pj="Bot & Owner" icon={Shield} color="bg-rose-100 text-rose-800" end>
                             <p>AI mendeteksi permintaan di luar lingkup. Bot memberi notifikasi ke Owner untuk peninjauan manual.</p>
-                            <div className="mt-2"><StatusBadgeWithPopover status='Eskalasi' /></div>
+                            <div className="mt-2"><StatusBadgeWithDialog status='Eskalasi' /></div>
                         </FlowStep>
                     </BranchPath>
                     
                     <BranchPath title="❌ Pembatalan" icon={MessageSquareWarning} color="bg-red-100 text-red-800">
-                        <FlowStep title="Konfirmasi & Feedback" pj="Bot" icon={Star} color="bg-red-100 text-red-800">
-                            <p>Bot meminta konfirmasi, rating, dan alasan sebelum membatalkan.</p>
+                        <FlowStep title="Batal Pra-Desain" pj="Bot & Admin" icon={Receipt} color="bg-red-100 text-red-800">
+                            <p>Jika klien membatalkan sebelum pratinjau, bot akan memproses refund parsial.</p>
+                            <div className="mt-2"><Badge variant="destructive">Status Final: Dibatalkan (Pra-Desain)</Badge></div>
                         </FlowStep>
-                        <FlowStep title="Proses Refund" pj="Owner & Admin Finance" icon={Receipt} color="bg-red-100 text-red-800">
-                             <p>Bot memberi notifikasi ke owner untuk memproses refund sesuai tahapannya.</p>
-                             <div className="mt-2"><StatusBadgeWithPopover status='Menunggu Proses Refund' /></div>
+                        <FlowStep title="Batal Pasca-Desain" pj="Bot & Admin" icon={Receipt} color="bg-red-100 text-red-800">
+                             <p>Jika klien membatalkan setelah pratinjau dikirim (sebelum revisi), DP hangus / refund 50%.</p>
+                             <div className="mt-2"><Badge variant="destructive">Status Final: Dibatalkan (Pasca-Desain)</Badge></div>
                         </FlowStep>
-                         <FlowStep title="Pesanan Dibatalkan" pj="Bot & Sistem" icon={X} color="bg-red-100 text-red-800" end>
-                            <p>Setelah owner menyelesaikan refund, bot mengirim bukti ke klien.</p>
-                            <div className="mt-2"><StatusBadgeWithPopover status='Dibatalkan' isFinal={true} /></div>
+                    </BranchPath>
+
+                     <BranchPath title="Batal Setelah 2x Revisi" icon={CircleDollarSign} color="bg-gray-100 text-gray-800">
+                         <FlowStep title="Pesanan Ditutup" pj="Sistem" icon={FileX} color="bg-gray-100 text-gray-800" end>
+                            <p>Jika klien membatalkan setelah 2x revisi, pesanan ditutup tanpa pengembalian dana.</p>
+                            <div className="mt-2"><Badge variant="destructive">Status Final: Ditutup (Tanpa Refund)</Badge></div>
                         </FlowStep>
                     </BranchPath>
                 </FlowBranch>
