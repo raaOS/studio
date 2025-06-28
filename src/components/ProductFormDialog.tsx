@@ -48,7 +48,7 @@ const productFormSchema = z.object({
     'umkm': z.string().url({ message: "URL gambar tidak valid." }),
     'e-comm': z.string().url({ message: "URL gambar tidak valid." }),
   }),
-  dataAiHint: z.string().min(2, { message: "Petunjuk AI minimal 2 karakter." }),
+  dataAiHint: z.string(), // No longer required in the form
 })
 
 type ProductFormValues = z.infer<typeof productFormSchema>
@@ -208,19 +208,6 @@ export function ProductFormDialog({ product, isOpen, onOpenChange, onSave }: Pro
                   <FormLabel>URL Gambar Utama (di kartu produk)</FormLabel>
                   <FormControl>
                     <Input placeholder="https://placehold.co/400x300" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-             <FormField
-              control={form.control}
-              name="dataAiHint"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Petunjuk Gambar AI</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Contoh: logo design" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
