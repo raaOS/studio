@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { isFirebaseConfigured, db } from "@/lib/firebase";
+import { BriefAssistant } from "./BriefAssistant";
 
 
 // Form Schema
@@ -178,6 +179,10 @@ export function OrderSummary() {
                     <p className="text-muted-foreground text-center py-8">Keranjang Anda kosong.</p>
                 )}
                 
+                <Separator />
+                
+                <BriefAssistant />
+
                 <Separator />
                 
                 <div className="space-y-4">
