@@ -54,10 +54,12 @@ export default function AdminIntegrationsPage() {
       
       <Alert variant="default" className="border-blue-500/50 text-blue-900 dark:text-blue-200 [&>svg]:text-blue-600">
           <Info className="h-4 w-4" />
-          <AlertTitle className="text-blue-800 dark:text-blue-300">Informasi Biaya: Google AI (Genkit/Gemini)</AlertTitle>
+          <AlertTitle className="text-blue-800 dark:text-blue-300">Informasi Biaya AI: Apakah Berbayar Setelah Publish?</AlertTitle>
           <AlertDescription>
-              <p>Untuk saat ini, penggunaan fitur AI **sepenuhnya gratis**. Google AI menyediakan tingkat gratis (free tier) yang sangat besar, dan penggunaan aplikasi kita saat ini sangat jauh di bawah batas tersebut.</p>
-              <p className="mt-2">Biaya hanya akan berlaku jika lalu lintas aplikasi menjadi **sangat tinggi**. Anda memegang kendali penuh melalui kunci <strong>GEMINI_API_KEY</strong> di file <code>.env</code> Anda. Jika kunci tersebut tidak ada, semua fitur AI akan dinonaktifkan secara aman.</p>
+              <p><strong>Kemungkinan Besar Tidak.</strong> Bahkan setelah aplikasi ini di-publish dan digunakan oleh pembeli, penggunaan fitur AI kemungkinan besar akan tetap **GRATIS**.</p>
+              <p className="mt-2"><strong>Alasannya:</strong> Google memberikan "kuota gratis" bulanan yang sangat besar untuk penggunaan AI (Gemini). Fitur di aplikasi ini (seperti logika bot) sangat ringan dan hanya memakai sebagian kecil dari kuota gratis tersebut. Anda perlu ribuan interaksi setiap bulan untuk melewati batas ini.</p>
+              <p className="mt-2"><strong>Kapan Bayar?</strong> Biaya hanya akan muncul jika bisnis Anda sukses besar dan traffic-nya sangat tinggi. Jika itu terjadi, biayanya bersifat "bayar sesuai pemakaian" dan biasanya sangat terjangkau.</p>
+              <p className="mt-2"><strong>Anda Pegang Kendali:</strong> Kunci `GEMINI_API_KEY` di file `.env` adalah saklar utama Anda. Hapus kunci itu, dan semua fitur AI akan mati total. Tidak ada biaya tersembunyi.</p>
           </AlertDescription>
       </Alert>
 
