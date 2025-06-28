@@ -26,53 +26,51 @@ const CustomersListTab = () => (
         <CardDescription>Lihat dan kelola semua data pelanggan Anda.</CardDescription>
     </CardHeader>
     <CardContent className="p-0">
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="min-w-[250px]">Pelanggan</TableHead>
-              <TableHead className="whitespace-nowrap">Lifetime Value (LTV)</TableHead>
-              <TableHead className="whitespace-nowrap">Total Pesanan</TableHead>
-              <TableHead className="whitespace-nowrap">Order Terakhir</TableHead>
-              <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {mockCustomers.length > 0 ? (
-              mockCustomers.map((customer: CustomerProfile) => (
-                <TableRow key={customer.id}>
-                  <TableCell className="font-medium">
-                      <div className="flex items-center gap-3">
-                          <Avatar>
-                              <AvatarImage src={customer.avatar} alt={customer.name} data-ai-hint="user avatar" />
-                              <AvatarFallback>{customer.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                              <p className="whitespace-normal">{customer.name}</p>
-                              <p className="text-sm text-muted-foreground">{customer.email}</p>
-                          </div>
-                      </div>
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap">{formatRupiah(customer.ltv)}</TableCell>
-                  <TableCell className="whitespace-nowrap">{customer.totalOrders}</TableCell>
-                  <TableCell className="whitespace-nowrap">{customer.lastOrderDate}</TableCell>
-                  <TableCell className="text-right whitespace-nowrap">
-                    <Button asChild size="sm" variant="outline">
-                        <Link href={`/admin/customers/${customer.id}`}>Lihat Detail</Link>
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">
-                  Belum ada data pelanggan.
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="min-w-[250px]">Pelanggan</TableHead>
+            <TableHead className="whitespace-nowrap">Lifetime Value (LTV)</TableHead>
+            <TableHead className="whitespace-nowrap">Total Pesanan</TableHead>
+            <TableHead className="whitespace-nowrap">Order Terakhir</TableHead>
+            <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {mockCustomers.length > 0 ? (
+            mockCustomers.map((customer: CustomerProfile) => (
+              <TableRow key={customer.id}>
+                <TableCell className="font-medium">
+                    <div className="flex items-center gap-3">
+                        <Avatar>
+                            <AvatarImage src={customer.avatar} alt={customer.name} data-ai-hint="user avatar" />
+                            <AvatarFallback>{customer.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                            <p className="whitespace-normal">{customer.name}</p>
+                            <p className="text-sm text-muted-foreground">{customer.email}</p>
+                        </div>
+                    </div>
+                </TableCell>
+                <TableCell className="whitespace-nowrap">{formatRupiah(customer.ltv)}</TableCell>
+                <TableCell className="whitespace-nowrap">{customer.totalOrders}</TableCell>
+                <TableCell className="whitespace-nowrap">{customer.lastOrderDate}</TableCell>
+                <TableCell className="text-right whitespace-nowrap">
+                  <Button asChild size="sm" variant="outline">
+                      <Link href={`/admin/customers/${customer.id}`}>Lihat Detail</Link>
+                  </Button>
                 </TableCell>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center h-24">
+                Belum ada data pelanggan.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
     </CardContent>
   </Card>
 );

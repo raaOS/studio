@@ -22,7 +22,6 @@ import { MessageTemplateFormDialog } from '@/components/MessageTemplateFormDialo
 import type { MessageTemplate, BudgetItem } from '@/lib/types';
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ResponsiveTableWrapper } from '@/components/ResponsiveTableWrapper';
 
 
 const BudgetsTab = () => {
@@ -132,30 +131,28 @@ const MessagingTab = () => {
             </div>
         </CardHeader>
         <CardContent className="p-0">
-          <ResponsiveTableWrapper>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="whitespace-nowrap">Template ID</TableHead>
-                  <TableHead className="min-w-[250px]">Deskripsi</TableHead>
-                  <TableHead className="whitespace-nowrap">Terakhir Diubah</TableHead>
-                  <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="whitespace-nowrap">Template ID</TableHead>
+                <TableHead className="min-w-[250px]">Deskripsi</TableHead>
+                <TableHead className="whitespace-nowrap">Terakhir Diubah</TableHead>
+                <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {mockMessageTemplates.map((template) => (
+                <TableRow key={template.id}>
+                  <TableCell className="font-mono text-xs whitespace-nowrap">{template.id}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{template.description}</TableCell>
+                  <TableCell className="whitespace-nowrap">{template.lastUpdated}</TableCell>
+                  <TableCell className="text-right whitespace-nowrap">
+                    <Button size="sm" variant="outline" onClick={() => handleEditTemplate(template)}>Edit</Button>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {mockMessageTemplates.map((template) => (
-                  <TableRow key={template.id}>
-                    <TableCell className="font-mono text-xs whitespace-nowrap">{template.id}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{template.description}</TableCell>
-                    <TableCell className="whitespace-nowrap">{template.lastUpdated}</TableCell>
-                    <TableCell className="text-right whitespace-nowrap">
-                      <Button size="sm" variant="outline" onClick={() => handleEditTemplate(template)}>Edit</Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </ResponsiveTableWrapper>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
       <MessageTemplateFormDialog
@@ -221,28 +218,26 @@ const CapacityTab = () => {
                     <CardDescription>Rencanakan dan pantau target kapasitas mingguan Anda.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <ResponsiveTableWrapper>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="whitespace-nowrap">Minggu</TableHead>
-                                <TableHead className="whitespace-nowrap">Target</TableHead>
-                                <TableHead className="whitespace-nowrap">Aktual</TableHead>
-                                <TableHead className="whitespace-nowrap">Status</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                        {weeklyPlanningData.map((item) => (
-                            <TableRow key={item.week}>
-                                <TableCell className="font-medium whitespace-nowrap">{item.week}</TableCell>
-                                <TableCell className="whitespace-nowrap">{item.target}</TableCell>
-                                <TableCell className="whitespace-nowrap">{item.actual}</TableCell>
-                                <TableCell className="whitespace-nowrap">{getStatusBadge(item.status, item.target - item.actual)}</TableCell>
-                            </TableRow>
-                        ))}
-                        </TableBody>
-                    </Table>
-                  </ResponsiveTableWrapper>
+                  <Table>
+                      <TableHeader>
+                          <TableRow>
+                              <TableHead className="whitespace-nowrap">Minggu</TableHead>
+                              <TableHead className="whitespace-nowrap">Target</TableHead>
+                              <TableHead className="whitespace-nowrap">Aktual</TableHead>
+                              <TableHead className="whitespace-nowrap">Status</TableHead>
+                          </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                      {weeklyPlanningData.map((item) => (
+                          <TableRow key={item.week}>
+                              <TableCell className="font-medium whitespace-nowrap">{item.week}</TableCell>
+                              <TableCell className="whitespace-nowrap">{item.target}</TableCell>
+                              <TableCell className="whitespace-nowrap">{item.actual}</TableCell>
+                              <TableCell className="whitespace-nowrap">{getStatusBadge(item.status, item.target - item.actual)}</TableCell>
+                          </TableRow>
+                      ))}
+                      </TableBody>
+                  </Table>
                 </CardContent>
             </Card>
         </div>

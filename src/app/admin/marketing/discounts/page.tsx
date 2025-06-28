@@ -16,7 +16,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { mockCoupons, mockPromos } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { PlusCircle } from 'lucide-react';
-import { ResponsiveTableWrapper } from '@/components/ResponsiveTableWrapper';
 
 const PromosTab = () => {
   const getStatusClass = (status: string) => {
@@ -31,44 +30,42 @@ const PromosTab = () => {
   return (
     <Card>
       <CardContent className="p-0">
-        <ResponsiveTableWrapper>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="min-w-[200px]">Produk</TableHead>
-                <TableHead className="whitespace-nowrap">Promo</TableHead>
-                <TableHead className="whitespace-nowrap">Periode</TableHead>
-                <TableHead className="whitespace-nowrap">Status</TableHead>
-                <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mockPromos.length > 0 ? (
-                mockPromos.map(promo => (
-                  <TableRow key={promo.id}>
-                    <TableCell className="font-medium">{promo.productName}</TableCell>
-                    <TableCell className="whitespace-nowrap">{promo.promoText}</TableCell>
-                    <TableCell className="whitespace-nowrap">{promo.period}</TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      <Badge variant="outline" className={cn("capitalize", getStatusClass(promo.status))}>
-                        {promo.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right space-x-2 whitespace-nowrap">
-                      <Button size="sm" variant="outline">Edit</Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center h-24">
-                    Belum ada promo yang dibuat.
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="min-w-[200px]">Produk</TableHead>
+              <TableHead className="whitespace-nowrap">Promo</TableHead>
+              <TableHead className="whitespace-nowrap">Periode</TableHead>
+              <TableHead className="whitespace-nowrap">Status</TableHead>
+              <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {mockPromos.length > 0 ? (
+              mockPromos.map(promo => (
+                <TableRow key={promo.id}>
+                  <TableCell className="font-medium">{promo.productName}</TableCell>
+                  <TableCell className="whitespace-nowrap">{promo.promoText}</TableCell>
+                  <TableCell className="whitespace-nowrap">{promo.period}</TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    <Badge variant="outline" className={cn("capitalize", getStatusClass(promo.status))}>
+                      {promo.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right space-x-2 whitespace-nowrap">
+                    <Button size="sm" variant="outline">Edit</Button>
                   </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </ResponsiveTableWrapper>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center h-24">
+                  Belum ada promo yang dibuat.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   );
@@ -87,46 +84,44 @@ const CouponsTab = () => {
     return (
         <Card>
             <CardContent className="p-0">
-              <ResponsiveTableWrapper>
-                <Table>
-                    <TableHeader>
-                    <TableRow>
-                        <TableHead className="whitespace-nowrap">Kode</TableHead>
-                        <TableHead className="whitespace-nowrap">Diskon</TableHead>
-                        <TableHead className="whitespace-nowrap">Usage</TableHead>
-                        <TableHead className="whitespace-nowrap">Periode</TableHead>
-                        <TableHead className="whitespace-nowrap">Status</TableHead>
-                        <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
-                    </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                    {mockCoupons.length > 0 ? (
-                        mockCoupons.map(coupon => (
-                        <TableRow key={coupon.id}>
-                            <TableCell className="font-medium whitespace-nowrap">{coupon.code}</TableCell>
-                            <TableCell className="whitespace-nowrap">{coupon.discount}</TableCell>
-                            <TableCell className="whitespace-nowrap">{coupon.usage}</TableCell>
-                            <TableCell className="whitespace-nowrap">{coupon.period}</TableCell>
-                            <TableCell className="whitespace-nowrap">
-                            <Badge variant="outline" className={cn("capitalize", getStatusClass(coupon.status))}>
-                                {coupon.status}
-                            </Badge>
-                            </TableCell>
-                            <TableCell className="text-right space-x-2 whitespace-nowrap">
-                            <Button size="sm" variant="outline">Edit</Button>
-                            </TableCell>
-                        </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                        <TableCell colSpan={6} className="text-center h-24">
-                            Belum ada kupon yang dibuat.
-                        </TableCell>
-                        </TableRow>
-                    )}
-                    </TableBody>
-                </Table>
-              </ResponsiveTableWrapper>
+              <Table>
+                  <TableHeader>
+                  <TableRow>
+                      <TableHead className="whitespace-nowrap">Kode</TableHead>
+                      <TableHead className="whitespace-nowrap">Diskon</TableHead>
+                      <TableHead className="whitespace-nowrap">Usage</TableHead>
+                      <TableHead className="whitespace-nowrap">Periode</TableHead>
+                      <TableHead className="whitespace-nowrap">Status</TableHead>
+                      <TableHead className="text-right whitespace-nowrap">Aksi</TableHead>
+                  </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                  {mockCoupons.length > 0 ? (
+                      mockCoupons.map(coupon => (
+                      <TableRow key={coupon.id}>
+                          <TableCell className="font-medium whitespace-nowrap">{coupon.code}</TableCell>
+                          <TableCell className="whitespace-nowrap">{coupon.discount}</TableCell>
+                          <TableCell className="whitespace-nowrap">{coupon.usage}</TableCell>
+                          <TableCell className="whitespace-nowrap">{coupon.period}</TableCell>
+                          <TableCell className="whitespace-nowrap">
+                          <Badge variant="outline" className={cn("capitalize", getStatusClass(coupon.status))}>
+                              {coupon.status}
+                          </Badge>
+                          </TableCell>
+                          <TableCell className="text-right space-x-2 whitespace-nowrap">
+                          <Button size="sm" variant="outline">Edit</Button>
+                          </TableCell>
+                      </TableRow>
+                      ))
+                  ) : (
+                      <TableRow>
+                      <TableCell colSpan={6} className="text-center h-24">
+                          Belum ada kupon yang dibuat.
+                      </TableCell>
+                      </TableRow>
+                  )}
+                  </TableBody>
+              </Table>
             </CardContent>
         </Card>
     );

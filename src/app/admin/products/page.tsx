@@ -104,12 +104,12 @@ export default function AdminProductsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[50px] text-center whitespace-nowrap">Aksi</TableHead>
-                  <TableHead className="min-w-[250px]">Nama Produk</TableHead>
-                  <TableHead className="min-w-[150px]">Kategori</TableHead>
-                  <TableHead className="min-w-[120px] whitespace-nowrap">Kaki Lima</TableHead>
-                  <TableHead className="min-w-[120px] whitespace-nowrap">UMKM</TableHead>
-                  <TableHead className="min-w-[120px] whitespace-nowrap">E-Comm</TableHead>
+                  <TableHead className="w-[50px] text-center">Aksi</TableHead>
+                  <TableHead>Nama Produk</TableHead>
+                  <TableHead>Kategori</TableHead>
+                  <TableHead>Kaki Lima</TableHead>
+                  <TableHead>UMKM</TableHead>
+                  <TableHead>E-Comm</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
