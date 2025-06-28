@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Send, Folder, Video, Calendar, CheckCircle, XCircle, KeyRound, Info, Search } from 'lucide-react';
+import { Send, Folder, Video, Calendar, CheckCircle, XCircle, KeyRound, Info, Search, AlertTriangle } from 'lucide-react';
 
 const integrations = [
   {
@@ -51,50 +51,37 @@ export default function AdminIntegrationsPage() {
         <p className="text-muted-foreground">Hubungkan layanan pihak ketiga dan pahami langkah-langkah untuk mempublikasikan aplikasi Anda.</p>
       </div>
       
-      <Alert variant="default" className="border-blue-500/50 text-blue-900 dark:text-blue-200 [&>svg]:text-blue-600">
-          <Info className="h-4 w-4" />
-          <AlertTitle className="text-blue-800 dark:text-blue-300">Informasi Biaya AI: Apakah Berbayar Setelah Publish?</AlertTitle>
-          <AlertDescription>
-              <p><strong>Kemungkinan Besar Tidak.</strong> Bahkan setelah aplikasi ini di-publish dan digunakan oleh pembeli, penggunaan fitur AI kemungkinan besar akan tetap **GRATIS**.</p>
-              <p className="mt-2"><strong>Alasannya:</strong> Google memberikan "kuota gratis" bulanan yang sangat besar untuk penggunaan AI (Gemini). Fitur di aplikasi ini (seperti logika bot) sangat ringan dan hanya memakai sebagian kecil dari kuota gratis tersebut. Anda perlu ribuan interaksi setiap bulan untuk melewati batas ini.</p>
-              <p className="mt-2"><strong>Kapan Bayar?</strong> Biaya hanya akan muncul jika bisnis Anda sukses besar dan traffic-nya sangat tinggi. Jika itu terjadi, biayanya bersifat "bayar sesuai pemakaian" dan biasanya sangat terjangkau.</p>
-              <p className="mt-2"><strong>Anda Pegang Kendali:</strong> Kunci `GEMINI_API_KEY` di file `.env` adalah saklar utama Anda. Hapus kunci itu, dan semua fitur AI akan mati total. Tidak ada biaya tersembunyi.</p>
-          </AlertDescription>
+      <Alert variant="destructive">
+        <AlertTriangle className="h-4 w-4" />
+        <AlertTitle>Kendala Umum: Persyaratan Penagihan (Billing)</AlertTitle>
+        <AlertDescription>
+            <p>Untuk menggunakan fitur canggih seperti **Secret Manager** (brankas digital untuk kunci API), Google Cloud mewajibkan adanya akun penagihan yang terverifikasi (biasanya dengan kartu kredit). Ini adalah standar industri untuk verifikasi identitas dan pencegahan penyalahgunaan.</p>
+            <p className="mt-2"><strong>Jangan khawatir, ini tidak berarti Anda akan ditagih.</strong> Layanan yang kita gunakan memiliki kuota gratis yang sangat besar. Namun, jika Anda tidak memiliki kartu kredit, Anda tidak akan bisa menyelesaikan langkah "Panduan Deployment" di bawah ini.</p>
+            <p className="mt-2"><strong>Solusi:</strong> Fokus untuk membuat semua fitur berjalan sempurna di komputer Anda dengan menyimpan semua kunci di file <code>.env</code>. Aplikasi akan berfungsi penuh untuk pengujian. Panduan di bawah ini adalah untuk masa depan, jika Anda sudah siap untuk go-live.</p>
+        </AlertDescription>
       </Alert>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="md:col-span-2 border-primary">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                    <KeyRound className="h-6 w-6 text-primary" /> Panduan Deployment: Menyimpan Kunci Rahasia (Secret)
+                    <KeyRound className="h-6 w-6 text-primary" /> Panduan Deployment (Jika Sudah Siap Go-Live)
                 </CardTitle>
                 <CardDescription>
-                    Langkah-langkah ini **hanya diperlukan saat Anda siap mempublikasikan aplikasi ke internet**.
+                    Langkah-langkah ini **hanya diperlukan saat Anda siap mempublikasikan aplikasi** dan sudah memiliki akun penagihan di Google Cloud.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                <Alert>
-                    <Info className="h-4 w-4" />
-                    <AlertTitle>Informasi Penagihan (Billing)</AlertTitle>
-                    <AlertDescription>
-                        Google Cloud mungkin akan meminta Anda untuk mengaktifkan akun penagihan. Ini adalah syarat standar, bahkan untuk layanan gratis.
-                        <strong className="block mt-2">Anda TIDAK PERLU melakukan ini sekarang.</strong> 
-                        Semua fitur yang kita bangun berfungsi penuh di lingkungan pengembangan ini hanya dengan menggunakan file <code>.env</code>.
-                    </AlertDescription>
-                </Alert>
                 <ol className="list-decimal list-inside space-y-4 text-sm pt-4">
                     <li>
                         Buka Google Cloud Console menggunakan tombol di bawah.
                         <div className="mt-2 p-3 border rounded-md bg-muted/50">
-                          <p>Setelah terbuka, cara termudah untuk menemukan layanan adalah dengan <strong>menggunakan bar pencarian di bagian atas halaman</strong>.</p>
+                          <p>Cara termudah untuk menemukan layanan adalah dengan <strong>menggunakan bar pencarian di bagian atas halaman</strong>.</p>
                           <p className="mt-1">Ketik <code className="bg-muted px-1 py-0.5 rounded">Secret Manager</code> di bar pencarian, lalu pilih dari hasil yang muncul.</p>
                         </div>
                     </li>
                     <li>
-                        Pastikan proyek yang terpilih di bagian atas adalah proyek yang benar (`urgent-studio`).
-                    </li>
-                    <li>
-                        Klik <strong>+ CREATE SECRET</strong> di bagian atas halaman Secret Manager.
+                        Di halaman Secret Manager, klik <strong>+ CREATE SECRET</strong>.
                     </li>
                     <li>
                         Untuk nama Secret, masukkan persis: <code>DRIVE_SERVICE_ACCOUNT_JSON</code>.
@@ -106,7 +93,7 @@ export default function AdminIntegrationsPage() {
                         Biarkan pengaturan lain sebagai default dan klik <strong>Create secret</strong>.
                     </li>
                     <li>
-                        Ulangi proses ini untuk kunci lainnya. Buat secret baru dengan nama dan nilai berikut:
+                        Ulangi proses ini untuk kunci rahasia lainnya:
                         <ul className="list-disc list-inside ml-4 mt-2 space-y-2">
                             <li>Nama: <code>DRIVE_PARENT_FOLDER_ID</code>, Nilai: ID folder utama Drive Anda.</li>
                             <li>Nama: <code>TELEGRAM_BOT_TOKEN</code>, Nilai: Token bot Telegram Anda.</li>
@@ -114,7 +101,7 @@ export default function AdminIntegrationsPage() {
                         </ul>
                     </li>
                      <li>
-                        <strong>Penting (Izin Akses):</strong> Setelah membuat secret, Anda harus memberikan izin kepada service account App Hosting untuk mengaksesnya. Klik pada nama secret yang baru dibuat, pergi ke tab <strong>Permissions</strong>, klik <strong>+ GRANT ACCESS</strong>, dan tambahkan service account App Hosting Anda (biasanya bernama <code>service-PROJECT_NUMBER@gcp-sa-apphosting.iam.gserviceaccount.com</code>) dengan peran <strong>Secret Manager Secret Accessor</strong>. Lakukan ini untuk semua secret yang Anda buat.
+                        <strong>Penting (Izin Akses):</strong> Setelah membuat secret, berikan izin kepada service account App Hosting untuk mengaksesnya. Klik nama secret, pergi ke tab <strong>Permissions</strong>, klik <strong>+ GRANT ACCESS</strong>, dan tambahkan service account App Hosting Anda (biasanya bernama <code>service-PROJECT_NUMBER@gcp-sa-apphosting.iam.gserviceaccount.com</code>) dengan peran <strong>Secret Manager Secret Accessor</strong>. Lakukan ini untuk semua secret.
                     </li>
                 </ol>
             </CardContent>
