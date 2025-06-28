@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Send, Folder, Video, Calendar, CheckCircle, XCircle, KeyRound, Info, Search, AlertTriangle } from 'lucide-react';
+import { Send, Folder, Video, Calendar, CheckCircle, XCircle, KeyRound, Search, AlertTriangle } from 'lucide-react';
 
 const integrations = [
   {
