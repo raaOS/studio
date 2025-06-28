@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { cn, getOrderStatusClass } from '@/lib/utils';
-import { User, Shield, GitFork, Workflow, Check, X, RefreshCw, AlertTriangle, Play, Hourglass, Wallet, FileCheck, CircleDollarSign, CalendarClock, MessageCircleQuestion, Bot as BotIcon, MessageSquareWarning, Star, Receipt, FileX } from 'lucide-react';
+import { User, Shield, GitFork, Workflow, Check, X, RefreshCw, AlertTriangle, Play, Hourglass, Wallet, FileCheck, CircleDollarSign, CalendarClock, MessageCircleQuestion, Bot as BotIcon, MessageSquareWarning, Star, Receipt, FileX2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -43,9 +43,27 @@ const StatusBadgeWithDialog = ({ status, isFinal = false }: { status: OrderStatu
     'Sedang Dikerjakan': [{ from: 'bot', text: 'Pesanan #DSN-1234 mulai dikerjakan oleh tim desainer kami!' }],
     'Menunggu Respon Klien': [{ from: 'bot', text: 'Pratinjau untuk #DSN-1234 siap! Balas "Setuju" atau "Revisi: [catatan]".' }],
     'Sedang Direvisi': [{ from: 'user', text: 'Revisi: Tolong ganti warna background jadi lebih gelap ya.' }, { from: 'bot', text: 'Baik, permintaan revisi diterima. Kami akan segera proses.' }],
-    'Selesai': [{ from: 'user', text: 'Oke, sudah bagus. Aku setuju.' }, { from: 'bot', text: 'Siap! Pesanan #DSN-1234 kami anggap selesai. Terima kasih!' }],
+    'Selesai': [
+      { from: 'user', text: 'Oke, sudah bagus. Aku setuju.' },
+      { from: 'bot', text: 'Siap! Pesanan #DSN-1234 kami anggap selesai. Ini link final untuk semua file desain Anda:\nhttps://drive.google.com/link-final' },
+      { from: 'bot', text: 'Untuk membantu kami jadi lebih baik, boleh minta rating & masukannya? Balas dengan format:\nBINTANG:[1-5] SARAN:[Saran Anda]' },
+      { from: 'user', text: 'BINTANG:5 SARAN:Puas banget, cepat dan hasilnya bagus!' },
+      { from: 'bot', text: 'Terima kasih banyak atas penilaiannya! Kami tunggu pesanan selanjutnya.' }
+    ],
     'Eskalasi': [{ from: 'user', text: 'Revisi: Selain logo, tolong buatkan juga desain kartu namanya ya.' }, { from: 'bot', text: '⚠️ Potensi Perubahan Lingkup Kerja Terdeteksi! Tim kami akan meninjau permintaan ini.' }],
     'Menunggu Jadwal Meeting': [{ from: 'user', text: 'Revisi lagi dong, font-nya ganti.' }, { from: 'bot', text: 'Anda telah mencapai batas revisi. Kami akan menawarkan jadwal G-Meet untuk diskusi lebih lanjut.' }],
+    'Dibatalkan (Pra-Desain)': [
+      { from: 'user', text: '/batal' },
+      { from: 'bot', text: '⚠️ Konfirmasi Pembatalan. Balas dengan format:\n/konfirmasi_batal BINTANG:[1-5] ALASAN:[Alasan singkat]' },
+      { from: 'user', text: '/konfirmasi_batal BINTANG:2 ALASAN:Belum butuh sekarang' },
+      { from: 'bot', text: 'Terima kasih atas masukannya. Permintaan pembatalan Anda kami proses.' },
+    ],
+     'Dibatalkan (Pasca-Desain)': [
+      { from: 'user', text: 'cancel order' },
+      { from: 'bot', text: '⚠️ Konfirmasi Pembatalan. Balas dengan format:\n/konfirmasi_batal BINTANG:[1-5] ALASAN:[Alasan singkat]' },
+      { from: 'user', text: '/konfirmasi_batal BINTANG:1 ALASAN:Desainnya tidak sesuai ekspektasi saya sama sekali' },
+      { from: 'bot', text: 'Terima kasih atas masukannya. Permintaan pembatalan Anda kami proses. Sesuai ketentuan, DP Anda tidak dapat dikembalikan.' },
+    ],
   };
   
   const messages = simulationMap[status];
@@ -165,7 +183,7 @@ export default function FlowchartPage() {
                 <FlowBranch>
                     <BranchPath title="✅ Persetujuan" icon={Check} color="bg-green-100 text-green-800">
                         <FlowStep title="Pesanan Selesai" pj="Bot" icon={FileCheck} color="bg-green-100 text-green-800" end>
-                            <p>Bot mendeteksi kata kunci "setuju" dan menuntaskan pesanan.</p>
+                            <p>Bot mendeteksi kata kunci "setuju", mengirim file final, dan meminta rating.</p>
                             <div className="mt-2"><StatusBadgeWithDialog status='Selesai' isFinal={true} /></div>
                         </FlowStep>
                     </BranchPath>
@@ -192,16 +210,16 @@ export default function FlowchartPage() {
                     <BranchPath title="❌ Pembatalan" icon={MessageSquareWarning} color="bg-red-100 text-red-800">
                         <FlowStep title="Batal Pra-Desain" pj="Bot & Admin" icon={Receipt} color="bg-red-100 text-red-800">
                             <p>Jika klien membatalkan sebelum pratinjau, bot akan memproses refund parsial.</p>
-                            <div className="mt-2"><Badge variant="destructive">Status Final: Dibatalkan (Pra-Desain)</Badge></div>
+                            <div className="mt-2"><StatusBadgeWithDialog status='Dibatalkan (Pra-Desain)' isFinal={true} /></div>
                         </FlowStep>
                         <FlowStep title="Batal Pasca-Desain" pj="Bot & Admin" icon={Receipt} color="bg-red-100 text-red-800">
                              <p>Jika klien membatalkan setelah pratinjau dikirim (sebelum revisi), DP hangus / refund 50%.</p>
-                             <div className="mt-2"><Badge variant="destructive">Status Final: Dibatalkan (Pasca-Desain)</Badge></div>
+                             <div className="mt-2"><StatusBadgeWithDialog status='Dibatalkan (Pasca-Desain)' isFinal={true} /></div>
                         </FlowStep>
                     </BranchPath>
 
                      <BranchPath title="Batal Setelah 2x Revisi" icon={CircleDollarSign} color="bg-gray-100 text-gray-800">
-                         <FlowStep title="Pesanan Ditutup" pj="Sistem" icon={FileX} color="bg-gray-100 text-gray-800" end>
+                         <FlowStep title="Pesanan Ditutup" pj="Sistem" icon={FileX2} color="bg-gray-100 text-gray-800" end>
                             <p>Jika klien membatalkan setelah 2x revisi, pesanan ditutup tanpa pengembalian dana.</p>
                             <div className="mt-2"><Badge variant="destructive">Status Final: Ditutup (Tanpa Refund)</Badge></div>
                         </FlowStep>
