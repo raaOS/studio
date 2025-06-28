@@ -143,10 +143,10 @@ const MessagingTab = () => {
             <TableBody>
               {mockMessageTemplates.map((template) => (
                 <TableRow key={template.id}>
-                  <TableCell className="font-mono text-xs">{template.id}</TableCell>
+                  <TableCell className="font-mono text-xs whitespace-nowrap">{template.id}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">{template.description}</TableCell>
-                  <TableCell>{template.lastUpdated}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="whitespace-nowrap">{template.lastUpdated}</TableCell>
+                  <TableCell className="text-right whitespace-nowrap">
                     <Button size="sm" variant="outline" onClick={() => handleEditTemplate(template)}>Edit</Button>
                   </TableCell>
                 </TableRow>
@@ -230,10 +230,10 @@ const CapacityTab = () => {
                         <TableBody>
                         {weeklyPlanningData.map((item) => (
                             <TableRow key={item.week}>
-                                <TableCell className="font-medium">{item.week}</TableCell>
-                                <TableCell>{item.target}</TableCell>
-                                <TableCell>{item.actual}</TableCell>
-                                <TableCell>{getStatusBadge(item.status, item.target - item.actual)}</TableCell>
+                                <TableCell className="font-medium whitespace-nowrap">{item.week}</TableCell>
+                                <TableCell className="whitespace-nowrap">{item.target}</TableCell>
+                                <TableCell className="whitespace-nowrap">{item.actual}</TableCell>
+                                <TableCell className="whitespace-nowrap">{getStatusBadge(item.status, item.target - item.actual)}</TableCell>
                             </TableRow>
                         ))}
                         </TableBody>

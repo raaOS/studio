@@ -54,15 +54,15 @@ export default function AdminRefundsPage() {
               {refunds.length > 0 ? (
                 refunds.map((refund) => (
                   <TableRow key={refund.kode_order}>
-                    <TableCell className="font-medium">
+                    <TableCell className="font-medium whitespace-nowrap">
                       <Link href={`/admin/orders/${refund.kode_order}`} className="text-primary hover:underline">
                         {refund.kode_order}
                       </Link>
                     </TableCell>
                     <TableCell>{refund.nama_klien}</TableCell>
-                    <TableCell>{formatRupiah(refund.total_refund)}</TableCell>
-                    <TableCell>{refund.jenis_potongan}</TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">{formatRupiah(refund.total_refund)}</TableCell>
+                    <TableCell className="whitespace-nowrap">{refund.jenis_potongan}</TableCell>
+                    <TableCell className="whitespace-nowrap">
                         <Badge variant={refund.status_refund === 'Sudah' ? 'default' : 'secondary'} className={refund.status_refund === 'Sudah' ? 'bg-green-600' : ''}>
                             {refund.status_refund}
                         </Badge>

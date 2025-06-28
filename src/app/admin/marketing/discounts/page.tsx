@@ -45,14 +45,14 @@ const PromosTab = () => {
               mockPromos.map(promo => (
                 <TableRow key={promo.id}>
                   <TableCell className="font-medium">{promo.productName}</TableCell>
-                  <TableCell>{promo.promoText}</TableCell>
-                  <TableCell>{promo.period}</TableCell>
-                  <TableCell>
+                  <TableCell className="whitespace-nowrap">{promo.promoText}</TableCell>
+                  <TableCell className="whitespace-nowrap">{promo.period}</TableCell>
+                  <TableCell className="whitespace-nowrap">
                     <Badge variant="outline" className={cn("capitalize", getStatusClass(promo.status))}>
                       {promo.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right space-x-2">
+                  <TableCell className="text-right space-x-2 whitespace-nowrap">
                      <Button size="sm" variant="outline">Edit</Button>
                   </TableCell>
                 </TableRow>
@@ -99,16 +99,16 @@ const CouponsTab = () => {
                 {mockCoupons.length > 0 ? (
                     mockCoupons.map(coupon => (
                     <TableRow key={coupon.id}>
-                        <TableCell className="font-medium">{coupon.code}</TableCell>
-                        <TableCell>{coupon.discount}</TableCell>
-                        <TableCell>{coupon.usage}</TableCell>
-                        <TableCell>{coupon.period}</TableCell>
-                        <TableCell>
+                        <TableCell className="font-medium whitespace-nowrap">{coupon.code}</TableCell>
+                        <TableCell className="whitespace-nowrap">{coupon.discount}</TableCell>
+                        <TableCell className="whitespace-nowrap">{coupon.usage}</TableCell>
+                        <TableCell className="whitespace-nowrap">{coupon.period}</TableCell>
+                        <TableCell className="whitespace-nowrap">
                         <Badge variant="outline" className={cn("capitalize", getStatusClass(coupon.status))}>
                             {coupon.status}
                         </Badge>
                         </TableCell>
-                        <TableCell className="text-right space-x-2">
+                        <TableCell className="text-right space-x-2 whitespace-nowrap">
                         <Button size="sm" variant="outline">Edit</Button>
                         </TableCell>
                     </TableRow>

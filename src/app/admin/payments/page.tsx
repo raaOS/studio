@@ -98,20 +98,20 @@ export default function AdminPaymentsPage() {
               {filteredOrders.length > 0 ? (
                 filteredOrders.map(order => (
                   <TableRow key={order.kode_order}>
-                    <TableCell className="font-medium">
+                    <TableCell className="font-medium whitespace-nowrap">
                       <Link href={`/admin/orders/${order.kode_order}`} className="text-primary hover:underline">
                         {order.kode_order}
                       </Link>
                     </TableCell>
                     <TableCell>{order.nama_klien}</TableCell>
-                    <TableCell>{formatRupiah(order.jumlah_transfer)}</TableCell>
-                    <TableCell>{formatRupiah(order.total_harga)}</TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">{formatRupiah(order.jumlah_transfer)}</TableCell>
+                    <TableCell className="whitespace-nowrap">{formatRupiah(order.total_harga)}</TableCell>
+                    <TableCell className="whitespace-nowrap">
                       <Badge variant="outline" className={cn("capitalize", getStatusClass(order.paymentStatus))}>
                         {order.paymentStatus}
                       </Badge>
                     </TableCell>
-                    <TableCell>{new Date(order.timestamp).toLocaleDateString('id-ID')}</TableCell>
+                    <TableCell className="whitespace-nowrap">{new Date(order.timestamp).toLocaleDateString('id-ID')}</TableCell>
                     <TableCell className="text-right space-x-2 whitespace-nowrap">
                        {order.paymentStatus !== 'Lunas' && order.paymentStatus !== 'Batal' && <Button size="sm" variant="default">Validasi</Button>}
                        {order.paymentStatus === 'Belum Lunas' && <Button size="sm" variant="outline">Ingatkan</Button>}

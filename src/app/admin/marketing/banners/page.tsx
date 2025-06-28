@@ -83,14 +83,14 @@ export default function AdminBannersPage() {
                 mockBanners.map((banner: Banner) => (
                   <TableRow key={banner.id}>
                     <TableCell className="font-medium">{banner.name}</TableCell>
-                    <TableCell>{banner.position}</TableCell>
-                    <TableCell>{banner.period}</TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">{banner.position}</TableCell>
+                    <TableCell className="whitespace-nowrap">{banner.period}</TableCell>
+                    <TableCell className="whitespace-nowrap">
                       <Badge variant="outline" className={cn("capitalize", getStatusClass(banner.status))}>
                         {banner.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right space-x-2">
+                    <TableCell className="text-right space-x-2 whitespace-nowrap">
                        <Button size="sm" variant="outline">Edit</Button>
                     </TableCell>
                   </TableRow>

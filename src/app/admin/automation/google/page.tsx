@@ -162,17 +162,19 @@ const DriveTab = () => {
             <TableBody>
               {activityLogs.map((log) => (
                 <TableRow key={log.id}>
-                  <TableCell className="font-medium">{log.orderId}</TableCell>
-                  <TableCell className="flex items-center gap-2">
-                    {log.activity}
-                    {log.user === 'System (Live Test)' && (
-                         <Button asChild variant="ghost" size="icon" className="h-6 w-6">
-                            <a href={`https://drive.google.com/drive/folders/${log.id}`} target="_blank" rel="noopener noreferrer"><LinkIcon className="h-3 w-3" /></a>
-                         </Button>
-                    )}
+                  <TableCell className="font-medium whitespace-nowrap">{log.orderId}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                        {log.activity}
+                        {log.user === 'System (Live Test)' && (
+                            <Button asChild variant="ghost" size="icon" className="h-6 w-6">
+                                <a href={`https://drive.google.com/drive/folders/${log.id}`} target="_blank" rel="noopener noreferrer"><LinkIcon className="h-3 w-3" /></a>
+                            </Button>
+                        )}
+                    </div>
                   </TableCell>
-                  <TableCell>{log.timestamp}</TableCell>
-                  <TableCell><Badge variant={log.user === 'System (Live Test)' ? 'default' : 'secondary'} className={log.user === 'System (Live Test)' ? 'bg-green-600' : ''}>{log.user}</Badge></TableCell>
+                  <TableCell className="whitespace-nowrap">{log.timestamp}</TableCell>
+                  <TableCell className="whitespace-nowrap"><Badge variant={log.user === 'System (Live Test)' ? 'default' : 'secondary'} className={log.user === 'System (Live Test)' ? 'bg-green-600' : ''}>{log.user}</Badge></TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -274,10 +276,10 @@ const CalendarTab = () => {
             <TableBody>
               {mockCalendarActivityLogs.map((log) => (
                 <TableRow key={log.id}>
-                  <TableCell className="font-medium">{log.orderId}</TableCell>
+                  <TableCell className="font-medium whitespace-nowrap">{log.orderId}</TableCell>
                   <TableCell>{log.activity}</TableCell>
-                  <TableCell>{log.timestamp}</TableCell>
-                  <TableCell><Badge variant="secondary">{log.trigger}</Badge></TableCell>
+                  <TableCell className="whitespace-nowrap">{log.timestamp}</TableCell>
+                  <TableCell className="whitespace-nowrap"><Badge variant="secondary">{log.trigger}</Badge></TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -378,10 +380,10 @@ const MeetTab = () => {
             <TableBody>
               {mockMeetActivityLogs.map((log) => (
                 <TableRow key={log.id}>
-                  <TableCell className="font-medium">{log.orderId}</TableCell>
+                  <TableCell className="font-medium whitespace-nowrap">{log.orderId}</TableCell>
                   <TableCell>{log.activity}</TableCell>
-                  <TableCell>{log.timestamp}</TableCell>
-                  <TableCell><Badge variant="secondary">{log.trigger}</Badge></TableCell>
+                  <TableCell className="whitespace-nowrap">{log.timestamp}</TableCell>
+                  <TableCell className="whitespace-nowrap"><Badge variant="secondary">{log.trigger}</Badge></TableCell>
                 </TableRow>
               ))}
             </TableBody>

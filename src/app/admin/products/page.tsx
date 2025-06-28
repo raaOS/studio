@@ -104,7 +104,7 @@ export default function AdminProductsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[50px] text-center">Aksi</TableHead>
+                  <TableHead className="w-[50px] text-center whitespace-nowrap">Aksi</TableHead>
                   <TableHead className="min-w-[250px]">Nama Produk</TableHead>
                   <TableHead className="min-w-[150px]">Kategori</TableHead>
                   <TableHead className="min-w-[120px] whitespace-nowrap">Kaki Lima</TableHead>
@@ -132,7 +132,7 @@ export default function AdminProductsPage() {
                           </DropdownMenu>
                       </TableCell>
                       <TableCell className="font-medium">{service.name}</TableCell>
-                      <TableCell>{getCategoryName(service.category)}</TableCell>
+                      <TableCell className="whitespace-nowrap">{getCategoryName(service.category)}</TableCell>
                       <TableCell className="whitespace-nowrap">{formatRupiah(service.prices['kaki-lima'])}</TableCell>
                       <TableCell className="whitespace-nowrap">{formatRupiah(service.prices['umkm'])}</TableCell>
                       <TableCell className="whitespace-nowrap">{formatRupiah(service.prices['e-comm'])}</TableCell>

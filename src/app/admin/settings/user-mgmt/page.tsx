@@ -78,15 +78,15 @@ export default function AdminUserManagementPage() {
                             </div>
                         </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">
                         <Badge variant="outline" className={cn(getRoleClass(user.role))}>{user.role}</Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">
                       <Badge variant="outline" className={cn("capitalize", getStatusClass(user.status))}>
                         {user.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right whitespace-nowrap">
                        <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" size="icon">

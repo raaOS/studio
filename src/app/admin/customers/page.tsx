@@ -52,10 +52,10 @@ const CustomersListTab = () => (
                         </div>
                     </div>
                 </TableCell>
-                <TableCell>{formatRupiah(customer.ltv)}</TableCell>
-                <TableCell>{customer.totalOrders}</TableCell>
-                <TableCell>{customer.lastOrderDate}</TableCell>
-                <TableCell className="text-right">
+                <TableCell className="whitespace-nowrap">{formatRupiah(customer.ltv)}</TableCell>
+                <TableCell className="whitespace-nowrap">{customer.totalOrders}</TableCell>
+                <TableCell className="whitespace-nowrap">{customer.lastOrderDate}</TableCell>
+                <TableCell className="text-right whitespace-nowrap">
                    <Button asChild size="sm" variant="outline">
                       <Link href={`/admin/customers/${customer.id}`}>Lihat Detail</Link>
                    </Button>
