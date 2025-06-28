@@ -199,17 +199,17 @@ const AnalyticsTabContent = () => {
                             <CardTitle>Funnel Pengunjung ke Pesanan</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="flex items-center justify-center space-x-4">
-                                <div className="text-center">
+                            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-center">
+                                <div>
                                     <Users className="h-8 w-8 mx-auto text-primary" />
                                     <p className="text-2xl font-bold">1,250</p>
                                     <p className="text-sm text-muted-foreground">Visitors</p>
                                 </div>
-                                <div className="text-center text-muted-foreground">
+                                <div className="text-muted-foreground">
                                     <TrendingUp className="h-6 w-6 mx-auto" />
                                     <p className="text-lg font-bold text-foreground">3.6%</p>
                                 </div>
-                                <div className="text-center">
+                                <div>
                                     <ShoppingCart className="h-8 w-8 mx-auto text-green-500" />
                                     <p className="text-2xl font-bold">45</p>
                                     <p className="text-sm text-muted-foreground">Orders</p>
@@ -229,21 +229,21 @@ const AnalyticsTabContent = () => {
                                     <span>UMKM</span>
                                     <div className="flex items-center gap-2">
                                         <span className="font-semibold">5.2%</span>
-                                        <div className="w-full sm:w-32 h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '70%'}}></div></div>
+                                        <div className="w-full max-w-32 h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '70%'}}></div></div>
                                     </div>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span>E-Comm</span>
                                      <div className="flex items-center gap-2">
                                         <span className="font-semibold">3.1%</span>
-                                        <div className="w-full sm:w-32 h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '50%'}}></div></div>
+                                        <div className="w-full max-w-32 h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '50%'}}></div></div>
                                     </div>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span>Kaki Lima</span>
                                     <div className="flex items-center gap-2">
                                         <span className="font-semibold">2.5%</span>
-                                        <div className="w-full sm:w-32 h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '40%'}}></div></div>
+                                        <div className="w-full max-w-32 h-2 bg-muted rounded-full"><div className="h-2 bg-primary rounded-full" style={{width: '40%'}}></div></div>
                                     </div>
                                 </div>
                             </div>
