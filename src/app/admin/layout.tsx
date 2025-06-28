@@ -17,7 +17,6 @@ import {
   ImageIcon,
   Users,
   Wrench,
-  LineChart,
   UserCog,
   Send,
   Sparkles,
@@ -27,7 +26,8 @@ import {
   BrainCircuit,
   PercentCircle,
   Bot,
-  BarChart3
+  BarChart3,
+  Workflow
 } from 'lucide-react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/AdminHeader';
@@ -145,10 +145,18 @@ export default function AdminLayout({
               {/* RUANG SISTEM */}
               <SidebarGroup>
                 <SidebarGroupLabel className="flex items-center gap-2">
-                  <Sparkles />
+                  <Bot />
                   RUANG SISTEM
                 </SidebarGroupLabel>
                   <SidebarMenu>
+                     <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="/admin/flowchart">
+                          <Workflow />
+                          Alur Kerja (Flowchart)
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
                         <Link href="/admin/settings/general">
