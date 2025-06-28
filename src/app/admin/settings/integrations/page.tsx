@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -7,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Send, Folder, Video, Calendar, CheckCircle, XCircle, KeyRound, Info } from 'lucide-react';
+import { Send, Folder, Video, Calendar, CheckCircle, XCircle, KeyRound, Info, Search } from 'lucide-react';
 
 const integrations = [
   {
@@ -85,10 +84,17 @@ export default function AdminIntegrationsPage() {
                 </Alert>
                 <ol className="list-decimal list-inside space-y-4 text-sm pt-4">
                     <li>
-                        Buka halaman <strong>Secret Manager</strong> di Google Cloud Console menggunakan tombol di bawah. Pastikan proyek yang terpilih sudah benar (`urgent-studio`).
+                        Buka Google Cloud Console menggunakan tombol di bawah.
+                        <div className="mt-2 p-3 border rounded-md bg-muted/50">
+                          <p>Setelah terbuka, cara termudah untuk menemukan layanan adalah dengan <strong>menggunakan bar pencarian di bagian atas halaman</strong>.</p>
+                          <p className="mt-1">Ketik <code className="bg-muted px-1 py-0.5 rounded">Secret Manager</code> di bar pencarian, lalu pilih dari hasil yang muncul.</p>
+                        </div>
                     </li>
                     <li>
-                        Klik <strong>+ CREATE SECRET</strong> di bagian atas.
+                        Pastikan proyek yang terpilih di bagian atas adalah proyek yang benar (`urgent-studio`).
+                    </li>
+                    <li>
+                        Klik <strong>+ CREATE SECRET</strong> di bagian atas halaman Secret Manager.
                     </li>
                     <li>
                         Untuk nama Secret, masukkan persis: <code>DRIVE_SERVICE_ACCOUNT_JSON</code>.
@@ -104,6 +110,7 @@ export default function AdminIntegrationsPage() {
                         <ul className="list-disc list-inside ml-4 mt-2 space-y-2">
                             <li>Nama: <code>DRIVE_PARENT_FOLDER_ID</code>, Nilai: ID folder utama Drive Anda.</li>
                             <li>Nama: <code>TELEGRAM_BOT_TOKEN</code>, Nilai: Token bot Telegram Anda.</li>
+                            <li>Nama: <code>GEMINI_API_KEY</code>, Nilai: Kunci API Gemini Anda (jika ada).</li>
                         </ul>
                     </li>
                      <li>
@@ -113,8 +120,8 @@ export default function AdminIntegrationsPage() {
             </CardContent>
             <CardFooter>
                 <Button asChild className="w-full">
-                    <a href="https://console.cloud.google.com/security/secret-manager" target="_blank" rel="noopener noreferrer">
-                        Buka Firebase Secret Manager (untuk nanti)
+                    <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer">
+                        <Search className="mr-2 h-4 w-4" /> Buka Google Cloud Console
                     </a>
                 </Button>
             </CardFooter>
