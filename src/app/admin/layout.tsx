@@ -169,7 +169,7 @@ export default function AdminLayout({
                       <SidebarMenuButton asChild>
                         <Link href="/admin/automation/telegram">
                           <Send />
-                          Telegram
+                          Integrasi Telegram
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
