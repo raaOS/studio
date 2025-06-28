@@ -1,5 +1,7 @@
 'use server';
 
+import { analyzeRevisionRequest } from '../flows/analyze-revision-request';
+
 /**
  * @fileOverview The single source of truth for conversational bot logic.
  * This module determines WHAT to say, but does not send the message itself.
@@ -20,11 +22,24 @@ export async function getTelegramResponse(text: string, chatId: number): Promise
     const revisionKeywords = ['revisi', 'ubah', 'ganti', 'perbaiki', 'tolong perbaiki'];
     const approvalKeywords = ['setuju', 'ok', 'oke', 'approve', 'lanjutkan', 'sip', 'sudah bagus'];
 
-    // The order of checks is the priority of the bot's logic.
     // 1. Check for revision keywords first.
     if (revisionKeywords.some(keyword => lowerCaseText.includes(keyword))) {
-        // In a real app, you might trigger a database update here to change the order status.
-        return `✍️ *Permintaan Revisi Dicatat!*\n\nCatatan revisi Anda telah kami terima dan akan diteruskan ke tim desainer. Status pesanan Anda akan segera diperbarui.`;
+        // Instead of a simple response, we now analyze the request.
+        try {
+            const analysis = await analyzeRevisionRequest({ requestText: text });
+            
+            if (analysis.classification === 'simple_revision') {
+                // In a real app, update order status to 'Sedang Direvisi'
+                return `✍️ *Permintaan Revisi Dicatat!*\n\nCatatan revisi Anda telah kami terima dan akan diteruskan ke tim desainer. Status pesanan Anda akan segera diperbarui.\n\n*(AI-Analysis: Revisi wajar)*`;
+            } else { // 'scope_creep'
+                // In a real app, update order status to 'Perlu Tinjauan Owner'
+                return `⚠️ *Potensi Perubahan Lingkup Kerja Terdeteksi!*\n\nPermintaan Anda: "*${text.substring(0, 50)}...*" sepertinya memerlukan tambahan di luar brief awal.\n\nTim kami akan meninjau permintaan ini terlebih dahulu dan akan segera menghubungi Anda kembali. Terima kasih atas pengertiannya.\n\n*(AI-Analysis: Tambahan brief)*`;
+            }
+        } catch (error) {
+            console.error("Revision analysis AI failed:", error);
+            // Fallback response if AI fails
+            return 'Terima kasih atas feedback Anda. Tim kami akan meninjaunya secara manual dan segera menghubungi Anda.';
+        }
     }
     
     // 2. Check for approval keywords.
