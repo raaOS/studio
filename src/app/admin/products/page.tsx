@@ -107,9 +107,9 @@ export default function AdminProductsPage() {
                   <TableHead className="w-[50px] text-center">Aksi</TableHead>
                   <TableHead className="min-w-[250px]">Nama Produk</TableHead>
                   <TableHead className="min-w-[150px]">Kategori</TableHead>
-                  <TableHead className="min-w-[120px]">Kaki Lima</TableHead>
-                  <TableHead className="min-w-[120px]">UMKM</TableHead>
-                  <TableHead className="min-w-[120px]">E-Comm</TableHead>
+                  <TableHead className="min-w-[120px] whitespace-nowrap">Kaki Lima</TableHead>
+                  <TableHead className="min-w-[120px] whitespace-nowrap">UMKM</TableHead>
+                  <TableHead className="min-w-[120px] whitespace-nowrap">E-Comm</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -133,9 +133,9 @@ export default function AdminProductsPage() {
                       </TableCell>
                       <TableCell className="font-medium">{service.name}</TableCell>
                       <TableCell>{getCategoryName(service.category)}</TableCell>
-                      <TableCell>{formatRupiah(service.prices['kaki-lima'])}</TableCell>
-                      <TableCell>{formatRupiah(service.prices['umkm'])}</TableCell>
-                      <TableCell>{formatRupiah(service.prices['e-comm'])}</TableCell>
+                      <TableCell className="whitespace-nowrap">{formatRupiah(service.prices['kaki-lima'])}</TableCell>
+                      <TableCell className="whitespace-nowrap">{formatRupiah(service.prices['umkm'])}</TableCell>
+                      <TableCell className="whitespace-nowrap">{formatRupiah(service.prices['e-comm'])}</TableCell>
                     </TableRow>
                   ))
                 ) : (
