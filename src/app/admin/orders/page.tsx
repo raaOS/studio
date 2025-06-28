@@ -41,19 +41,14 @@ export default function AdminOrdersPage() {
   
   const getStatusClass = (status: OrderStatus) => {
     switch (status) {
-      case 'Masuk Antrian': return 'bg-gray-500/20 text-gray-700 border-gray-500/30';
+      case 'Menunggu Pembayaran': return 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30';
+      case 'Menunggu Pengerjaan': return 'bg-gray-500/20 text-gray-700 border-gray-500/30';
       case 'Sedang Dikerjakan': return 'bg-blue-500/20 text-blue-700 border-blue-500/30';
-      case 'Siap Kirim Pratinjau': return 'bg-cyan-500/20 text-cyan-700 border-cyan-500/30';
+      case 'Menunggu Respon Klien': return 'bg-amber-500/20 text-amber-700 border-amber-500/30';
       case 'Sedang Direvisi': return 'bg-indigo-500/20 text-indigo-700 border-indigo-500/30';
       case 'Selesai': return 'bg-green-500/20 text-green-700 border-green-500/30';
-      case 'Menunggu Pembayaran': return 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30';
-      case 'Menunggu Respon Klien': return 'bg-amber-500/20 text-amber-700 border-amber-500/30';
-      case 'Perlu Tinjauan Owner': return 'bg-purple-500/20 text-purple-700 border-purple-500/30 font-bold';
-      case 'Eskalasi: Revisi di Luar Lingkup': return 'bg-orange-500/20 text-orange-700 border-orange-500/30 font-bold';
-      case 'Dibatalkan (Belum Dikerjakan)': return 'bg-red-500/20 text-red-700 border-red-500/30';
-      case 'Dibatalkan (Sudah Dikerjakan)': return 'bg-red-600/20 text-red-800 border-red-600/30';
-      case 'Tidak Puas (Refund 50%)': return 'bg-pink-500/20 text-pink-700 border-pink-500/30';
-      case 'Ditutup (Tanpa Refund)': return 'bg-neutral-500/20 text-neutral-700 border-neutral-500/30';
+      case 'Dibatalkan': return 'bg-red-500/20 text-red-700 border-red-500/30';
+      case 'Eskalasi': return 'bg-purple-500/20 text-purple-700 border-purple-500/30 font-bold';
       default: return 'bg-gray-500/20 text-gray-700 border-gray-500/30';
     }
   };

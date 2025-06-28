@@ -283,40 +283,27 @@ export const services: Service[] = [
 ];
 
 export const allOrderStatusesCategorized: { label: string; statuses: OrderStatus[] }[] = [
-    {
-        label: 'Alur Kerja Desainer (Manual)',
-        statuses: [
-            'Sedang Dikerjakan',
-            'Siap Kirim Pratinjau',
-        ],
-    },
-    {
-        label: 'Interaksi Klien (Via Bot)',
-        statuses: [
-            'Menunggu Pembayaran',
-            'Sedang Direvisi',
-            'Selesai',
-        ],
-    },
-    {
-        label: 'Otomatis (Dipicu Sistem)',
-        statuses: [
-            'Masuk Antrian',
-            'Masuk Antrian (Minggu Depan)',
-            'Menunggu Respon Klien',
-        ],
-    },
-    {
-        label: 'Eskalasi & Pembatalan (Manual)',
-        statuses: [
-            'Perlu Tinjauan Owner',
-            'Eskalasi: Revisi di Luar Lingkup',
-            'Dibatalkan (Belum Dikerjakan)',
-            'Dibatalkan (Sudah Dikerjakan)',
-            'Tidak Puas (Refund 50%)',
-            'Ditutup (Tanpa Refund)',
-        ],
-    },
+  {
+      label: 'Antrian & Proses',
+      statuses: [
+          'Menunggu Pembayaran',
+          'Menunggu Pengerjaan',
+          'Sedang Dikerjakan',
+          'Menunggu Respon Klien',
+          'Sedang Direvisi',
+      ],
+  },
+  {
+      label: 'Status Akhir',
+      statuses: [
+          'Selesai',
+          'Dibatalkan',
+      ],
+  },
+  {
+      label: 'Perlu Tinjauan',
+      statuses: ['Eskalasi'],
+  },
 ];
 
 export const mockOrders: Order[] = [];

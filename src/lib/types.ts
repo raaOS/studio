@@ -35,20 +35,14 @@ export type Customer = {
 };
 
 export type OrderStatus =
-  | 'Menunggu Pembayaran'
-  | 'Masuk Antrian'
-  | 'Masuk Antrian (Minggu Depan)'
-  | 'Sedang Direvisi'
-  | 'Menunggu Respon Klien'
-  | 'Selesai'
-  | 'Dibatalkan (Belum Dikerjakan)'
-  | 'Dibatalkan (Sudah Dikerjakan)'
-  | 'Tidak Puas (Refund 50%)'
-  | 'Ditutup (Tanpa Refund)'
-  | 'Perlu Tinjauan Owner'
-  | 'Sedang Dikerjakan'
-  | 'Siap Kirim Pratinjau'
-  | 'Eskalasi: Revisi di Luar Lingkup';
+  | 'Menunggu Pembayaran' // Klien belum bayar
+  | 'Menunggu Pengerjaan' // Sudah bayar, masuk antrian
+  | 'Sedang Dikerjakan'   // Desainer sedang bekerja
+  | 'Menunggu Respon Klien' // Pratinjau terkirim, menunggu feedback
+  | 'Sedang Direvisi'     // Klien minta revisi
+  | 'Eskalasi'            // Butuh tinjauan owner (scope creep, dll)
+  | 'Selesai'             // Disetujui klien
+  | 'Dibatalkan';         // Dibatalkan karena berbagai alasan
 
 // Struktur data baru sesuai spesifikasi
 export type Order = {

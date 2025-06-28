@@ -26,7 +26,7 @@ export default function OrderDetailPage() {
     return mockOrders.find(o => o.kode_order === orderId) || null;
   }, [orderId]);
 
-  const [currentStatus, setCurrentStatus] = useState<OrderStatus>('Masuk Antrian');
+  const [currentStatus, setCurrentStatus] = useState<OrderStatus>('Menunggu Pengerjaan');
   const [driveUrl, setDriveUrl] = useState(order?.driveFolderUrl);
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [isSubmittingUpdate, setIsSubmittingUpdate] = useState(false);
@@ -84,7 +84,7 @@ export default function OrderDetailPage() {
     try {
         let message: string;
 
-        if (currentStatus === 'Siap Kirim Pratinjau') {
+        if (currentStatus === 'Menunggu Respon Klien') {
              if (!driveUrl) {
                 toast({
                     title: 'Folder Drive Belum Ada',
@@ -127,27 +127,14 @@ export default function OrderDetailPage() {
 
   const getStatusClass = (status: OrderStatus) => {
     switch (status) {
-      // Positive flow
-      case 'Masuk Antrian': return 'bg-gray-500 hover:bg-gray-500/90 text-gray-50';
+      case 'Menunggu Pembayaran': return 'bg-yellow-500 hover:bg-yellow-500/90 text-yellow-50';
+      case 'Menunggu Pengerjaan': return 'bg-gray-500 hover:bg-gray-500/90 text-gray-50';
       case 'Sedang Dikerjakan': return 'bg-blue-500 hover:bg-blue-500/90 text-blue-50';
-      case 'Siap Kirim Pratinjau': return 'bg-cyan-500 hover:bg-cyan-500/90 text-cyan-50';
+      case 'Menunggu Respon Klien': return 'bg-amber-500 hover:bg-amber-500/90 text-amber-50';
       case 'Sedang Direvisi': return 'bg-indigo-500 hover:bg-indigo-500/90 text-indigo-50';
       case 'Selesai': return 'bg-green-500 hover:bg-green-500/90 text-green-50';
-
-      // Waiting statuses
-      case 'Menunggu Pembayaran': return 'bg-yellow-500 hover:bg-yellow-500/90 text-yellow-50';
-      case 'Menunggu Respon Klien': return 'bg-amber-500 hover:bg-amber-500/90 text-amber-50';
-      
-      // Action needed statuses
-      case 'Perlu Tinjauan Owner': return 'bg-purple-600 hover:bg-purple-600/90 text-purple-50 font-bold';
-      case 'Eskalasi: Revisi di Luar Lingkup': return 'bg-orange-500 hover:bg-orange-500/90 text-orange-50 font-bold';
-
-      // Negative/Cancellation statuses
-      case 'Dibatalkan (Belum Dikerjakan)': return 'bg-red-500 hover:bg-red-500/90 text-red-50';
-      case 'Dibatalkan (Sudah Dikerjakan)': return 'bg-red-600 hover:bg-red-600/90 text-red-50';
-      case 'Tidak Puas (Refund 50%)': return 'bg-pink-500 hover:bg-pink-500/90 text-pink-50';
-      case 'Ditutup (Tanpa Refund)': return 'bg-neutral-600 hover:bg-neutral-600/90 text-neutral-50';
-
+      case 'Dibatalkan': return 'bg-red-500 hover:bg-red-500/90 text-red-50';
+      case 'Eskalasi': return 'bg-purple-600 hover:bg-purple-600/90 text-purple-50 font-bold';
       default: return 'bg-gray-500 hover:bg-gray-500/90 text-gray-50';
     }
   };

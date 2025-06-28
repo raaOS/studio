@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Bot, User, BrainCircuit, Shield, GitFork, Workflow, MousePointerClick, FileCheck, FileX, CircleDollarSign, Ghost, RefreshCw, Check, X, CalendarClock, MessageCircleQuestion, AlertTriangle } from 'lucide-react';
+import { Bot, User, BrainCircuit, Shield, GitFork, Workflow, MousePointerClick, FileCheck, FileX, CircleDollarSign, Ghost, RefreshCw, Check, X, CalendarClock, MessageCircleQuestion, AlertTriangle, Play, Pause, Hourglass, Wallet } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 const FlowStep = ({ title, pj, icon, color, children, end = false }: { title: string, pj: string, icon: React.ElementType, color: string, children: React.ReactNode, end?: boolean }) => (
@@ -67,97 +67,57 @@ export default function FlowchartPage() {
             </div>
 
             <div className="space-y-6">
-                <FlowStep title="Pesanan Dibuat" pj="Pelanggan & Bot" icon={MousePointerClick} color="bg-blue-100 text-blue-800">
-                    <p>Pelanggan mengisi keranjang di website dan membuka tautan Telegram yang berisi data pesanan terenkripsi. Bot menerima pesan `/start` dengan data tersebut.</p>
+                <FlowStep title="Pesanan Dibuat & Pembayaran" pj="Pelanggan & Sistem" icon={Wallet} color="bg-yellow-100 text-yellow-800">
+                    <p>Pelanggan menyelesaikan checkout di website dan diarahkan ke bot Telegram. Bot mengirim instruksi pembayaran.</p>
                     <div className="mt-2"><Badge variant="outline">Status: Menunggu Pembayaran</Badge></div>
                 </FlowStep>
                 
-                <FlowDecision text="Pembayaran Diterima?" />
+                <FlowStep title="Pembayaran Diterima" pj="Admin Finance" icon={FileCheck} color="bg-green-100 text-green-800">
+                    <p>Admin memvalidasi pembayaran secara manual. Sistem mengubah status pesanan.</p>
+                    <div className="mt-2"><Badge variant="outline">Status: Menunggu Pengerjaan</Badge></div>
+                </FlowStep>
 
+                <FlowStep title="Pengerjaan Desain Dimulai" pj="Desainer" icon={Play} color="bg-blue-100 text-blue-800">
+                    <p>Desainer memilih pesanan dari antrian dan mengubah status. Bot memberi notifikasi ke pelanggan.</p>
+                    <div className="mt-2"><Badge variant="outline">Status: Sedang Dikerjakan</Badge></div>
+                </FlowStep>
+                
+                <FlowStep title="Pratinjau Terkirim" pj="Desainer & Sistem" icon={Hourglass} color="bg-sky-100 text-sky-800">
+                     <p>Desainer mengunggah pratinjau dan mengubah status. Bot mengirimkan link pratinjau ke pelanggan.</p>
+                     <div className="mt-2"><Badge variant="outline">Status: Menunggu Respon Klien</Badge></div>
+                </FlowStep>
+
+                <FlowDecision text="Bagaimana Respon Klien?" />
+                
                 <FlowBranch>
-                    <BranchPath title="Jalur TUNDA" icon={X} color="bg-red-100 text-red-800">
-                        <FlowStep title="Dibatalkan (Belum Dikerjakan)" pj="Sistem" icon={FileX} color="bg-red-100 text-red-800" end>
-                             <p>Jika pembayaran tidak terkonfirmasi dalam waktu yang ditentukan (misal, 24 jam), sistem otomatis membatalkan pesanan.</p>
-                             <div className="mt-2"><Badge variant="destructive">Status Final: Dibatalkan (Belum Dikerjakan)</Badge></div>
+                    <BranchPath title="Revisi Wajar" icon={RefreshCw} color="bg-indigo-100 text-indigo-800">
+                        <FlowStep title="Revisi Diproses" pj="Bot & Desainer" icon={RefreshCw} color="bg-indigo-100 text-indigo-800">
+                            <p>AI mengklasifikasikan permintaan sebagai revisi wajar. Bot mengubah status & memberi notifikasi ke desainer. Alur kembali ke "Pengerjaan Desain".</p>
+                            <div className="mt-2"><Badge variant="outline">Status: Sedang Direvisi</Badge></div>
+                        </FlowStep>
+                    </BranchPath>
+                    
+                    <BranchPath title="Persetujuan" icon={Check} color="bg-green-100 text-green-800">
+                        <FlowStep title="Pesanan Selesai" pj="Bot" icon={FileCheck} color="bg-green-100 text-green-800" end>
+                            <p>Bot mendeteksi kata kunci "setuju" dan mengubah status. Pesanan dianggap tuntas.</p>
+                            <div className="mt-2"><Badge variant="destructive">Status Final: Selesai</Badge></div>
                         </FlowStep>
                     </BranchPath>
 
-                    <BranchPath title="Jalur LANJUT" icon={Check} color="bg-green-100 text-green-800">
-                        <FlowStep title="Pembayaran Terkonfirmasi" pj="Sistem/Admin" icon={FileCheck} color="bg-green-100 text-green-800">
-                            <p>Admin memvalidasi pembayaran secara manual di panel, atau sistem pembayaran otomatis mengirim sinyal konfirmasi.</p>
+                    <BranchPath title="Scope Creep / Tidak Wajar" icon={AlertTriangle} color="bg-rose-100 text-rose-800">
+                        <FlowStep title="Eskalasi ke Owner" pj="Bot & Owner" icon={Shield} color="bg-rose-100 text-rose-800" end>
+                            <p>AI mendeteksi permintaan di luar lingkup. Bot mengubah status dan memberi notifikasi kepada Owner untuk peninjauan manual.</p>
+                            <div className="mt-2"><Badge variant="destructive">Status: Eskalasi</Badge></div>
                         </FlowStep>
+                    </BranchPath>
 
-                        <FlowDecision text="Kapasitas Antrian Penuh?" />
-
-                        <FlowBranch>
-                             <BranchPath title="Jalur PENUH" icon={CalendarClock} color="bg-orange-100 text-orange-800">
-                                 <FlowStep title="Masuk Antrian (Minggu Depan)" pj="Sistem" icon={CalendarClock} color="bg-orange-100 text-orange-800">
-                                     <p>Sistem mendeteksi antrian minggu ini penuh dan otomatis menjadwalkan pesanan untuk prioritas utama minggu berikutnya.</p>
-                                     <div className="mt-2"><Badge variant="outline">Status: Masuk Antrian (Minggu Depan)</Badge></div>
-                                 </FlowStep>
-                             </BranchPath>
-                             <BranchPath title="Jalur TERSEDIA" icon={Check} color="bg-green-100 text-green-800">
-                                <FlowStep title="Masuk Antrian" pj="Sistem" icon={BrainCircuit} color="bg-slate-100 text-slate-800">
-                                    <p>Pesanan masuk ke dalam daftar tugas aktif yang bisa diambil oleh desainer.</p>
-                                    <div className="mt-2"><Badge variant="outline">Status: Masuk Antrian</Badge></div>
-                                </FlowStep>
-                             </BranchPath>
-                        </FlowBranch>
-                        
-                        <FlowStep title="Pengerjaan Desain" pj="Desainer" icon={User} color="bg-amber-100 text-amber-800">
-                            <p>Desainer memilih pesanan dari antrian dan mengubah status. Bot memberi notifikasi ke pelanggan.</p>
-                            <div className="mt-2"><Badge variant="outline">Status: Sedang Dikerjakan</Badge></div>
+                     <BranchPath title="Dibatalkan" icon={X} color="bg-gray-100 text-gray-800">
+                        <FlowStep title="Pesanan Dibatalkan" pj="Admin/Sistem" icon={FileX} color="bg-gray-100 text-gray-800" end>
+                            <p>Pesanan dibatalkan karena tidak ada pembayaran, permintaan klien, atau keputusan owner.</p>
+                             <div className="mt-2"><Badge variant="destructive">Status Final: Dibatalkan</Badge></div>
                         </FlowStep>
-
-                        <FlowStep title="Pratinjau Siap" pj="Desainer" icon={User} color="bg-amber-100 text-amber-800">
-                            <p>Desainer mengunggah hasil karya ke folder Drive dan mengubah status.</p>
-                            <div className="mt-2"><Badge variant="outline">Status: Siap Kirim Pratinjau</Badge></div>
-                        </FlowStep>
-                        
-                        <FlowStep title="Menunggu Respon Klien" pj="Sistem & Bot" icon={MessageCircleQuestion} color="bg-sky-100 text-sky-800">
-                             <p>Sistem mengubah status dan Bot mengirimkan pesan pratinjau yang berisi link Drive ke pelanggan.</p>
-                             <div className="mt-2"><Badge variant="outline">Status: Menunggu Respon Klien</Badge></div>
-                        </FlowStep>
-
-                        <FlowDecision text="Respon Klien?" />
-                        
-                        <FlowBranch>
-                            <BranchPath title="Minta REVISI" icon={RefreshCw} color="bg-indigo-100 text-indigo-800">
-                                <FlowStep title="Sedang Direvisi" pj="Bot & Desainer" icon={RefreshCw} color="bg-indigo-100 text-indigo-800">
-                                    <p>Bot mendeteksi kata kunci "revisi" dan mengubah status. Notifikasi dikirim ke desainer untuk mengerjakan ulang. Alur kembali ke "Pengerjaan Desain".</p>
-                                    <div className="mt-2"><Badge variant="outline">Status: Sedang Direvisi</Badge></div>
-                                </FlowStep>
-                            </BranchPath>
-                            <BranchPath title="SETUJU" icon={Check} color="bg-green-100 text-green-800">
-                                <FlowStep title="Selesai" pj="Bot" icon={FileCheck} color="bg-green-100 text-green-800" end>
-                                    <p>Bot mendeteksi kata kunci "setuju" dan mengubah status. Pesanan dianggap tuntas.</p>
-                                    <div className="mt-2"><Badge variant="destructive">Status Final: Selesai</Badge></div>
-                                </FlowStep>
-                            </BranchPath>
-                        </FlowBranch>
                     </BranchPath>
                 </FlowBranch>
-
-                 <FlowDecision text="Terjadi Eskalasi?" end/>
-                  <FlowBranch>
-                     <BranchPath title="Jalur Eskalasi" icon={AlertTriangle} color="bg-rose-100 text-rose-800">
-                        <div className="space-y-4">
-                            <FlowStep title="Revisi di Luar Lingkup" pj="Desainer" icon={Shield} color="bg-rose-100 text-rose-800">
-                                <p>Desainer mengubah status secara manual jika permintaan revisi tidak wajar.</p>
-                                <div className="mt-2"><Badge variant="destructive">Status Eskalasi: Revisi di Luar Lingkup</Badge></div>
-                            </FlowStep>
-                            <FlowStep title="Tidak Puas (Refund 50%)" pj="Owner" icon={CircleDollarSign} color="bg-rose-100 text-rose-800">
-                                <p>Owner memutuskan untuk mengakhiri proyek dengan pengembalian dana sebagian setelah negosiasi.</p>
-                                <div className="mt-2"><Badge variant="destructive">Status Final: Tidak Puas (Refund 50%)</Badge></div>
-                            </FlowStep>
-                            <FlowStep title="Ditutup (Tanpa Refund)" pj="Owner" icon={Ghost} color="bg-rose-100 text-rose-800" end>
-                                <p>Owner menutup paksa pesanan karena klien tidak responsif.</p>
-                                <div className="mt-2"><Badge variant="destructive">Status Final: Ditutup (Tanpa Refund)</Badge></div>
-                            </FlowStep>
-                        </div>
-                    </BranchPath>
-                  </FlowBranch>
-
             </div>
         </div>
     );
