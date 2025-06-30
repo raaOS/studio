@@ -1,4 +1,7 @@
-import { Timestamp } from "firebase/firestore";
+// import { Timestamp } from "firebase/firestore";
+
+// Placeholder for Firebase Timestamp if needed, or use Date/string
+type Timestamp = Date | string;
 
 export type BudgetTier = 'kaki-lima' | 'umkm' | 'e-comm';
 

@@ -5,9 +5,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { assistWithBrief, type BriefAssistantOutput } from '@/ai/flows/brief-assistant';
+// import { assistWithBrief, type BriefAssistantOutput } from '@/ai/flows/brief-assistant';
 import { Lightbulb, Loader2, Wand2 } from 'lucide-react';
 import { Badge } from './ui/badge';
+
+// Placeholder type if original is not available
+type BriefAssistantOutput = {
+  suggested_title: string;
+  keywords: string[];
+  style_suggestions: string[];
+};
 
 export function BriefAssistant() {
   const { toast } = useToast();
@@ -28,19 +35,30 @@ export function BriefAssistant() {
     setIsLoading(true);
     setResult(null);
 
-    try {
-      const response = await assistWithBrief({ raw_description: idea });
-      setResult(response);
-    } catch (error: any) {
-      console.error('Brief assistant failed:', error);
-      toast({
-        title: 'Gagal Memproses Ide',
-        description: error.message || 'Terjadi kesalahan pada asisten AI.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    // try {
+    //   const response = await assistWithBrief({ raw_description: idea });
+    //   setResult(response);
+    // } catch (error: any) {
+    //   console.error('Brief assistant failed:', error);
+    //   toast({
+    //     title: 'Gagal Memproses Ide',
+    //     description: error.message || 'Terjadi kesalahan pada asisten AI.',
+    //     variant: 'destructive',
+    //   });
+    // } finally {
+    //   setIsLoading(false);
+    // }
+    toast({
+      title: 'Fitur Dalam Pengembangan',
+      description: 'Asisten AI untuk brief sedang dinonaktifkan sementara.',
+    });
+    // Mock response for UI development
+    // setResult({
+    //   suggested_title: "Pengembangan Mockup Logo Kopi Senja",
+    //   keywords: ["kopi", "senja", "modern", "elegan", "simpel"],
+    //   style_suggestions: ["Minimalis", "Kontemporer", "Klasik Modern"]
+    // });
+    setIsLoading(false);
   };
 
   return (
