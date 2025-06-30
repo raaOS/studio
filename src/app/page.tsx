@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react'; // Added useEffect, useState
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { PortfolioSection } from '@/components/PortfolioSection';
@@ -17,11 +18,40 @@ export default function Home() {
     'Desain Digital & Event',
   ];
 
+  const [backendMessage, setBackendMessage] = useState("Loading message from backend...");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5328';
+    fetch(`${apiUrl}/api/hello`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        setBackendMessage(data.message || "No message field in response");
+      })
+      .catch(error => {
+        console.error("Error fetching from backend:", error);
+        setBackendMessage("Failed to fetch message from backend.");
+        setErrorMessage(`Error: ${error.message}. Is the Flask server running on port 5328?`);
+      });
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <CartWrapper>
         <main className="flex-grow">
+          {/* Backend Message Test */}
+          <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 container mx-auto my-4">
+            <p className="font-bold">Backend Status:</p>
+            <p>{backendMessage}</p>
+            {errorMessage && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
+          </div>
+
           <PortfolioSection />
           <PromotionalBannerCarousel />
 

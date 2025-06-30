@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Line, LineChart } from "recharts";
+import { Line, LineChart, CartesianGrid, XAxis, YAxis } from "recharts"; // Added CartesianGrid, XAxis, YAxis
 import { TrendingUp, ArrowDown, Users, ShoppingCart, DollarSign, Percent, Inbox, Loader2, CheckCircle } from 'lucide-react';
 import { formatRupiah } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -169,10 +169,10 @@ const AnalyticsTabContent = () => {
                 <CardContent>
                     <ChartContainer config={chartConfig} className="h-[300px] w-full">
                         <LineChart data={revenueData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                            <cartesianGrid strokeDasharray="3 3" vertical={false} />
-                            <xAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
-                            <yAxis 
-                            tickFormatter={(value) => `${(value as number) / 1000000} Jt`}
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                            <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
+                            <YAxis
+                            tickFormatter={(value: any) => `${(value as number) / 1000000} Jt`}
                             tickLine={false}
                             axisLine={false}
                             tickMargin={8}
@@ -181,7 +181,7 @@ const AnalyticsTabContent = () => {
                             <ChartTooltip 
                             cursor={false}
                             content={<ChartTooltipContent 
-                                formatter={(value) => formatRupiah(value as number)} 
+                                formatter={(value: any) => formatRupiah(value as number)}
                                 indicator="line" 
                             />}
                             />

@@ -14,9 +14,13 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { isFirebaseConfigured, db } from "@/lib/firebase";
+// import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+// import { isFirebaseConfigured, db } from "@/lib/firebase";
 import { BriefAssistant } from "./BriefAssistant";
+
+// Mock isFirebaseConfigured and db for now
+const isFirebaseConfigured = false;
+const db = null;
 
 
 // Form Schema
@@ -72,68 +76,68 @@ export function OrderSummary() {
         setIsSubmitting(true);
 
         // Check if Firebase is configured. If not, run a simulation.
-        if (!isFirebaseConfigured || !db) {
+        // if (!isFirebaseConfigured || !db) {
+        toast({
+            title: 'Mode Simulasi (Firebase Dinonaktifkan)',
+            description: 'Fitur checkout dengan Firebase sedang dalam refactoring. Menjalankan simulasi...',
+        });
+
+        setTimeout(() => {
             toast({
-                title: 'Mode Simulasi',
-                description: 'Konfigurasi Firebase tidak ditemukan. Menjalankan simulasi checkout...',
-            });
-
-            setTimeout(() => {
-                toast({
-                    title: 'Simulasi Berhasil!',
-                    description: 'Dalam aplikasi nyata, Anda akan diarahkan ke Telegram sekarang.',
-                });
-                setIsSubmitting(false);
-                clearCart();
-            }, 2500);
-            return;
-        }
-
-        // --- Real Checkout Flow ---
-        const orderPayload = {
-            customer,
-            cartItems: cartItems.map(item => ({
-                id: item.id,
-                name: item.name,
-                quantity: item.quantity,
-                price: item.price,
-                brief: item.brief,
-                budgetTier: item.budgetTier,
-                budgetName: item.budgetName,
-            })),
-            totalPrice,
-            paymentMethod,
-            createdAt: serverTimestamp(),
-        };
-
-        try {
-            const pendingOrdersCol = collection(db, "pendingOrders");
-            const docRef = await addDoc(pendingOrdersCol, orderPayload);
-            const pendingOrderId = docRef.id;
-
-            const botUsername = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME;
-            if (!botUsername) {
-                 toast({
-                    title: 'Konfigurasi Bot Diperlukan',
-                    description: 'Admin perlu mengatur NEXT_PUBLIC_TELEGRAM_BOT_USERNAME di file .env',
-                    variant: 'destructive',
-                });
-                setIsSubmitting(false);
-                return;
-            }
-
-            const telegramUrl = `https://t.me/${botUsername}?start=${pendingOrderId}`;
-            window.location.href = telegramUrl;
-            
-        } catch (error) {
-            console.error("Failed to create pending order or redirect:", error);
-            toast({
-                title: 'Gagal Memproses Pesanan',
-                description: 'Terjadi kesalahan saat terhubung ke database. Pastikan konfigurasi Firebase sudah benar.',
-                variant: 'destructive',
+                title: 'Simulasi Checkout Berhasil!',
+                description: 'Dalam aplikasi nyata, data pesanan akan dikirim ke backend dan Anda akan diarahkan ke Telegram.',
             });
             setIsSubmitting(false);
-        }
+            // clearCart(); // Keep cart for now during refactor
+        }, 2500);
+        return;
+        // }
+
+        // --- Real Checkout Flow (Commented Out) ---
+        // const orderPayload = {
+        //     customer,
+        //     cartItems: cartItems.map(item => ({
+        //         id: item.id,
+        //         name: item.name,
+        //         quantity: item.quantity,
+        //         price: item.price,
+        //         brief: item.brief,
+        //         budgetTier: item.budgetTier,
+        //         budgetName: item.budgetName,
+        //     })),
+        //     totalPrice,
+        //     paymentMethod,
+        //     createdAt: serverTimestamp(),
+        // };
+
+        // try {
+        //     const pendingOrdersCol = collection(db, "pendingOrders");
+        //     const docRef = await addDoc(pendingOrdersCol, orderPayload);
+        //     const pendingOrderId = docRef.id;
+
+        //     const botUsername = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME;
+        //     if (!botUsername) {
+        //          toast({
+        //             title: 'Konfigurasi Bot Diperlukan',
+        //             description: 'Admin perlu mengatur NEXT_PUBLIC_TELEGRAM_BOT_USERNAME di file .env',
+        //             variant: 'destructive',
+        //         });
+        //         setIsSubmitting(false);
+        //         return;
+        //     }
+
+        //     const telegramUrl = `https://t.me/${botUsername}?start=${pendingOrderId}`;
+        //     window.location.href = telegramUrl;
+            
+        // } catch (error) {
+        //     console.error("Failed to create pending order or redirect:", error);
+        //     toast({
+        //         title: 'Gagal Memproses Pesanan',
+        //         description: 'Terjadi kesalahan saat terhubung ke database. Pastikan konfigurasi Firebase sudah benar.',
+        //         variant: 'destructive',
+        //     });
+        //     setIsSubmitting(false);
+        // }
     };
 
     const finalPrice = paymentMethod === 'dp' ? totalPrice / 2 : totalPrice;

@@ -49,7 +49,7 @@ const StatusBadgeWithDialog = ({ status, isFinal = false }: { status: OrderStatu
     ],
     'Eskalasi': [{ from: 'user', text: 'Revisi: Selain logo, tolong buatkan juga desain kartu namanya ya.' }, { from: 'bot', text: '⚠️ Potensi Perubahan Lingkup Kerja Terdeteksi! Tim kami akan meninjau permintaan ini.' }],
     'Menunggu Jadwal Meeting': [{ from: 'user', text: 'Revisi lagi dong, font-nya ganti.' }, { from: 'bot', text: 'Anda telah mencapai batas revisi. Kami akan menawarkan jadwal G-Meet untuk diskusi lebih lanjut.' }],
-    'Dibatalkan': [
+    'Dibatalkan (Pra-Desain)': [ // Changed from 'Dibatalkan'
       { from: 'user', text: '/batal' },
       { from: 'bot', text: '⚠️ Konfirmasi Pembatalan. Balas dengan format:\n/konfirmasi_batal BINTANG:[1-5] ALASAN:[Alasan singkat]' },
     ],
@@ -187,7 +187,7 @@ export default function FlowchartPage() {
                         </FlowStep>
                         
                         <FlowStep title="Revisi ke-3 Ditolak" pj="Bot" icon={CalendarClock} color="bg-orange-100 text-orange-800" end>
-                            <p>Setelah 2x revisi (`revisionCount` >= 2), bot akan menolak revisi via teks dan menawarkan G-Meet.</p>
+                            <p>Setelah 2x revisi ('revisionCount' &gt;= 2), bot akan menolak revisi via teks dan menawarkan G-Meet.</p>
                             <div className="mt-2"><StatusBadgeWithDialog status='Menunggu Jadwal Meeting' /></div>
                         </FlowStep>
                     </BranchPath>
@@ -216,7 +216,7 @@ export default function FlowchartPage() {
                     <BranchPath title="❌ Pembatalan" icon={MessageSquareWarning} color="bg-red-100 text-red-800">
                         <FlowStep title="Pembatalan Diproses" pj="Bot & Admin Finance" icon={Receipt} color="bg-red-100 text-red-800" end>
                             <p>Bot meminta feedback & rating. Admin Finance memproses refund sesuai tahap pembatalan.</p>
-                            <div className="mt-2"><StatusBadgeWithDialog status='Dibatalkan' isFinal={true} /></div>
+                            <div className="mt-2"><StatusBadgeWithDialog status='Dibatalkan (Pra-Desain)' isFinal={true} /></div>
                         </FlowStep>
                     </BranchPath>
                 </FlowBranch>

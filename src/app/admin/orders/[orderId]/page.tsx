@@ -12,8 +12,8 @@ import { Separator } from '@/components/ui/separator';
 import { formatRupiah, cn, getOrderStatusSolidClass } from '@/lib/utils';
 import type { Order, OrderStatus } from '@/lib/types';
 import { MessageSquare, Send, Folder, Calendar, Video, History, FolderSync, Loader2 } from 'lucide-react';
-import { createOrderFolder } from '@/ai/flows/create-drive-folder';
-import { sendTelegramUpdate } from '@/ai/flows/telegram-bot-integration';
+// import { createOrderFolder } from '@/ai/flows/create-drive-folder';
+// import { sendTelegramUpdate } from '@/ai/flows/telegram-bot-integration';
 import { useToast } from '@/hooks/use-toast';
 
 export default function OrderDetailPage() {
@@ -49,88 +49,92 @@ export default function OrderDetailPage() {
   
   const handleCreateFolder = async () => {
     setIsCreatingFolder(true);
-    try {
-      const result = await createOrderFolder({
-        orderId: order.kode_order,
-        customerName: order.nama_klien,
-        folderTemplate: '[OrderID] - [CustomerName]',
-      });
+    // try {
+    //   const result = await createOrderFolder({
+    //     orderId: order.kode_order,
+    //     customerName: order.nama_klien,
+    //     folderTemplate: '[OrderID] - [CustomerName]',
+    //   });
 
-      if (result.success && result.folderUrl) {
-        setDriveUrl(result.folderUrl);
-        toast({
-          title: 'Folder Berhasil Dibuat!',
-          description: `Folder untuk pesanan ${order.kode_order} telah dibuat.`,
-        });
-        // Note: In a real app, you'd want to persist this URL to your database
-        // and update the local mockOrder data or refetch.
-      } else {
-        throw new Error(result.error || 'Gagal membuat folder.');
-      }
-    } catch (error: any) {
-      toast({
-        title: 'Gagal Membuat Folder',
-        description: error.message,
-        variant: 'destructive',
-      });
-    } finally {
-      setIsCreatingFolder(false);
-    }
+    //   if (result.success && result.folderUrl) {
+    //     setDriveUrl(result.folderUrl);
+    //     toast({
+    //       title: 'Folder Berhasil Dibuat!',
+    //       description: `Folder untuk pesanan ${order.kode_order} telah dibuat.`,
+    //     });
+    //     // Note: In a real app, you'd want to persist this URL to your database
+    //     // and update the local mockOrder data or refetch.
+    //   } else {
+    //     throw new Error(result.error || 'Gagal membuat folder.');
+    //   }
+    // } catch (error: any) {
+    //   toast({
+    //     title: 'Gagal Membuat Folder',
+    //     description: error.message,
+    //     variant: 'destructive',
+    //   });
+    // } finally {
+    //   setIsCreatingFolder(false);
+    // }
+    toast({ title: 'Fitur Dalam Pengembangan', description: 'Pembuatan folder otomatis sedang dinonaktifkan.'});
+    setIsCreatingFolder(false);
   };
 
   const handleStatusUpdate = async () => {
     if (!order) return;
 
     setIsSubmittingUpdate(true);
-    try {
-        let message: string;
+    // try {
+    //     let message: string;
 
-        if (currentStatus === 'Menunggu Respon Klien') {
-             if (!driveUrl) {
-                toast({
-                    title: 'Folder Drive Belum Ada',
-                    description: 'Mohon buat folder Drive terlebih dahulu sebelum mengirim pratinjau.',
-                    variant: 'destructive',
-                });
-                setIsSubmittingUpdate(false);
-                return;
-            }
-            const template = mockMessageTemplates.find(t => t.id === 'preview_ready');
-            if (!template) {
-                throw new Error("Template 'preview_ready' tidak ditemukan. Mohon periksa file data.");
-            }
-            message = template.content
-                .replace('{{customerName}}', order.nama_klien)
-                .replace('{{orderId}}', order.kode_order)
-                .replace('{{driveUrl}}', driveUrl);
-        } else {
-            message = `🔔 *Update Pesanan Anda* 🔔\n\nHalo ${order.nama_klien},\nStatus pesanan Anda dengan ID \`${order.kode_order}\` telah diperbarui menjadi:\n\n*${currentStatus}*\n\nJika ada pertanyaan, jangan ragu untuk membalas pesan ini. Terima kasih!`;
-        }
+    //     if (currentStatus === 'Menunggu Respon Klien') {
+    //          if (!driveUrl) {
+    //             toast({
+    //                 title: 'Folder Drive Belum Ada',
+    //                 description: 'Mohon buat folder Drive terlebih dahulu sebelum mengirim pratinjau.',
+    //                 variant: 'destructive',
+    //             });
+    //             setIsSubmittingUpdate(false);
+    //             return;
+    //         }
+    //         const template = mockMessageTemplates.find(t => t.id === 'preview_ready');
+    //         if (!template) {
+    //             throw new Error("Template 'preview_ready' tidak ditemukan. Mohon periksa file data.");
+    //         }
+    //         message = template.content
+    //             .replace('{{customerName}}', order.nama_klien)
+    //             .replace('{{orderId}}', order.kode_order)
+    //             .replace('{{driveUrl}}', driveUrl);
+    //     } else {
+    //         message = `🔔 *Update Pesanan Anda* 🔔\n\nHalo ${order.nama_klien},\nStatus pesanan Anda dengan ID \`${order.kode_order}\` telah diperbarui menjadi:\n\n*${currentStatus}*\n\nJika ada pertanyaan, jangan ragu untuk membalas pesan ini. Terima kasih!`;
+    //     }
         
-        const result = await sendTelegramUpdate({
-            telegramId: order.customerTelegram,
-            message: message,
-        });
+    //     const result = await sendTelegramUpdate({
+    //         telegramId: order.customerTelegram,
+    //         message: message,
+    //     });
 
-        if (result.success) {
-            toast({
-                title: 'Update Terkirim!',
-                description: `Notifikasi perubahan status ke "${currentStatus}" telah dikirim ke klien.`,
-            });
-            // In a real app, you would also update the order in your database.
-        } else {
-            throw new Error(result.error || 'Gagal mengirim notifikasi Telegram.');
-        }
+    //     if (result.success) {
+    //         toast({
+    //             title: 'Update Terkirim!',
+    //             description: `Notifikasi perubahan status ke "${currentStatus}" telah dikirim ke klien.`,
+    //         });
+    //         // In a real app, you would also update the order in your database.
+    //     } else {
+    //         throw new Error(result.error || 'Gagal mengirim notifikasi Telegram.');
+    //     }
 
-    } catch (error: any) {
-        toast({
-            title: 'Gagal Mengirim Update',
-            description: error.message,
-            variant: 'destructive',
-        });
-    } finally {
-        setIsSubmittingUpdate(false);
-    }
+    // } catch (error: any) {
+    //     toast({
+    //         title: 'Gagal Mengirim Update',
+    //         description: error.message,
+    //         variant: 'destructive',
+    //     });
+    // } finally {
+    //     setIsSubmittingUpdate(false);
+    // }
+    toast({ title: 'Fitur Dalam Pengembangan', description: 'Pengiriman notifikasi Telegram sedang dinonaktifkan.'});
+    setIsSubmittingUpdate(false);
 };
 
   return (
